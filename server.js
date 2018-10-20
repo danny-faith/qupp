@@ -16,6 +16,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 
+// set CORS headers on server as server listens on port 3333
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 mongoose.Promise = global.Promise;
 var promise = mongoose.connect('mongodb://localhost/qupp_db_EBDNBFJN');
 
@@ -26,12 +33,37 @@ promise.then(function(db) {
 });
 
 var Schema = mongoose.Schema;
+
+var artistSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+});
 var songSchema = new Schema({
-    title: String,
-    artist: String
+    spotId: {
+        type: String,
+        unique : true,
+        required : true,
+        dropDups: true
+    },
+    name: {
+        type: String,
+        required : true
+    },
+    duration: Number,
+    artists: [artistSchema],
+    uri: String,
+    album: String
+});
+var playlistSchema = new Schema({
+    songs: [songSchema]
 });
 
+
 var Song = mongoose.model('Song', songSchema);
+var Playlist = mongoose.model('Playlist', playlistSchema);
+var Artist = mongoose.model('Artist', artistSchema);
 
 // app.use('')
 
