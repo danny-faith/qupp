@@ -54,7 +54,13 @@ var songSchema = new Schema({
     duration: Number,
     artists: [artistSchema],
     uri: String,
-    album: String
+    album: String,
+    // could have an image schema
+    image: [{
+        height: Number,
+        width: Number,
+        url: String
+    }]
 });
 var playlistSchema = new Schema({
     songs: [songSchema]

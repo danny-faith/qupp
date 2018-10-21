@@ -1,23 +1,33 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-materialize';
+import { Row, Col, Button } from 'react-materialize';
 import PropTypes from 'prop-types';
 
-const SearchResultItem = (props) => {
-//   <p>Artists:<br/>
-//   {props.data.ingredients.map(key => (
-//     <span key={key}>{key}</span>
-//   ))}
-// </p>
-return(
-  <Row>
-    <Col s={2} className=''>
-      <img src={props.data.image.url} />
-    </Col>
-    <Col s={10} className=''>
-      {props.data.name}
-    </Col>
-  </Row>
-);
+class SearchResultItem extends Component {
+  
+  addSongToPlaylistHandler = (song) => {
+    console.log('send a song');
+    this.props.addSongToPlaylist(this.props.data);
+  }
+  render() {
+    return(
+      <Row>
+        <Col s={2} className=''>
+          <img src={this.props.data.image.url} />
+        </Col>
+        <Col s={5} className=''>
+          <p>{this.props.data.name}, {this.props.data.album}</p>
+          <p>Artists:
+            {this.props.data.artists.map(key => (
+              <span key={key.name}> {key.name}</span>
+            ))}
+          </p>
+        </Col>
+        <Col s={5} className=''>
+          <Button className="btn-small right" onClick={this.addSongToPlaylistHandler}>Add</Button>
+        </Col>
+      </Row>
+    );
+  }
 }
   
   export default SearchResultItem;

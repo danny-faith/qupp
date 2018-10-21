@@ -6,7 +6,12 @@ import PropTypes from 'prop-types';
 class SearchForm extends Component {
     searchQuery = React.createRef();
     componentDidMount = () => {
-        
+        console.log('componentDidMount');
+        axios.get(`http://localhost:3333/songs/`)
+        .then(res => {
+            console.log('res: ', res);
+            
+        });
     }
     // <Input ref={this.searchQuery} placeholder="Prince I would die for you" s={6} label="Track search" />
     // <Row>
@@ -18,7 +23,7 @@ class SearchForm extends Component {
         // console.log(this.searchQuery.current.state.value);
         axios.get(`https://api.spotify.com/v1/search?q=${searchTerm}&type=track`, {
             headers: {
-                'Authorization': 'Bearer BQBKSTmB13-gtF434Zo4-LovCn-dGHisZlQsbbSnJaeMzatOp6zSVQSLG2F5RWDpAgA9z8UBF5sqMD1ii5dcp5Cn8hTOEszho4syk3xp--f06Vb-xio200qsw5gae8zWVx5pdUeFGeBZ6gK373EA'
+                'Authorization': 'Bearer BQBFS8eX23M17oTPaxi9Q6ZfDN5Ufk8DH0XiFbnwsnLRoAkaiKRjAXY9Cu9FcDrukQGBPPYNE_WesM7wIxS-a6B8P_01mktnHshjJX9OnLpqiIzxt-aU0-h850HklTtqbjWsMEdrBYXdGqDKCeY7'
             }
         })
         .then(res => {
