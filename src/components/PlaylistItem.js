@@ -6,13 +6,13 @@ class PlaylistItem extends Component {
   
     deleteSongFromPlaylistHandler = () => {
         console.log('delete a song');
-        this.props.deleteSongFromPlaylist(this.props.data);
+        this.props.deleteSongFromPlaylist(this.props.data._id);
     }
     render() {
         return(
             <Row>
                 <Col s={2} className=''>
-                    <img src={this.props.data.image.url} />
+                    <img src={this.props.data.image} />
                 </Col>
                 <Col s={5} className=''>
                     <p>{this.props.data.name}, {this.props.data.album}</p>

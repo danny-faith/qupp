@@ -1,16 +1,41 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-materialize';
 import axios from 'axios';
+// import songs from './loadPlaylist';
 import SearchForm from './components/SearchForm';
 import SearchResultItem from './components/SearchResultItem';
 import PlaylistItem from './components/PlaylistItem';
 import logo from './logo.svg';
 import './App.scss';
 
+
+
+
+
+// To make playlist persitant, load playlist from database and put it in `playList` state
+// or maybe localStorage, but that may come later
+
 class App extends Component {
   state = {
     searchResults: [],
     playList: []
+  }
+  componentDidMount = () => {
+    var songs = {};
+    axios.get('http://localhost:3333/songs/')
+    .then((res) => {
+      var songs = res.data;
+      this.setState({
+        playList: songs
+      });
+      console.log('songs: ', songs);
+    });
+    axios.get('http://localhost:3333/authspotify')
+    .then((res) => {
+      console.log('Anything??');
+      
+      console.log('res: ', res);
+    });
   }
   addSearchResultsToState = (results) => {
     console.log('results from App.js: ', results);
@@ -20,10 +45,7 @@ class App extends Component {
     console.log(this.state);    
   }
   addSongToPlaylist = song => {
-    console.log('addSongToPlaylist: ', song);
-    // this.setState((prevState) => ({
-    //   playList: song
-    // }));
+
     const playList = this.state.playList;
     // TODO: check if object item is already there!!
     // if(!playList.hasOwnProperty(song)) {
@@ -34,7 +56,7 @@ class App extends Component {
       axios.post(`http://localhost:3333/songs/`, song)
         .then(res => {
           console.log(res);
-          
+          // SHOULD BE ERROR CATCHING IN HERE!!!
         });
     // } else if (song == undefined) {
     //   console.log('empty string');
@@ -42,8 +64,28 @@ class App extends Component {
     //   console.log('it was already there');
     // }
   }
-  deleteSongFromPlaylist = songId => {
-    console.log('deleteSongFromPlaylist: ', songId);
+  deleteSongFromPlaylist = songToDeleteId => {
+
+    axios.delete(`http://localhost:3333/songs/${songToDeleteId}`)
+      .then(() => {
+        // Copy state.playList
+        const playlistCopy = [...this.state.playList];
+        // Find the index of the object we want to delete
+        const index = playlistCopy.findIndex(obj => obj._id === songToDeleteId);
+        // Remove chosen object to delete by adding all other object back in around our chosen object
+        const newPlaylist = [
+            ...playlistCopy.slice(0, index),
+            ...playlistCopy.slice(index + 1)
+        ];
+        this.setState({
+          playList: newPlaylist
+        });
+      })
+      .catch(function (error) {
+        console.log('error: ', error);
+        console.log('error.config: ', error.config);
+      });
+    // TODO remove form DB. Maybe just 
   }
   render() {
     return (
