@@ -26,6 +26,7 @@
     "react-dom": "^16.5.2",
     "react-materialize": "^2.4.6",
     "react-scripts": "2.0.5",
+    "react-spotify-player": "^1.0.4",
     "source-map-support": "^0.5.9",
     "spotify-web-api-node": "^4.0.0"
   },

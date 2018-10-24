@@ -2,23 +2,29 @@ import React, { Component } from 'react';
 import { Row, Col } from 'react-materialize';
 import axios from 'axios';
 // import songs from './loadPlaylist';
+import SpotifyPlayer from 'react-spotify-player';
 import SearchForm from './components/SearchForm';
 import SearchResultItem from './components/SearchResultItem';
 import PlaylistItem from './components/PlaylistItem';
 import logo from './logo.svg';
 import './App.scss';
 
-
-
-
-
 // To make playlist persitant, load playlist from database and put it in `playList` state
 // or maybe localStorage, but that may come later
+
+
+const size = {
+  width: '100%',
+  height: 520,
+};
+const view = 'list'; // or 'coverart'
+const theme = 'black'; // or 'white'
 
 class App extends Component {
   state = {
     searchResults: [],
-    playList: []
+    playList: [],
+    songToPlayUri: ''
   }
   componentDidMount = () => {
     var songs = {};
@@ -30,12 +36,12 @@ class App extends Component {
       });
       console.log('songs: ', songs);
     });
-    axios.get('http://localhost:3333/authspotify')
-    .then((res) => {
-      console.log('Anything??');
+    // axios.get('http://localhost:3333/authspotify')
+    // .then((res) => {
+    //   console.log('Anything??');
       
-      console.log('res: ', res);
-    });
+    //   console.log('res: ', res);
+    // });
   }
   addSearchResultsToState = (results) => {
     console.log('results from App.js: ', results);
@@ -63,6 +69,13 @@ class App extends Component {
     // } else {
     //   console.log('it was already there');
     // }
+  }
+  playSong = songUri => {
+    // update songToPlay state so the Spotify player re-renders
+    const songToPlayCopy = [...this.state.songToPlayUri];
+    this.setState({
+      songToPlayUri: songUri
+    });
   }
   deleteSongFromPlaylist = songToDeleteId => {
 
@@ -97,7 +110,7 @@ class App extends Component {
           <Col s={4} className='grid-example'>
             <h3 className="center">Playlist</h3>
             {Object.keys(this.state.playList).map(key => {
-                return <PlaylistItem deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playList[key]} key={key} />
+                return <PlaylistItem playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playList[key]} key={key} />
             })}
           </Col>
           <Col s={4} className='grid-example'>
@@ -109,6 +122,12 @@ class App extends Component {
           </Col>
           <Col s={4} className='grid-example'>
             <h3 className="center">Player</h3>
+            <SpotifyPlayer
+              uri={this.state.songToPlayUri}
+              size={size}
+              view={view}
+              theme={theme}
+            />
           </Col>
         </Row>
       </>

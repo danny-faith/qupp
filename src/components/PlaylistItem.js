@@ -8,6 +8,10 @@ class PlaylistItem extends Component {
         console.log('delete a song');
         this.props.deleteSongFromPlaylist(this.props.data._id);
     }
+    playSongHandler = () => {
+        console.log('play a song', this.props.data);
+        this.props.playSong(this.props.data.uri);
+    }
     render() {
         return(
             <Row>
@@ -23,7 +27,8 @@ class PlaylistItem extends Component {
                     </p>
                 </Col>
                 <Col s={5} className=''>
-                    <Button className="btn-small align-right" onClick={this.deleteSongFromPlaylistHandler}>Delete</Button>
+                    <Button className="btn-small align-right red lighten-2" onClick={this.deleteSongFromPlaylistHandler}>Delete</Button>
+                    <Button className="btn-small align-right" onClick={this.playSongHandler}>Play</Button>
                 </Col>
             </Row>
         );
