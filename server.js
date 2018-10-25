@@ -5,6 +5,7 @@ const axios = require('axios');
 const cors = require('cors');
 const Base64 = require('js-base64').Base64;
 var passport = require('passport');
+const jwt = require('jsonwebtoken');
 var LocalStrategy = require('passport-local').Strategy;
 
 
@@ -65,7 +66,7 @@ app.use(bodyParser.json());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();
 });
 
@@ -106,7 +107,6 @@ var playlistSchema = new Schema({
     songs: [songSchema]
 });
 
-
 var Song = mongoose.model('Song', songSchema);
 // var Playlist = mongoose.model('Playlist', playlistSchema);
 // var Artist = mongoose.model('Artist', artistSchema);
@@ -130,7 +130,8 @@ passport.use(new LocalStrategy(
             console.log('wrong password');
             return done(null, false, { message: 'Incorrect password.' });
         }
-        console.log('guess this means we got in?');
+        console.log('Login SUCCESSFUL');
+        // set JWT token here
         
         return done(null, user);
       });
@@ -145,11 +146,19 @@ passport.use(new LocalStrategy(
 app.post('/login', 
     passport.authenticate('local', 
         { 
-            successRedirect: '/success',
-            failureRedirect: '/login',
+            // successRedirect: 'http://localhost:3000/',
+            // failureRedirect: 'http://localhost:3000/login',
             session: false
         }
-    )
+    ), (req, res) => {
+        console.log('herro'); // this wont run as `successRedirect` is being used
+        jwt.sign({user: req.user}, 'secretKey', (err, token) => {
+            // let JWTjj = token;
+            res.json({token});
+        });
+        // console.log('JWT: ', JWTjj);
+        
+    }
 );
 
 app.get('/users/:username', (req, res, next) => {
