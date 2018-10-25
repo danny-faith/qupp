@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Row, Input, Button, Toast } from 'react-materialize';
+import { Row, Input, Button } from 'react-materialize';
 import axios from 'axios';
 // import GET_ACCESS_TOKEN from '../accessToken';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 class SearchForm extends Component {
     searchQuery = React.createRef();
     componentDidMount = () => {
-        console.log('local storage', localStorage);
+        // console.log('local storage', localStorage);
     }
     componentWillMount = () => {
         // in setInterval() {
@@ -30,7 +30,7 @@ class SearchForm extends Component {
         event.preventDefault();
         // TODO  filter out disallowed characters ` <- that oen for starters
         // this.searchQuery.current.focus();
-        const searchTerm = this.searchQuery.current.state.value
+        const searchTerm = this.searchQuery.current.state.value;
         // console.log('this.GET_ACCESS_TOKEN(): ', this.GET_ACCESS_TOKEN());
         // var ACCESS_TOKEN = this.GET_ACCESS_TOKEN();
         // console.log(this.searchQuery.current.state.value);
@@ -41,7 +41,7 @@ class SearchForm extends Component {
         })
         .then(res => {
             console.log('res.data: ', res.data);
-            if (res.data.tracks.items == 0){
+            if (res.data.tracks.items === 0){
                 // Materialize toast
                 console.log('what the hell did you search for bro!');
                 // window.Materialize.toast('I am a toast!', 10000);

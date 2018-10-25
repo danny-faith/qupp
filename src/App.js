@@ -5,13 +5,13 @@ import axios from 'axios';
 import SpotifyPlayer from 'react-spotify-player';
 import SearchForm from './components/SearchForm';
 import SearchResultItem from './components/SearchResultItem';
+import Login from './components/Login';
 import PlaylistItem from './components/PlaylistItem';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.scss';
 
 // To make playlist persitant, load playlist from database and put it in `playList` state
 // or maybe localStorage, but that may come later
-
 
 const size = {
   width: '100%',
@@ -34,7 +34,7 @@ class App extends Component {
       this.setState({
         playList: songs
       });
-      console.log('songs: ', songs);
+      // console.log('songs: ', songs);
     });
     // axios.get('http://localhost:3333/authspotify')
     // .then((res) => {
@@ -114,6 +114,8 @@ class App extends Component {
             })}
           </Col>
           <Col s={4} className='grid-example'>
+            <h3 className="center">Login</h3>
+            <Login />
             <h3 className="center">Search</h3>
             <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
             {Object.keys(this.state.searchResults).map(key => {

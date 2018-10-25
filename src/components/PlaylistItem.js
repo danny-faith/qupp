@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
 import { Row, Col, Button } from 'react-materialize';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 class PlaylistItem extends Component {
   
     deleteSongFromPlaylistHandler = () => {
-        console.log('delete a song');
+        // console.log('delete a song');
         this.props.deleteSongFromPlaylist(this.props.data._id);
     }
     playSongHandler = () => {
-        console.log('play a song', this.props.data);
+        // console.log('play a song', this.props.data);
         this.props.playSong(this.props.data.uri);
     }
     render() {
         return(
             <Row>
                 <Col s={2} className=''>
-                    <img src={this.props.data.image} />
+                    <img alt={'alt text'} src={this.props.data.image} />
                 </Col>
                 <Col s={5} className=''>
                     <p>{this.props.data.name}, {this.props.data.album}</p>
@@ -35,4 +35,4 @@ class PlaylistItem extends Component {
     }
 }
   
-  export default PlaylistItem;
+export default PlaylistItem;

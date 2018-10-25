@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Button } from 'react-materialize';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 class SearchResultItem extends Component {
   
@@ -12,7 +12,7 @@ class SearchResultItem extends Component {
     return(
       <Row>
         <Col s={2} className=''>
-          <img src={this.props.data.image} />
+          <img alt={'alt text'} src={this.props.data.image} />
         </Col>
         <Col s={5} className=''>
           <p>{this.props.data.name}, {this.props.data.album}</p>
