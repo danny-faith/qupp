@@ -8,7 +8,7 @@ import * as serviceWorker from './serviceWorker';
 
 // ReactDOM.render(<App />, document.getElementById('root'));
 
-const loggedIn = false;
+const loggedIn = true;
 
 
 

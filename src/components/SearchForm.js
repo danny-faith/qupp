@@ -18,7 +18,7 @@ class SearchForm extends Component {
         //     }
         // }
         // maybe use momentJS to tell when an hour has past
-        axios.get('http://localhost:3333/authspotify')
+        axios.get('http://localhost:8080/authspotify')
         .then((res) => {
             localStorage.setItem('SPOTIFY_ACCESS_TOKEN', res.data.access_token);
         }); 

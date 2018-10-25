@@ -13,6 +13,10 @@ class PlaylistItem extends Component {
         this.props.playSong(this.props.data.uri);
     }
     render() {
+        // let deleteBtn;
+        // if (this.props.editMode) {
+        // deleteBtn = 
+        // }
         return(
             <Row>
                 <Col s={2} className=''>

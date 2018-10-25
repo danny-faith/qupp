@@ -19,8 +19,11 @@ require('dotenv').config();
 
 const {
     CLIENT_ID,
-    CLIENT_SECRET
+    CLIENT_SECRET,
+    PORT:pt
 } = process.env;
+
+const PORT = pt || 8080;
 
 const CLIENT_ID_SECRET_64 = Base64.encode(CLIENT_ID + ':' + CLIENT_SECRET);
 
@@ -41,10 +44,21 @@ const spotifyAxios = axios.create({
     }
 });
 
-const PORT = 3333;
+// const PORT = 8080;
 const app = express();
 
-app.use(cors());
+const whitelist = ['http://localhost:3000'];
+var corsOptions = {
+    origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    }
+  }
+app.use(cors(corsOptions));
+
 app.use(require('cookie-parser')());
 app.use(require('express-session')({
     secret: 'keyboard cat',
@@ -62,13 +76,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 
-// set CORS headers on server as server listens on port 3333
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    next();
-});
+// set CORS headers on server as server listens on port 8080
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//     next();
+// });
 
 mongoose.Promise = global.Promise;
 var promise = mongoose.connect('mongodb://localhost/qupp_db_EBDNBFJN');
@@ -146,16 +160,16 @@ passport.use(new LocalStrategy(
 app.post('/login', 
     passport.authenticate('local', 
         { 
-            // successRedirect: 'http://localhost:3000/',
-            // failureRedirect: 'http://localhost:3000/login',
+            successRedirect: `http://localhost:${PORT}/`,
+            failureRedirect: `http://localhost:${PORT}/login`,
             session: false
         }
     ), (req, res) => {
         console.log('herro'); // this wont run as `successRedirect` is being used
-        jwt.sign({user: req.user}, 'secretKey', (err, token) => {
-            // let JWTjj = token;
-            res.json({token});
-        });
+        // jwt.sign({user: req.user}, 'secretKey', (err, token) => {
+        //     // let JWTjj = token;
+        //     res.json({token});
+        // });
         // console.log('JWT: ', JWTjj);
         
     }
@@ -244,7 +258,7 @@ app.delete('/songs/:songid', (req, res) => {
         res.sendStatus(204);
     });
 });
-
+// app.listen(process.env.PORT || 8080);
 app.listen(PORT, function() {
-    console.log('listening on port 3333');
+    console.log('listening on port 8080');
 });

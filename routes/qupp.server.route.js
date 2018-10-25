@@ -6,7 +6,7 @@ const Base64 = require('js-base64').Base64;
 // require('../models/qupp.models.js');
 
 
-const PORT = 3333;
+const PORT = 8080;
 
 const {
     CLIENT_ID,
@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 
-// set CORS headers on server as server listens on port 3333
+// set CORS headers on server as server listens on port 8080
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
@@ -98,5 +98,5 @@ app.delete('/songs/:songid', (req, res) => {
 });
 
 app.listen(PORT, function() {
-    console.log('listening on port 3333');
+    console.log('listening on port 8080');
 });

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-materialize';
+import { Row, Col, Button } from 'react-materialize';
 import axios from 'axios';
 // import songs from './loadPlaylist';
 import SpotifyPlayer from 'react-spotify-player';
@@ -24,11 +24,12 @@ class App extends Component {
   state = {
     searchResults: [],
     playList: [],
-    songToPlayUri: ''
+    songToPlayUri: '',
+    editMode: false
   }
   componentDidMount = () => {
     var songs = {};
-    axios.get('http://localhost:3333/songs/')
+    axios.get('http://localhost:8080/songs/')
     .then((res) => {
       var songs = res.data;
       this.setState({
@@ -36,7 +37,7 @@ class App extends Component {
       });
       // console.log('songs: ', songs);
     });
-    // axios.get('http://localhost:3333/authspotify')
+    // axios.get('http://localhost:8080/authspotify')
     // .then((res) => {
     //   console.log('Anything??');
       
@@ -59,7 +60,7 @@ class App extends Component {
       this.setState({
         playList: playList
       });
-      axios.post(`http://localhost:3333/songs/`, song)
+      axios.post(`http://localhost:8080/songs/`, song)
         .then(res => {
           console.log(res);
           // SHOULD BE ERROR CATCHING IN HERE!!!
@@ -70,6 +71,12 @@ class App extends Component {
     //   console.log('it was already there');
     // }
   }
+  handleEditModeBtn = () => {
+    this.setState((prevState) => ({
+      editMode: !prevState.editMode
+    }));
+    console.log('this.state.editMode: ', this.state.editMode);
+  }
   playSong = songUri => {
     // update songToPlay state so the Spotify player re-renders
     const songToPlayCopy = [...this.state.songToPlayUri];
@@ -79,7 +86,7 @@ class App extends Component {
   }
   deleteSongFromPlaylist = songToDeleteId => {
 
-    axios.delete(`http://localhost:3333/songs/${songToDeleteId}`)
+    axios.delete(`http://localhost:8080/songs/${songToDeleteId}`)
       .then(() => {
         // Copy state.playList
         const playlistCopy = [...this.state.playList];
@@ -109,8 +116,9 @@ class App extends Component {
         <Row>
           <Col s={4} className='grid-example'>
             <h3 className="center">Playlist</h3>
+            <Button onClick={this.handleEditModeBtn}>Edit</Button>
             {Object.keys(this.state.playList).map(key => {
-                return <PlaylistItem playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playList[key]} key={key} />
+                return <PlaylistItem editMode={this.state.editMode} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playList[key]} key={key} />
             })}
           </Col>
           <Col s={4} className='grid-example'>
