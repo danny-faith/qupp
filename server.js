@@ -7,12 +7,12 @@ const Base64 = require('js-base64').Base64;
 var passport = require('passport');
 const jwt = require('jsonwebtoken');
 var LocalStrategy = require('passport-local').Strategy;
-
-
+const Daniel = require('./routes/Daniel');
 
 // require('./routes/qupp.server.route.js');
 const User = require('./models/User');
 // const Playlist = require('./models/Playlist');
+
 
 
 require('dotenv').config();
@@ -46,6 +46,7 @@ const spotifyAxios = axios.create({
 
 // const PORT = 8080;
 const app = express();
+// app.use('/daniel', Daniel);
 
 const whitelist = ['http://localhost:3000'];
 var corsOptions = {
