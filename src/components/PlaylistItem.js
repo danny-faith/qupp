@@ -13,10 +13,10 @@ class PlaylistItem extends Component {
         this.props.playSong(this.props.data.uri);
     }
     render() {
-        // let deleteBtn;
-        // if (this.props.editMode) {
-        // deleteBtn = 
-        // }
+        let deleteBtn;
+        if (this.props.editMode) {
+            deleteBtn = <Button className="btn-small align-right red lighten-2" onClick={this.deleteSongFromPlaylistHandler}>Delete</Button>;
+        }
         return(
             <Row>
                 <Col s={2} className=''>
@@ -31,7 +31,7 @@ class PlaylistItem extends Component {
                     </p>
                 </Col>
                 <Col s={5} className=''>
-                    <Button className="btn-small align-right red lighten-2" onClick={this.deleteSongFromPlaylistHandler}>Delete</Button>
+                    {deleteBtn}
                     <Button className="btn-small align-right" onClick={this.playSongHandler}>Play</Button>
                 </Col>
             </Row>
