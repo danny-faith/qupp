@@ -200,12 +200,13 @@ app.post('/login',
 
 /* Routes START
  *****************************************/
-
+var usersRouter = require('./routes/api/users.route');
 var songsRouter = require('./routes/api/songs.route');
 var spotifyRouter = require('./routes/api/authSpotify.route');
-// var deleteSongRouter = require('./routes/api/deleteSong.route');
+
 app.use('/songs', songsRouter);
 app.use('/authspotify', spotifyRouter);
+app.use('/users', usersRouter);
 // app.use('/songs', addSongRouter);
 
 /* Routes END
@@ -228,22 +229,22 @@ app.get('/users', (req, res) => {
     });
 });
 
-app.post('/user', (req, res) => {
-    const newUser = req.body;
-    // console.log(req.body.password);
-    const user = new User(newUser);
-    user.setPassword(req.body.password);
-    // console.log(passwordSuper);
+// app.post('/user', (req, res) => {
+//     const newUser = req.body;
+//     // console.log(req.body.password);
+//     const user = new User(newUser);
+//     user.setPassword(req.body.password);
+//     // console.log(passwordSuper);
     
-    user.save(function(err, userModel) {
-        if (err) {
-            // as I dont send a status, axios doesnt realise theres an error and so it doesn get caught by the catch.
-            // add status back in and figure out why you cant send a status and the err object
-            return res.send(err);
-        }
-        res.status(201).send(userModel);
-    })
-});
+//     user.save(function(err, userModel) {
+//         if (err) {
+//             // as I dont send a status, axios doesnt realise theres an error and so it doesn get caught by the catch.
+//             // add status back in and figure out why you cant send a status and the err object
+//             return res.send(err);
+//         }
+//         res.status(201).send(userModel);
+//     })
+// });
 
 // app.get('/songs', (req, res) => {
 //     Song.find({}).exec(function(err, songs) {
