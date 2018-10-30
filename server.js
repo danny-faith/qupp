@@ -203,8 +203,10 @@ app.post('/login',
 /* Routes START
  *****************************************/
 
-var songRouter = require('./routes/api/song.route');
-app.use('/songs', songRouter);
+var songsRouter = require('./routes/api/songs.route');
+// var deleteSongRouter = require('./routes/api/deleteSong.route');
+app.use('/songs', songsRouter);
+// app.use('/songs', addSongRouter);
 
 /* Routes END
  *****************************************/
@@ -285,14 +287,14 @@ app.put('/songs/:songid', (req, res) => {
     });
 });
 
-app.delete('/songs/:songid', (req, res) => {
-    var songToDelete = req.params.songid;
-    // console.log('songToDelete: ', songToDelete);
-    Song.deleteOne({ _id : songToDelete }, function(err) {
-        if (err) return handleError(err);
-        res.sendStatus(204);
-    });
-});
+// app.delete('/songs/:songid', (req, res) => {
+//     var songToDelete = req.params.songid;
+//     // console.log('songToDelete: ', songToDelete);
+//     Song.deleteOne({ _id : songToDelete }, function(err) {
+//         if (err) return handleError(err);
+//         res.sendStatus(204);
+//     });
+// });
 // app.listen(process.env.PORT || 8080);
 app.listen(PORT, function() {
     console.log('listening on port 8080');
