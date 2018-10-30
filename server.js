@@ -77,31 +77,29 @@ var playlistSchema = new Schema({
 require('dotenv').config();
 
 const {
-    CLIENT_ID,
-    CLIENT_SECRET,
     PORT:pt
 } = process.env;
 
 const PORT = pt || 8080;
 
-const CLIENT_ID_SECRET_64 = Base64.encode(CLIENT_ID + ':' + CLIENT_SECRET);
+// const CLIENT_ID_SECRET_64 = Base64.encode(CLIENT_ID + ':' + CLIENT_SECRET);
 
 // import routes
 // import endPoints from './routes/qupp.server.route';
 // TODO: add RegEx to schemas
 // TODO: use MAterilize modal to tell user if a duplicate has been entered
 
-const spotifyAxios = axios.create({
-    baseURL: 'https://accounts.spotify.com/api/token',
-    timeout: 1000,
-    headers: {
-        'Authorization': 'Basic ' + CLIENT_ID_SECRET_64,
-        'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    params: {
-        grant_type: 'client_credentials'
-    }
-});
+// const spotifyAxios = axios.create({
+//     baseURL: 'https://accounts.spotify.com/api/token',
+//     timeout: 1000,
+//     headers: {
+//         'Authorization': 'Basic ' + CLIENT_ID_SECRET_64,
+//         'Content-Type': 'application/x-www-form-urlencoded'
+//     },
+//     params: {
+//         grant_type: 'client_credentials'
+//     }
+// });
 
 // const PORT = 8080;
 const app = express();
@@ -204,8 +202,10 @@ app.post('/login',
  *****************************************/
 
 var songsRouter = require('./routes/api/songs.route');
+var spotifyRouter = require('./routes/api/authSpotify.route');
 // var deleteSongRouter = require('./routes/api/deleteSong.route');
 app.use('/songs', songsRouter);
+app.use('/authspotify', spotifyRouter);
 // app.use('/songs', addSongRouter);
 
 /* Routes END
@@ -245,24 +245,24 @@ app.post('/user', (req, res) => {
     })
 });
 
-app.get('/songs', (req, res) => {
-    Song.find({}).exec(function(err, songs) {
-        res.status(200).json(songs);
-    });
-});
+// app.get('/songs', (req, res) => {
+//     Song.find({}).exec(function(err, songs) {
+//         res.status(200).json(songs);
+//     });
+// });
 
-app.get('/authspotify', (req, res) => {
-    spotifyAxios.post()
-        .then((response) => {
-            // console.log(response.data.access_token);
-            res.status(200).json(response.data);
-        })
-        .catch((error) => {
-            // console.log(error);
-            res.status(500).json(error);
-        }
-    );
-});
+// app.get('/authspotify', (req, res) => {
+//     spotifyAxios.post()
+//         .then((response) => {
+//             // console.log(response.data.access_token);
+//             res.status(200).json(response.data);
+//         })
+//         .catch((error) => {
+//             // console.log(error);
+//             res.status(500).json(error);
+//         }
+//     );
+// });
 
 // app.post('/songs', (req, res) => {
 //     var newSong = req.body;

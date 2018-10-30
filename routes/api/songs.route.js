@@ -1,8 +1,14 @@
-var express = require('express');
-var Song = require('../../models/Song');
-var router = express.Router();
+const express = require('express');
+const Song = require('../../models/Song');
+const router = express.Router();
 
 /* GET home page. */
+
+router.get('/', (req, res) => {
+    Song.find({}).exec(function(err, songs) {
+        res.status(200).json(songs);
+    });
+});
 
 router.post('/', (req, res) => {
   var newSong = req.body;
