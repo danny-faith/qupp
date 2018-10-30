@@ -5,10 +5,10 @@ import axios from 'axios';
 import SpotifyPlayer from 'react-spotify-player';
 import SearchForm from './components/SearchForm';
 import SearchResultItem from './components/SearchResultItem';
-import Login from './components/Login';
 import PlaylistItem from './components/PlaylistItem';
-// import logo from './logo.svg';
+import logo from './logo-v2.svg';
 import './App.scss';
+import CurrentUser from './components/CurrentUser';
 
 // To make playlist persitant, load playlist from database and put it in `playList` state
 // or maybe localStorage, but that may come later
@@ -109,9 +109,12 @@ class App extends Component {
   }
   render() {
     return (
-      <>
+      <div className="container">
         <Row>
-          <Col s={12} className='center'><h1>qupp</h1></Col>
+          <Col s={2} offset={"s5"} className='center logo'><img src={logo} /></Col>
+          <Col s={3} className=''>
+            <CurrentUser currentUser={this.props.currentUser} />
+          </Col>
         </Row>
         <Row>
           <Col s={4} className='grid-example'>
@@ -122,8 +125,6 @@ class App extends Component {
             })}
           </Col>
           <Col s={4} className='grid-example'>
-            <h3 className="center">Login</h3>
-            <Login />
             <h3 className="center">Search</h3>
             <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
             {Object.keys(this.state.searchResults).map(key => {
@@ -140,7 +141,7 @@ class App extends Component {
             />
           </Col>
         </Row>
-      </>
+      </div>
     );
   }
 }

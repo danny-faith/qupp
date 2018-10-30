@@ -40,13 +40,10 @@ class SearchForm extends Component {
             }
         })
         .then(res => {
-            console.log('res.data: ', res.data);
-            if (res.data.tracks.items === 0){
+            // console.log('res.data: ', res.data);
+            if (res.data.tracks.items.length === 0){
                 // Materialize toast
-                console.log('what the hell did you search for bro!');
-                // window.Materialize.toast('I am a toast!', 10000);
-                console.log('window.Materialize: ', window.Materialize);
-                
+                window.M.toast({html: 'No tracks found!', classes: 'red lighten-1'});
                 // <Toast toast="here you go!">
                 //     Toast
                 // </Toast>

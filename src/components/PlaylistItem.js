@@ -22,7 +22,7 @@ class PlaylistItem extends Component {
                 <Col s={2} className=''>
                     <img alt={'alt text'} src={this.props.data.image} />
                 </Col>
-                <Col s={5} className=''>
+                <Col s={6} className=''>
                     <p>{this.props.data.name}, {this.props.data.album}</p>
                     <p>Artists:
                         {this.props.data.artists.map(key => (
@@ -30,9 +30,9 @@ class PlaylistItem extends Component {
                         ))}
                     </p>
                 </Col>
-                <Col s={5} className=''>
+                <Col s={4} className=''>
                     {deleteBtn}
-                    <Button className="btn-small align-right" onClick={this.playSongHandler}>Play</Button>
+                    <Button waves="light" className="btn-small right" onClick={this.playSongHandler}>Play</Button>
                 </Col>
             </Row>
         );

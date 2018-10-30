@@ -9,9 +9,68 @@ const jwt = require('jsonwebtoken');
 var LocalStrategy = require('passport-local').Strategy;
 
 
+mongoose.Promise = global.Promise;
+var promise = mongoose.connect('mongodb://localhost/qupp_db_EBDNBFJN');
+
+promise.then(function(db) {
+  console.log('DATABASE CONNECTED!!');
+}).catch(function(err){
+  console.log('CONNECTION ERROR', err);
+});
+
+var Schema = mongoose.Schema;
+// var artistSchema = new Schema({
+//     name: {
+//         type: String,
+//         required: true
+//     }
+// });
+// var songSchema = new Schema({
+//     spotId: {
+//         type: String,
+//         unique : true,
+//         required : true,
+//         dropDups: true
+//     },
+//     name: {
+//         type: String,
+//         required : true
+//     },
+//     duration: Number,
+//     artists: [artistSchema],
+//     uri: String,
+//     album: String,
+//     image: String
+// });
+// var playlistSchema = new Schema({
+//     name: String,
+//     desc: String,
+//     createdAt : {
+//         type: Date,
+//         default: Date.now
+//     },
+//     songs: [songSchema]
+// });
+
+// var Song = mongoose.model('Song', songSchema);
 
 // require('./routes/qupp.server.route.js');
 const User = require('./models/User');
+const Song = require('./models/Song');
+const songSchema = Song.schema.obj;
+
+var playlistSchema = new Schema({
+    name: String,
+    desc: String,
+    createdAt : {
+        type: Date,
+        default: Date.now
+    },
+    songs: [songSchema]
+});
+
+// console.log(Song.schema.obj);
+
 // const Playlist = require('./models/Playlist');
 
 
@@ -47,17 +106,18 @@ const spotifyAxios = axios.create({
 // const PORT = 8080;
 const app = express();
 
-const whitelist = ['http://localhost:3000'];
-var corsOptions = {
-    origin: function (origin, callback) {
-      if (whitelist.indexOf(origin) !== -1) {
-        callback(null, true)
-      } else {
-        callback(new Error('Not allowed by CORS'))
-      }
-    }
-  }
-app.use(cors(corsOptions));
+// const whitelist = ['http://localhost:8080'];
+// var corsOptions = {
+//     origin: function (origin, callback) {
+//       if (whitelist.indexOf(origin) !== -1) {
+//         callback(null, true)
+//       } else {
+//         callback(new Error('Not allowed by CORS...'))
+//       }
+//     }
+//   }
+// app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(require('cookie-parser')());
 app.use(require('express-session')({
@@ -77,51 +137,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // set CORS headers on server as server listens on port 8080
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-//     next();
-// });
-
-mongoose.Promise = global.Promise;
-var promise = mongoose.connect('mongodb://localhost/qupp_db_EBDNBFJN');
-
-promise.then(function(db) {
-  console.log('DATABASE CONNECTED!!');
-}).catch(function(err){
-  console.log('CONNECTION ERROR', err);
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
 });
 
-var Schema = mongoose.Schema;
-var artistSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    }
-});
-var songSchema = new Schema({
-    spotId: {
-        type: String,
-        unique : true,
-        required : true,
-        dropDups: true
-    },
-    name: {
-        type: String,
-        required : true
-    },
-    duration: Number,
-    artists: [artistSchema],
-    uri: String,
-    album: String,
-    image: String
-});
-var playlistSchema = new Schema({
-    songs: [songSchema]
-});
-
-var Song = mongoose.model('Song', songSchema);
 // var Playlist = mongoose.model('Playlist', playlistSchema);
 // var Artist = mongoose.model('Artist', artistSchema);
 
@@ -165,7 +187,10 @@ app.post('/login',
             session: false
         }
     ), (req, res) => {
-        console.log('herro'); // this wont run as `successRedirect` is being used
+        
+        console.log('herro'); // this wont run if `successRedirect` is being used
+        // res.redirect('/');
+        // res.redirect(`/?username=${req.user.username}`);        
         // jwt.sign({user: req.user}, 'secretKey', (err, token) => {
         //     // let JWTjj = token;
         //     res.json({token});
@@ -192,17 +217,18 @@ app.get('/users', (req, res) => {
     });
 });
 
-app.post('/users', (req, res) => {
+app.post('/user', (req, res) => {
     const newUser = req.body;
-    console.log(req.body.password);
+    // console.log(req.body.password);
     const user = new User(newUser);
     user.setPassword(req.body.password);
     // console.log(passwordSuper);
     
     user.save(function(err, userModel) {
         if (err) {
-            console.log(err);
-            return res.status(500).send(err);
+            // as I dont send a status, axios doesnt realise theres an error and so it doesn get caught by the catch.
+            // add status back in and figure out why you cant send a status and the err object
+            return res.send(err);
         }
         res.status(201).send(userModel);
     })
@@ -221,7 +247,7 @@ app.get('/authspotify', (req, res) => {
             res.status(200).json(response.data);
         })
         .catch((error) => {
-            console.log(error);
+            // console.log(error);
             res.status(500).json(error);
         }
     );

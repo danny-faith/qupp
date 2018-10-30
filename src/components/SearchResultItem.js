@@ -23,7 +23,7 @@ class SearchResultItem extends Component {
           </p>
         </Col>
         <Col s={5} className=''>
-          <Button className="btn-small right" onClick={this.addSongToPlaylistHandler}>Add</Button>
+          <Button waves="light" className="btn-small right" onClick={this.addSongToPlaylistHandler}>Add</Button>
         </Col>
       </Row>
     );

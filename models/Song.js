@@ -26,7 +26,6 @@ var songSchema = new Schema({
     image: String
 });
 
-
 var Song = mongoose.model('Song', songSchema);
 
 module.exports = Song;
