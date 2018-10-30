@@ -29,7 +29,7 @@ class LoginForm extends Component {
         .then(res => {
           console.log('res: ', res);
           console.log('only runs when login successful??');
-          this.props.setCurrentUser({username: 'Bucky O\'Hare', avatar: 'http://placehold.it/60x60'});
+          this.props.setCurrentUser({username: 'Bucky O\'Hare', avatar: 'http://www.honcho-sfx.com/blog/wp-content/uploads/2016/11/Bucky-OHare-toys-300x300.jpg'});
         // console.log(this.props);
         
           // success!

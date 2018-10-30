@@ -12,25 +12,20 @@ class Index extends Component {
     state = {
         loggedIn: true,
         currentUser: {
-            username: 'DannyWobble',
-            avatar: 'http://placehold.it/30x30'
+            username: 'John Smith',
+            avatar: 'https://bodiezpro.com/wp-content/uploads/2015/09/medium-default-avatar.png'
         }
     }
     setCurrentUser = user => {
-        // console.log('setCurrentUser', user);
-        // let copyOfUser = [...this.state.currentUser];
-        const {username, avatar} = user;
-        console.log(username, avatar);
+        let currentUser = {...this.state.currentUser};
+        const {username, avatar} = user;        
+        currentUser = {
+            username,
+            avatar
+        }        
         this.setState({
-            currentUser: {
-                username,
-                avatar
-            }
-        })
-        // let copyOfUser = {...this.state.user, [username]: username};
-        // this.setState({currentUser})
-        // console.log(copyOfUser);
-        
+            currentUser
+        })   
     }
     render() {
         return(
