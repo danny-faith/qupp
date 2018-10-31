@@ -10,7 +10,7 @@ import logo from './logo-v2.svg';
 import './App.scss';
 import CurrentUser from './components/CurrentUser';
 
-// To make playlist persitant, load playlist from database and put it in `playList` state
+// To make playlist persitant, load playlist from database and put it in `playlist` state
 // or maybe localStorage, but that may come later
 
 const size = {
@@ -23,7 +23,7 @@ const theme = 'black'; // or 'white'
 class App extends Component {
   state = {
     searchResults: [],
-    playList: [],
+    playlist: [],
     songToPlayUri: '',
     editMode: false
   }
@@ -33,7 +33,7 @@ class App extends Component {
     .then((res) => {
       var songs = res.data;
       this.setState({
-        playList: songs
+        playlist: songs
       });
       // console.log('songs: ', songs);
     });
@@ -53,12 +53,12 @@ class App extends Component {
   }
   addSongToPlaylist = song => {
 
-    const playList = this.state.playList;
+    const playlist = this.state.playlist;
     // TODO: check if object item is already there!!
-    // if(!playList.hasOwnProperty(song)) {
-      playList[song.spotId] = song;
+    // if(!playlist.hasOwnProperty(song)) {
+      playlist[song.spotId] = song;
       this.setState({
-        playList: playList
+        playlist: playlist
       });
       axios.post(`http://localhost:8080/songs/`, song)
         .then(res => {
@@ -88,8 +88,8 @@ class App extends Component {
 
     axios.delete(`http://localhost:8080/songs/${songToDeleteId}`)
       .then(() => {
-        // Copy state.playList
-        const playlistCopy = [...this.state.playList];
+        // Copy state.playlist
+        const playlistCopy = [...this.state.playlist];
         // Find the index of the object we want to delete
         const index = playlistCopy.findIndex(obj => obj._id === songToDeleteId);
         // Remove chosen object to delete by adding all other object back in around our chosen object
@@ -98,7 +98,7 @@ class App extends Component {
             ...playlistCopy.slice(index + 1)
         ];
         this.setState({
-          playList: newPlaylist
+          playlist: newPlaylist
         });
       })
       .catch(function (error) {
@@ -120,8 +120,8 @@ class App extends Component {
           <Col s={4} className='grid-example'>
             <h3 className="center">Playlist</h3>
             <Button onClick={this.handleEditModeBtn}>Edit</Button>
-            {Object.keys(this.state.playList).map(key => {
-                return <PlaylistItem editMode={this.state.editMode} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playList[key]} key={key} />
+            {Object.keys(this.state.playlist).map(key => {
+                return <PlaylistItem editMode={this.state.editMode} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playlist[key]} key={key} />
             })}
           </Col>
           <Col s={4} className='grid-example'>

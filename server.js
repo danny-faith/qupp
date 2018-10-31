@@ -7,7 +7,7 @@ const Base64 = require('js-base64').Base64;
 var passport = require('passport');
 const jwt = require('jsonwebtoken');
 var LocalStrategy = require('passport-local').Strategy;
-
+require('dotenv').config();
 
 mongoose.Promise = global.Promise;
 var promise = mongoose.connect('mongodb://localhost/qupp_db_EBDNBFJN');
@@ -19,62 +19,13 @@ promise.then(function(db) {
 });
 
 var Schema = mongoose.Schema;
-// var artistSchema = new Schema({
-//     name: {
-//         type: String,
-//         required: true
-//     }
-// });
-// var songSchema = new Schema({
-//     spotId: {
-//         type: String,
-//         unique : true,
-//         required : true,
-//         dropDups: true
-//     },
-//     name: {
-//         type: String,
-//         required : true
-//     },
-//     duration: Number,
-//     artists: [artistSchema],
-//     uri: String,
-//     album: String,
-//     image: String
-// });
-// var playlistSchema = new Schema({
-//     name: String,
-//     desc: String,
-//     createdAt : {
-//         type: Date,
-//         default: Date.now
-//     },
-//     songs: [songSchema]
-// });
 
-// var Song = mongoose.model('Song', songSchema);
-
-// require('./routes/qupp.server.route.js');
 const User = require('./models/User');
-const Song = require('./models/Song');
-const songSchema = Song.schema.obj;
-
-var playlistSchema = new Schema({
-    name: String,
-    desc: String,
-    createdAt : {
-        type: Date,
-        default: Date.now
-    },
-    songs: [songSchema]
-});
-
-// console.log(Song.schema.obj);
-
+// const Song = require('./models/Song');
 // const Playlist = require('./models/Playlist');
+// const songSchema = Song.schema.obj;
+// songs: [songSchema]
 
-
-require('dotenv').config();
 
 const {
     PORT:pt
@@ -145,13 +96,6 @@ app.use(function(req, res, next) {
 // var Playlist = mongoose.model('Playlist', playlistSchema);
 // var Artist = mongoose.model('Artist', artistSchema);
 
-// app.use('')
-
-// app.post('/login', (req, res) => {
-//     console.log('trying to login: ', req.body);
-//     res.status(200).send(req.body);
-// });
-
 passport.use(new LocalStrategy(
     function(username, password, done) {
       User.findOne({ username: username }, function(err, user) {
@@ -180,7 +124,7 @@ passport.use(new LocalStrategy(
 app.post('/login', 
     passport.authenticate('local', 
         { 
-            successRedirect: `http://localhost:${PORT}/`,
+            successRedirect: `http://localhost:3001/`,
             failureRedirect: `http://localhost:${PORT}/login`,
             session: false
         }
@@ -202,101 +146,19 @@ app.post('/login',
  *****************************************/
 var usersRouter = require('./routes/api/users.route');
 var songsRouter = require('./routes/api/songs.route');
+var playlistRouter = require('./routes/api/playlist.route');
 var spotifyRouter = require('./routes/api/authSpotify.route');
 
-app.use('/songs', songsRouter);
-app.use('/authspotify', spotifyRouter);
 app.use('/users', usersRouter);
-// app.use('/songs', addSongRouter);
+app.use('/songs', songsRouter);
+app.use('/playlist', playlistRouter);
+app.use('/authspotify', spotifyRouter);
 
 /* Routes END
  *****************************************/
 
-app.get('/users/:username', (req, res, next) => {
-    var { username } = req.params;
-    User.find({ username: username }).exec(function(err, user) {
-        if (err) {
-            next();
-        } else {
-            res.status(200).json(user);
-        }
-    });
-});
 
-app.get('/users', (req, res) => {
-    User.find({}).exec(function(err, songs) {
-        res.status(200).json(users);
-    });
-});
-
-// app.post('/user', (req, res) => {
-//     const newUser = req.body;
-//     // console.log(req.body.password);
-//     const user = new User(newUser);
-//     user.setPassword(req.body.password);
-//     // console.log(passwordSuper);
-    
-//     user.save(function(err, userModel) {
-//         if (err) {
-//             // as I dont send a status, axios doesnt realise theres an error and so it doesn get caught by the catch.
-//             // add status back in and figure out why you cant send a status and the err object
-//             return res.send(err);
-//         }
-//         res.status(201).send(userModel);
-//     })
+app.listen(process.env.PORT || 8080);
+// app.listen(PORT, function() {
+//     console.log('listening on port 8080');
 // });
-
-// app.get('/songs', (req, res) => {
-//     Song.find({}).exec(function(err, songs) {
-//         res.status(200).json(songs);
-//     });
-// });
-
-// app.get('/authspotify', (req, res) => {
-//     spotifyAxios.post()
-//         .then((response) => {
-//             // console.log(response.data.access_token);
-//             res.status(200).json(response.data);
-//         })
-//         .catch((error) => {
-//             // console.log(error);
-//             res.status(500).json(error);
-//         }
-//     );
-// });
-
-// app.post('/songs', (req, res) => {
-//     var newSong = req.body;
-//     console.log(newSong);
-//     var song = new Song(newSong);
-//     song.save(function(err, songModel) {
-//         if (err) {
-//             console.log(err);
-//             return res.status(500).send(err);
-//         }
-//         res.status(201).send(songModel);
-//     })
-// });
-
-app.put('/songs/:songid', (req, res) => {
-    var { songid } = req.params;
-    // console.log(songid);
-    Song.updateOne({ _id: songid }, req.body, function (err, raw) {
-        if (err) return handleError(err);
-        console.log('The raw response from Mongo was ', raw);
-        return res.sendStatus(200);
-    });
-});
-
-// app.delete('/songs/:songid', (req, res) => {
-//     var songToDelete = req.params.songid;
-//     // console.log('songToDelete: ', songToDelete);
-//     Song.deleteOne({ _id : songToDelete }, function(err) {
-//         if (err) return handleError(err);
-//         res.sendStatus(204);
-//     });
-// });
-// app.listen(process.env.PORT || 8080);
-app.listen(PORT, function() {
-    console.log('listening on port 8080');
-});

@@ -21,4 +21,21 @@ router.post('/', (req, res) => {
     })
 });
 
+router.get('/:username', (req, res, next) => {
+    var { username } = req.params;
+    User.find({ username: username }).exec(function(err, user) {
+        if (err) {
+            next();
+        } else {
+            res.status(200).json(user);
+        }
+    });
+});
+
+router.get('/', (req, res) => {
+    User.find({}).exec(function(err, users) {
+        res.status(200).json(users);
+    });
+});
+
 module.exports = router;

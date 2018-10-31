@@ -4,12 +4,11 @@
   "description": "App that allows users to create playlists using Spotify's API",
   "main": "server.js",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:8080",
   "author": "Daniel Blythe",
   "license": "ISC",
   "dependencies": {

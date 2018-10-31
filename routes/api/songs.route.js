@@ -32,4 +32,14 @@ router.delete('/:songid', (req, res) => {
     });
 });
 
+/* NOT CURRENTLY IN USE */
+router.put('/songs/:songid', (req, res) => {
+    var { songid } = req.params;
+    Song.updateOne({ _id: songid }, req.body, function (err, raw) {
+        if (err) return handleError(err);
+        return res.sendStatus(200);
+    });
+});
+/* NOT CURRENTLY IN USE */
+
 module.exports = router;
