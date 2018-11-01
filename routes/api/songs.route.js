@@ -34,7 +34,7 @@ router.delete('/:songid', (req, res) => {
 
 /* NOT CURRENTLY IN USE */
 router.put('/songs/:songid', (req, res) => {
-    var { songid } = req.params;
+    var { songid } = req.body;
     Song.updateOne({ _id: songid }, req.body, function (err, raw) {
         if (err) return handleError(err);
         return res.sendStatus(200);

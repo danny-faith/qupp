@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Row, Col, Button } from 'react-materialize';
+import { Row, Col, Button, Input } from 'react-materialize';
 import axios from 'axios';
 // import songs from './loadPlaylist';
 import SpotifyPlayer from 'react-spotify-player';
 import SearchForm from './components/SearchForm';
 import SearchResultItem from './components/SearchResultItem';
 import PlaylistItem from './components/PlaylistItem';
+import PlaylistRename from './components/PlaylistRename';
 import logo from './logo-v2.svg';
 import './App.scss';
 import CurrentUser from './components/CurrentUser';
@@ -23,17 +24,23 @@ const theme = 'black'; // or 'white'
 class App extends Component {
   state = {
     searchResults: [],
-    playlist: [],
+    playlist: {
+      songs: [],
+      name: '2112 playlist'
+    },
     songToPlayUri: '',
     editMode: false
   }
+
   componentDidMount = () => {
     var songs = {};
     axios.get('http://localhost:8080/songs/')
     .then((res) => {
       var songs = res.data;
+      const playlist = {...this.state.playlist};
+      playlist.songs = songs;
       this.setState({
-        playlist: songs
+        playlist
       });
       // console.log('songs: ', songs);
     });
@@ -53,12 +60,12 @@ class App extends Component {
   }
   addSongToPlaylist = song => {
 
-    const playlist = this.state.playlist;
-    // TODO: check if object item is already there!!
+    const playlist = {...this.state.playlist};
+    // TODO: check if object item is already there otherwise it ends up in state and shows. But then once refresed isn't there as DB rejected it based on schema
     // if(!playlist.hasOwnProperty(song)) {
-      playlist[song.spotId] = song;
+      playlist.songs[song.spotId] = song;
       this.setState({
-        playlist: playlist
+        playlist
       });
       axios.post(`http://localhost:8080/songs/`, song)
         .then(res => {
@@ -77,6 +84,18 @@ class App extends Component {
     }));
     console.log('this.state.editMode: ', this.state.editMode);
   }
+  updatePlaylistName = (newPlaylistName) => {
+    console.log('newPlaylistName: ', newPlaylistName);
+    
+    // console.log(playlistInput);
+    
+    const playlistCopy = {...this.state.playlist};
+    playlistCopy.name = newPlaylistName;
+    this.setState({
+      playlist: playlistCopy,
+      editMode: false
+    });
+  }
   playSong = songUri => {
     // update songToPlay state so the Spotify player re-renders
     const songToPlayCopy = [...this.state.songToPlayUri];
@@ -89,7 +108,7 @@ class App extends Component {
     axios.delete(`http://localhost:8080/songs/${songToDeleteId}`)
       .then(() => {
         // Copy state.playlist
-        const playlistCopy = [...this.state.playlist];
+        const playlistCopy = [...this.state.playlist.songs];
         // Find the index of the object we want to delete
         const index = playlistCopy.findIndex(obj => obj._id === songToDeleteId);
         // Remove chosen object to delete by adding all other object back in around our chosen object
@@ -98,7 +117,9 @@ class App extends Component {
             ...playlistCopy.slice(index + 1)
         ];
         this.setState({
-          playlist: newPlaylist
+          playlist: {
+            songs: newPlaylist
+          }
         });
       })
       .catch(function (error) {
@@ -108,20 +129,34 @@ class App extends Component {
     // TODO remove form DB. Maybe just 
   }
   render() {
+    let playlistName;
+    if (this.state.editMode) {
+      playlistName = <PlaylistRename updatePlaylistName={this.updatePlaylistName} playlistName={this.state.playlist.name} />
+    } else {
+      playlistName = <h3 className="center">{this.state.playlist.name}</h3>;
+    }
     return (
       <div className="container">
         <Row>
-          <Col s={2} offset={"s5"} className='center logo'><img src={logo} /></Col>
+          <Col s={2} offset={"s5"} className='center logo'>
+            <img src={logo} />
+          </Col>
           <Col s={3} className=''>
             <CurrentUser currentUser={this.props.currentUser} />
           </Col>
         </Row>
         <Row>
           <Col s={4} className='grid-example'>
-            <h3 className="center">Playlist</h3>
-            <Button onClick={this.handleEditModeBtn}>Edit</Button>
-            {Object.keys(this.state.playlist).map(key => {
-                return <PlaylistItem editMode={this.state.editMode} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playlist[key]} key={key} />
+            <Row>
+              <Col s={8} offset={"s2"}>
+                {playlistName}
+              </Col>
+              <Col s={2} className="valign-wrapper playlistSettingsCol">
+                <Button onClick={this.handleEditModeBtn} icon="settings" className="right orange lighten-2"></Button>
+              </Col>
+            </Row>
+            {Object.keys(this.state.playlist.songs).map(key => {
+                return <PlaylistItem editMode={this.state.editMode} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playlist.songs[key]} key={key} />
             })}
           </Col>
           <Col s={4} className='grid-example'>

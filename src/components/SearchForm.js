@@ -82,7 +82,7 @@ class SearchForm extends Component {
                 <form onSubmit={this.handleFormSubmit}>
                     <Button waves="light">Search</Button>
                     <Row>
-                        <Input id={"searchInput"} defaultValue='when doves cry' ref={this.searchQuery} placeholder="Prince I would die for you" s={12} label="Track search" />
+                        <Input id={"searchInput"} defaultValue='hello' ref={this.searchQuery} placeholder="Prince I would die for you" s={12} label="Track search" />
                     </Row>
                 </form>
             </Row>
