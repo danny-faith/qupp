@@ -6,8 +6,6 @@ import App from './App';
 import LoginOrRegister from './LoginOrRegister';
 import * as serviceWorker from './serviceWorker';
 
-// ReactDOM.render(<App />, document.getElementById('root'));
-
 class Index extends Component {
     state = {
         loggedIn: false,
@@ -45,7 +43,7 @@ class Index extends Component {
                         ) : (
                             <Redirect to="/login"/>
                         )
-                        )}/>
+                    )}/>
                     <Route path="/login" render={()=> (
                         this.state.loggedIn ? (
                             <Redirect to="/" />
