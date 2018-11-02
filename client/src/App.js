@@ -7,6 +7,7 @@ import SearchForm from './components/SearchForm';
 import SearchResultItem from './components/SearchResultItem';
 import PlaylistItem from './components/PlaylistItem';
 import PlaylistRename from './components/PlaylistRename';
+import LogoutBtn from './components/LogoutBtn';
 import logo from './logo-v2.svg';
 import './App.scss';
 import CurrentUser from './components/CurrentUser';
@@ -26,30 +27,36 @@ class App extends Component {
     searchResults: [],
     playlist: {
       songs: [],
-      name: '2112 playlist'
+      name: ''
     },
-    songToPlayUri: '',
+    songToPlayUri: 'spotify:track:7o2AeQZzfCERsRmOM86EcB',
     editMode: false
   }
 
   componentDidMount = () => {
     var songs = {};
+    
     axios.get('http://localhost:8080/songs/')
     .then((res) => {
       var songs = res.data;
       const playlist = {...this.state.playlist};
+
       playlist.songs = songs;
       this.setState({
         playlist
       });
-      // console.log('songs: ', songs);
     });
-    // axios.get('http://localhost:8080/authspotify')
-    // .then((res) => {
-    //   console.log('Anything??');
-      
-    //   console.log('res: ', res);
-    // });
+
+    axios.get('http://localhost:8080/playlist/')
+    .then((res) => {
+      const newPlaylistName = res.data[0].name;
+      let playlist = {...this.state.playlist};
+      playlist.name = newPlaylistName;
+
+      this.setState({
+        playlist
+      });
+    });
   }
   addSearchResultsToState = (results) => {
     console.log('results from App.js: ', results);
@@ -143,6 +150,7 @@ class App extends Component {
           </Col>
           <Col s={3} className=''>
             <CurrentUser currentUser={this.props.currentUser} />
+            <LogoutBtn updateLoginState={this.props.updateLoginState} />
           </Col>
         </Row>
         <Row>

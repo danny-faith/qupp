@@ -12,12 +12,13 @@ class RegisterForm extends Component {
     handleRegisterForm = event => {
         event.preventDefault();
         // console.log(this.password.current.state.value);
+        // NOTE `?` NOT ALLOWED in username. Or convert it to HTML entity etc
         const newUser = {
             username: this.username.current.state.value,
             email: this.email.current.state.value,
             password: this.password.current.state.value
         }
-        axios.post('http://localhost:8080/user/', newUser)
+        axios.post('http://localhost:8080/users/', newUser)
             .then(function (response) {
                 // console.log(response.data.errors.keys());
                 // if errors set colour else blue or something
@@ -29,7 +30,7 @@ class RegisterForm extends Component {
             .catch(function (err) {
                 // as I dont send a status in server.js, axios doesnt realise theres an error and so it doesn get caught by the catch.
                 // add status back in and figure out why you cant send a status and the err object `.status(400).send(err)` <- cant do that
-                window.M.toast({html: 'catch error.data.message', classes: 'red lighten-1'});
+                window.M.toast({html: 'Error, please try registration again', classes: 'red lighten-1'});
             })
             .then(function (response) {
                 // console.log('always run', response);

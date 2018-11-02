@@ -13,7 +13,6 @@ class LoginOrRegister extends Component {
             <div className="container">
                 <Row>
                     <Col s={12} className='center logo'><img src={logo} alt="qupp logo" /></Col>
-                    <CurrentUser currentUser={this.props.currentUser} />
                 </Row>
                 <Row>
                     <Col s={12} l={4} offset={"l2"}>

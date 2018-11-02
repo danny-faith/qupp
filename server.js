@@ -77,7 +77,8 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use(express.static('public'));
+// need if statement around this to switch to look for the react build folder once in production
+app.use(express.static('public'));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -124,14 +125,14 @@ passport.use(new LocalStrategy(
 app.post('/login', 
     passport.authenticate('local', 
         { 
-            successRedirect: `/`,
+            // successRedirect: `/`,
             failureRedirect: `http://localhost:${PORT}/login`,
             session: false
         }
     ), (req, res) => {
         
-        console.log('herro'); // this wont run if `successRedirect` is being used
-        // res.redirect('/');
+        // console.log('herro', req.user); // this wont run if `successRedirect` is being used
+        res.redirect(`/?username=${req.user.username}&avatar=${req.user.image}`);
         // res.redirect(`/?username=${req.user.username}`);        
         // jwt.sign({user: req.user}, 'secretKey', (err, token) => {
         //     // let JWTjj = token;
@@ -150,7 +151,7 @@ var playlistRouter = require('./routes/api/playlist.route');
 var spotifyRouter = require('./routes/api/authSpotify.route');
 
 app.get('/', (req, res) => {
-    res.status(200).send('some shit');
+    res.status(200).send();
 });
 
 app.use('/users', usersRouter);

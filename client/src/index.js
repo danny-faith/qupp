@@ -39,7 +39,7 @@ class Index extends Component {
                 <div>  
                     <Route exact path="/" render={() => (
                         this.state.loggedIn ? (
-                            <App currentUser={this.state.currentUser} loggedIn={this.state.loggedIn}  />
+                            <App updateLoginState={this.updateLoginState} currentUser={this.state.currentUser} loggedIn={this.state.loggedIn}  />
                         ) : (
                             <Redirect to="/login"/>
                         )

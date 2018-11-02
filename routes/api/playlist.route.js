@@ -18,7 +18,16 @@ router.post('/', (req, res) => {
         }
         res.status(201).send(playlistModel);
     })
-  });
+});
+
+router.get('/', (req, res) => {
+    Playlist.find({ _id: '5bdb2e61e508dc3b7e2bb325'}).exec(function(err, playlist) {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        res.status(200).json(playlist);
+    });
+});
 
 router.put('/:playlistId', (req, res) => {
     const { playlistId } = req.params;
