@@ -77,7 +77,7 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.static('public'));
+// app.use(express.static('public'));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -124,7 +124,7 @@ passport.use(new LocalStrategy(
 app.post('/login', 
     passport.authenticate('local', 
         { 
-            successRedirect: `http://localhost:3001/`,
+            successRedirect: `/`,
             failureRedirect: `http://localhost:${PORT}/login`,
             session: false
         }
@@ -148,6 +148,10 @@ var usersRouter = require('./routes/api/users.route');
 var songsRouter = require('./routes/api/songs.route');
 var playlistRouter = require('./routes/api/playlist.route');
 var spotifyRouter = require('./routes/api/authSpotify.route');
+
+app.get('/', (req, res) => {
+    res.status(200).send('some shit');
+});
 
 app.use('/users', usersRouter);
 app.use('/songs', songsRouter);

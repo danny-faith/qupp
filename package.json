@@ -2,19 +2,19 @@
   "name": "qupp",
   "version": "1.0.0",
   "description": "App that allows users to create playlists using Spotify's API",
-  "main": "server.js",
-  "scripts": {
-    "start": "PORT=3001 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
   "author": "Daniel Blythe",
   "license": "ISC",
+  "main": "server.js",
+  "scripts": {
+    "client": "cd client && npm start",
+    "server": "nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+  },
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "spotify-web-api-node": "^4.0.0",
     "axios": "^0.18.0",
     "babel-preset-es2015-node6": "^0.4.0",
-    "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "dotenv": "^6.1.0",
@@ -28,26 +28,10 @@
     "node-sass": "^4.9.4",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "prop-types": "^15.6.2",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-materialize": "^2.4.6",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "2.0.5",
-    "react-spotify-player": "^1.0.4",
-    "source-map-support": "^0.5.9",
-    "spotify-web-api-node": "^4.0.0"
+    "source-map-support": "^0.5.9"    
   },
   "devDependencies": {
+    "concurrently": "^4.0.1",
     "nodemon": "^1.18.4"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  }
 }

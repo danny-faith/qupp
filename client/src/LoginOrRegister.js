@@ -17,7 +17,7 @@ class LoginOrRegister extends Component {
                 </Row>
                 <Row>
                     <Col s={12} l={4} offset={"l2"}>
-                        <LoginForm setCurrentUser={this.props.setCurrentUser} />
+                        <LoginForm updateLoginState={this.props.updateLoginState} setCurrentUser={this.props.setCurrentUser} />
                     </Col>
                     <Col s={12} l={4}>
                         <RegisterForm setCurrentUser={this.props.setCurrentUser} />

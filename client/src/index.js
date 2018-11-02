@@ -10,7 +10,7 @@ import * as serviceWorker from './serviceWorker';
 
 class Index extends Component {
     state = {
-        loggedIn: true,
+        loggedIn: false,
         currentUser: {
             username: 'John Smith',
             avatar: 'https://bodiezpro.com/wp-content/uploads/2015/09/medium-default-avatar.png'
@@ -27,6 +27,17 @@ class Index extends Component {
             currentUser
         })   
     }
+    updateLoginState = loginState => {
+        // update state `loggedIn`
+        console.log('Message from afar: ', loginState);
+        const copyOfState = {...this.state.loggedIn};
+        console.log(copyOfState);
+        
+        copyOfState.loggedIn = loginState;
+        this.setState({
+            loggedIn: true
+        });
+    }
     render() {
         return(
             <Router>
@@ -38,7 +49,14 @@ class Index extends Component {
                             <Redirect to="/login"/>
                         )
                         )}/>
-                    <Route path="/login" render={()=><LoginOrRegister currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser}/>} />
+                    <Route path="/login" render={()=> (
+                        this.state.loggedIn ? (
+                            <Redirect to="/" />
+                        ) : (
+                            <LoginOrRegister updateLoginState={this.updateLoginState} currentUser={this.state.currentUser} setCurrentUser={this.setCurrentUser} />
+                        )
+                    )}/>
+                    
                 </div>
             </Router>
         )

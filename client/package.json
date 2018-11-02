@@ -1,0 +1,39 @@
+{
+  "name": "qupp",
+  "version": "1.0.0",
+  "description": "App that allows users to create playlists using Spotify's API",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:8080/",
+  "author": "Daniel Blythe",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "babel-preset-es2015-node6": "^0.4.0",
+    "dotenv": "^6.1.0",
+    "morgan": "^1.9.1",
+    "node-sass": "^4.9.4",
+    "prop-types": "^15.6.2",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-materialize": "^2.4.6",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.0.5",
+    "react-spotify-player": "^1.0.4",
+    "source-map-support": "^0.5.9"
+  },
+  "devDependencies": {},
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
