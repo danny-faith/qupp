@@ -28,14 +28,11 @@ class Index extends Component {
         })   
     }
     updateLoginState = loginState => {
-        // update state `loggedIn`
-        console.log('Message from afar: ', loginState);
-        const copyOfState = {...this.state.loggedIn};
-        console.log(copyOfState);
+        let copyOfLoginState = {...this.state.loggedIn};
+        copyOfLoginState = loginState;
         
-        copyOfState.loggedIn = loginState;
         this.setState({
-            loggedIn: true
+            loggedIn: copyOfLoginState
         });
     }
     render() {
