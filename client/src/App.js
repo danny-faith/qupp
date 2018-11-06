@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Input } from 'react-materialize';
+import { Row, Col, Button } from 'react-materialize';
 import axios from 'axios';
 // import songs from './loadPlaylist';
 import SpotifyPlayer from 'react-spotify-player';
@@ -34,8 +34,8 @@ class App extends Component {
   }
 
   componentDidMount = () => {
-    var songs = {};
-    
+    // var songs = {};
+
     axios.get('http://localhost:8080/songs/')
     .then((res) => {
       var songs = res.data;
@@ -59,11 +59,11 @@ class App extends Component {
     });
   }
   addSearchResultsToState = (results) => {
-    console.log('results from App.js: ', results);
+    // console.log('results from App.js: ', results);
     this.setState((prevState) => ({
       searchResults: results
     }));
-    console.log(this.state);    
+    // console.log(this.state);  
   }
   addSongToPlaylist = song => {
 
@@ -89,10 +89,10 @@ class App extends Component {
     this.setState((prevState) => ({
       editMode: !prevState.editMode
     }));
-    console.log('this.state.editMode: ', this.state.editMode);
+    // console.log('this.state.editMode: ', this.state.editMode);
   }
   updatePlaylistName = (newPlaylistName) => {
-    console.log('newPlaylistName: ', newPlaylistName);
+    // console.log('newPlaylistName: ', newPlaylistName);
     
     // console.log(playlistInput);
     
@@ -104,11 +104,9 @@ class App extends Component {
     });
   }
   playSong = songUri => {
-    // update songToPlay state so the Spotify player re-renders
-    const songToPlayCopy = [...this.state.songToPlayUri];
-    this.setState({
-      songToPlayUri: songUri
-    });
+    const newState = {...this.state};
+    newState.songToPlayUri = songUri;
+    this.setState(newState);
   }
   deleteSongFromPlaylist = songToDeleteId => {
 

@@ -3,10 +3,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const axios = require('axios');
 const cors = require('cors');
-const Base64 = require('js-base64').Base64;
-var passport = require('passport');
-const jwt = require('jsonwebtoken');
-var LocalStrategy = require('passport-local').Strategy;
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 require('dotenv').config();
 
 mongoose.Promise = global.Promise;
@@ -20,7 +18,7 @@ promise.then(function(db) {
 
 var Schema = mongoose.Schema;
 
-const User = require('./models/User');
+// const User = require('./models/User');
 // const Song = require('./models/Song');
 // const Playlist = require('./models/Playlist');
 // const songSchema = Song.schema.obj;
@@ -97,58 +95,13 @@ app.use(function(req, res, next) {
 // var Playlist = mongoose.model('Playlist', playlistSchema);
 // var Artist = mongoose.model('Artist', artistSchema);
 
-passport.use(new LocalStrategy(
-    function(username, password, done) {
-      User.findOne({ username: username }, function(err, user) {
-        if (err) { return done(err); }
-        if (!user) {
-            console.log('Incorrect username.');
-            return done(null, false, { message: 'Incorrect username.' });
-        }
-        if (user.validPassword(password) === false) {
-            console.log('wrong password');
-            return done(null, false, { message: 'Incorrect password.' });
-        }
-        console.log('Login SUCCESSFUL');
-        // set JWT token here
-        
-        return done(null, user);
-      });
-    }
-  ));
-
-// app.post('/login', passport.authenticate('local', { successRedirect: '/success', failureRedirect: 'http://localhost:3000/login' }), (req, res) => {
-//     console.log('trying to login: ', req.user.username);
-//     res.status(200).send(req.user.username);
-// });
-
-app.post('/login', 
-    passport.authenticate('local', 
-        { 
-            // successRedirect: `/`,
-            failureRedirect: `http://localhost:${PORT}/login`,
-            session: false
-        }
-    ), (req, res) => {
-        
-        // console.log('herro', req.user); // this wont run if `successRedirect` is being used
-        res.redirect(`/?username=${req.user.username}&avatar=${req.user.image}`);
-        // res.redirect(`/?username=${req.user.username}`);        
-        // jwt.sign({user: req.user}, 'secretKey', (err, token) => {
-        //     // let JWTjj = token;
-        //     res.json({token});
-        // });
-        // console.log('JWT: ', JWTjj);
-        
-    }
-);
-
 /* Routes START
  *****************************************/
 var usersRouter = require('./routes/api/users.route');
 var songsRouter = require('./routes/api/songs.route');
 var playlistRouter = require('./routes/api/playlist.route');
 var spotifyRouter = require('./routes/api/authSpotify.route');
+var loginRouter = require('./routes/api/login.route');
 
 app.get('/', (req, res) => {
     res.status(200).send();
@@ -158,6 +111,7 @@ app.use('/users', usersRouter);
 app.use('/songs', songsRouter);
 app.use('/playlist', playlistRouter);
 app.use('/authspotify', spotifyRouter);
+app.use('/login', loginRouter);
 
 /* Routes END
  *****************************************/

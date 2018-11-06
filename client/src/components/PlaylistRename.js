@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Input, Button } from 'react-materialize';
+import { Input, Button } from 'react-materialize';
 import axios from 'axios';
 
 class PlaylistRename extends Component {

@@ -25,7 +25,8 @@ class LoginForm extends Component {
             },
             params: params
         })
-        .then(res => {            
+        .then(res => {
+            console.log('res.request: ', res.request);
             const userData = qs.parse(res.request.responseURL.split('?')[1]);
             this.props.setCurrentUser(userData);
             this.props.updateLoginState(true);
@@ -42,10 +43,10 @@ class LoginForm extends Component {
         return(
             <form onSubmit={this.handleFormSubmit}>
                 <Col s={12}>
-                    <Input id={"userName"} defaultValue='daniel8' ref={this.usernameInput} placeholder="is this even used" s={12} label="Username" />
+                    <Input id={"userName"} defaultValue='DannyWobble' ref={this.usernameInput} placeholder="is this even used" s={12} label="Username" />
                 </Col>
                 <Col s={12}>
-                    <Input id={"loginPassword"} defaultValue='password' ref={this.passwordInput} placeholder="is this even used" s={12} label="Password" type="password"/>
+                    <Input id={"loginPassword"} defaultValue='123' ref={this.passwordInput} placeholder="is this even used" s={12} label="Password" type="password"/>
                 </Col>
                 <Col s={12}>
                     <Button waves="light" className="pink lighten-2 right">Login</Button>
