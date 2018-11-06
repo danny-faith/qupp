@@ -18,52 +18,17 @@ promise.then(function(db) {
 
 var Schema = mongoose.Schema;
 
-// const User = require('./models/User');
-// const Song = require('./models/Song');
-// const Playlist = require('./models/Playlist');
-// const songSchema = Song.schema.obj;
-// songs: [songSchema]
-
-
 const {
     PORT:pt
 } = process.env;
 
 const PORT = pt || 8080;
 
-// const CLIENT_ID_SECRET_64 = Base64.encode(CLIENT_ID + ':' + CLIENT_SECRET);
-
-// import routes
-// import endPoints from './routes/qupp.server.route';
 // TODO: add RegEx to schemas
 // TODO: use MAterilize modal to tell user if a duplicate has been entered
 
-// const spotifyAxios = axios.create({
-//     baseURL: 'https://accounts.spotify.com/api/token',
-//     timeout: 1000,
-//     headers: {
-//         'Authorization': 'Basic ' + CLIENT_ID_SECRET_64,
-//         'Content-Type': 'application/x-www-form-urlencoded'
-//     },
-//     params: {
-//         grant_type: 'client_credentials'
-//     }
-// });
-
-// const PORT = 8080;
 const app = express();
 
-// const whitelist = ['http://localhost:8080'];
-// var corsOptions = {
-//     origin: function (origin, callback) {
-//       if (whitelist.indexOf(origin) !== -1) {
-//         callback(null, true)
-//       } else {
-//         callback(new Error('Not allowed by CORS...'))
-//       }
-//     }
-//   }
-// app.use(cors(corsOptions));
 app.use(cors());
 
 app.use(require('cookie-parser')());
@@ -92,9 +57,6 @@ app.use(function(req, res, next) {
     next();
 });
 
-// var Playlist = mongoose.model('Playlist', playlistSchema);
-// var Artist = mongoose.model('Artist', artistSchema);
-
 /* Routes START
  *****************************************/
 var usersRouter = require('./routes/api/users.route');
@@ -118,6 +80,3 @@ app.use('/login', loginRouter);
 
 
 app.listen(process.env.PORT || 8080);
-// app.listen(PORT, function() {
-//     console.log('listening on port 8080');
-// });

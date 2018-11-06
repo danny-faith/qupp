@@ -16,7 +16,7 @@ class LoginForm extends Component {
             username: username,
             password: password
         }
-        // const setCurrentUser = this.props.setCurrentUser;
+        
         axios({
             method: 'post',
             url: 'http://localhost:8080/login',
@@ -26,18 +26,12 @@ class LoginForm extends Component {
             params: params
         })
         .then(res => {
-            console.log('res.request: ', res.request);
             const userData = qs.parse(res.request.responseURL.split('?')[1]);
             this.props.setCurrentUser(userData);
             this.props.updateLoginState(true);
         })
         .catch(function (error) {
             window.M.toast({html: 'There was an error logging in. Please try again', classes: 'red lighten-1'});            
-            // console.log(error);
-            // console.log('error.config: ', error.config);
-        })
-        .then(res => {
-            // console.log('but this one always runs??');
         });
     }
     render() {

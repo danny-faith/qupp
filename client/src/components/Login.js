@@ -10,8 +10,6 @@ class Login extends Component {
         const username = this.usernameInput.current.state.value;
         const password = this.passwordInput.current.state.value;
 
-        console.log('username: ', username);
-        console.log('password: ', password);
         const params = {
             username: username,
             password: password
@@ -25,7 +23,6 @@ class Login extends Component {
             params: params
         })
         .then(res => {
-          console.log(res);
           // SHOULD BE ERROR CATCHING IN HERE!!!
         })
         .catch(function (error) {

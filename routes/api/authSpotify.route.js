@@ -28,11 +28,9 @@ const spotifyAxios = axios.create({
 router.get('/', (req, res) => {
     spotifyAxios.post()
         .then((response) => {
-            // console.log(response.data.access_token);
             res.status(200).json(response.data);
         })
         .catch((error) => {
-            // console.log(error);
             res.status(500).json(error);
         }
     );

@@ -9,8 +9,7 @@ class PlaylistRename extends Component {
         event.preventDefault();
         axios.put(`http://localhost:8080/playlist/${this.playlistId}`, {
             name: this.playlistInput.current.state.value
-        }).then((res) => {
-            console.log('res: ', res);            
+        }).then((res) => {          
         });
         this.props.updatePlaylistName(this.playlistInput.current.state.value);
     }

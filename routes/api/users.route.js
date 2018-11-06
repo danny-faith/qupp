@@ -6,18 +6,12 @@ var router = express.Router();
 
 router.post('/', (req, res) => {
     const newUser = req.body;
-    // console.log(req.body.password);
     const user = new User(newUser);
     user.setPassword(req.body.password);
-    // console.log(passwordSuper);
     
     user.save(function(err, userModel) {
         if (err) {
-            // as I dont send a status, axios doesnt realise theres an error and so it doesn get caught by the catch.
-            // add status back in and figure out why you cant send a status and the err object
-            // console.log('there was an error: ', err);
-            
-            return res.send(err); // if I do `res.status(xxx).send(err);` the `err` doesnt get sent and I get no info on why the new user didnt work
+            return res.status(500).send(err);
         }
         res.status(201).send(userModel);
     })

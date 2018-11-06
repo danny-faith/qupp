@@ -5,24 +5,24 @@ import { Row, Col, Button } from 'react-materialize';
 class PlaylistItem extends Component {
   
     deleteSongFromPlaylistHandler = () => {
-        // console.log('delete a song');
         this.props.deleteSongFromPlaylist(this.props.data.spotId);
     }
     playSongHandler = () => {
-        // console.log('play a song', this.props.data);
         this.props.playSong(this.props.data.uri);
     }
     render() {
-        let deleteBtn;
+        let button;
         if (this.props.editMode) {
-            deleteBtn = <Button className="btn-small align-right red lighten-2" onClick={this.deleteSongFromPlaylistHandler}>Delete</Button>;
+            button = <Button className="btn-small right red lighten-2" waves="light" onClick={this.deleteSongFromPlaylistHandler}>Delete</Button>;
+        } else {
+            button = <Button className="btn-small right" waves="light" onClick={this.playSongHandler}>Play</Button>;
         }
         return(
             <Row>
-                <Col s={2} className=''>
+                <Col s={2}>
                     <img alt={'alt text'} src={this.props.data.image} />
                 </Col>
-                <Col s={6} className=''>
+                <Col s={6}>
                     <p>{this.props.data.name}, {this.props.data.album}</p>
                     <p>Artists:
                         {this.props.data.artists.map(key => (
@@ -30,9 +30,8 @@ class PlaylistItem extends Component {
                         ))}
                     </p>
                 </Col>
-                <Col s={4} className=''>
-                    {deleteBtn}
-                    <Button waves="light" className="btn-small right" onClick={this.playSongHandler}>Play</Button>
+                <Col s={4}>
+                    {button}
                 </Col>
             </Row>
         );

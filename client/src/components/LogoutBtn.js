@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Button } from 'react-materialize';
 
 class LogoutBtn extends Component {
-    logout = () => {
+    handleLogout = () => {
         this.props.updateLoginState(false);
     }
     render() {
         return(
-            <Button onClick={this.logout}>Logout</Button>
+            <Button onClick={this.handleLogout}>Logout</Button>
         )
     }
 }

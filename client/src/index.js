@@ -8,7 +8,7 @@ import * as serviceWorker from './serviceWorker';
 
 class Index extends Component {
     state = {
-        loggedIn: true,
+        loggedIn: false,
         currentUser: {
             username: 'John Smith',
             avatar: 'https://bodiezpro.com/wp-content/uploads/2015/09/medium-default-avatar.png'

@@ -39,38 +39,13 @@ class RegisterForm extends Component {
 
         axios.post('http://localhost:8080/users/', newUser)
             .then(function (response) {
-                console.log(response);
-                console.log(response.status); // this doesn't run on success as there are no errors           
-                if (response.status !== 201) {
-                    console.log('new user not successful');
-                    const resData = response.data.errors;
-                    Object.keys(resData).forEach(key => {
-                        window.M.toast({html: `${resData[key].path} ${resData[key].message}`, classes: 'red lighten-1'});
-                    });
-                } else {
-                    console.log('new user created as it was 201');
-                    window.M.toast({html: `Username: ${response.data.username} was created`, classes: 'green lighten-1'});
-                }
-                
-                // if errors set colour else blue or something
-                
-                // console.log(Object.keys(resData).forEach(key => {
-                //     window.M.toast({html: `${resData[key].path} ${resData[key].message}`, classes: 'red lighten-1'});
-                // }));
+                window.M.toast({html: `Username: ${response.data.username} was created`, classes: 'green lighten-1'});
             })
-            .catch(function (err) {
-                // UPDATE: basically its always a success. Andif I try and send an error status I cannot send any of the data that I can use for messages and reasons like username already taken
-
-                // as I dont send a status in server.js, axios doesnt realise theres an error and so it doesn get caught by the catch.
-                // add status back in and figure out why you cant send a status and the err object `.status(400).send(err)` <- cant do that
-                // UPDATE: this .catch() function is running(as well as the above .then() which I believe should only run on success, then .catch() shouldn't run) even though a user is created. I'm guessing its as I'm not sending the right status' from express
-                // console.log('.catch in axios: ', err);
-
-                // window.M.toast({html: 'Error, please try registration again', classes: 'red lighten-1'});
-            })
-            .then(function (response) {
-                // console.log('always run', response);
-                // window.M.toast({html: 'response.data', classes: 'red lighten-1'});
+            .catch(err => {
+                const resData = err.response.data.errors;
+                Object.keys(resData).forEach(key => {
+                    window.M.toast({html: `${resData[key].path} ${resData[key].message}`, classes: 'red lighten-1'});
+                });
             });
     }
     render() {

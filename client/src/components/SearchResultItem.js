@@ -5,7 +5,6 @@ import { Row, Col, Button } from 'react-materialize';
 class SearchResultItem extends Component {
   
   addSongToPlaylistHandler = (song) => {
-    console.log(this.props.data);
     this.props.addSongToPlaylist(this.props.data);
   }
   render() {
