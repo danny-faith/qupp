@@ -65,18 +65,37 @@ class App extends Component {
     }));
     // console.log(this.state);  
   }
-  addSongToPlaylist = song => {
+  addSongToPlaylist = songToAdd => {
 
     const playlist = {...this.state.playlist};
     // TODO: check if object item is already there otherwise it ends up in state and shows. But then once refresed isn't there as DB rejected it based on schema
+    console.log('playlist: ', playlist.songs);
+    
     // if(!playlist.hasOwnProperty(song)) {
-      playlist.songs[song.spotId] = song;
+    // }
+    for(let song of playlist.songs) {
+      if (song.spotId === songToAdd.spotId) return window.M.toast({html: `"${songToAdd.name}" is a duplicate, cannot add`, classes: 'red lighten-1'});
+    }
+    // playlist.songs.forEach(song => {
+    //   console.log(song);
+    //   if (song.spotId === songToAdd.spotId) {
+    //     return window.M.toast({html: `Duplicate`, classes: 'green lighten-1'});
+    //   }
+    // });
+    // if(playlist.hasOwnProperty(songToAdd)) {
+    //   console.log('song is already there');
+    // } else {
+    //   console.log('sog is not there');
+    // }
+
+      playlist.songs.push(songToAdd);
       this.setState({
         playlist
       });
-      axios.post(`http://localhost:8080/songs/`, song)
+      axios.post(`http://localhost:8080/songs/`, songToAdd)
         .then(res => {
           console.log(res);
+          window.M.toast({html: `Added: ${res.data.name} - ${res.data.album}`, classes: 'green lighten-1'});
           // SHOULD BE ERROR CATCHING IN HERE!!!
         });
     // } else if (song == undefined) {
@@ -108,24 +127,32 @@ class App extends Component {
     newState.songToPlayUri = songUri;
     this.setState(newState);
   }
-  deleteSongFromPlaylist = songToDeleteId => {
+  deleteSongFromPlaylist = songToDeleteSpotId => {
 
-    axios.delete(`http://localhost:8080/songs/${songToDeleteId}`)
+    axios.delete(`http://localhost:8080/songs/${songToDeleteSpotId}`)
       .then(() => {
         // Copy state.playlist
         const playlistCopy = [...this.state.playlist.songs];
+        // songToDeleteSpotId = songToDeleteSpotId.toString();
+        console.log(playlistCopy);
+        console.log(songToDeleteSpotId);
+        
         // Find the index of the object we want to delete
-        const index = playlistCopy.findIndex(obj => obj._id === songToDeleteId);
+        const index = playlistCopy.findIndex(obj => obj.spotId === songToDeleteSpotId);
+        console.log('index: ', index);
+        
         // Remove chosen object to delete by adding all other object back in around our chosen object
         const newPlaylist = [
             ...playlistCopy.slice(0, index),
             ...playlistCopy.slice(index + 1)
         ];
-        this.setState({
+        this.setState(prevState => ({
           playlist: {
-            songs: newPlaylist
+            songs: newPlaylist,
+            name: prevState.playlist.name
           }
-        });
+        }));
+        window.M.toast({html: `Deleted: ${playlistCopy[index].name} - ${playlistCopy[index].album}`, classes: 'green lighten-1'});        
       })
       .catch(function (error) {
         console.log('error: ', error);
@@ -144,7 +171,7 @@ class App extends Component {
       <div className="container">
         <Row>
           <Col s={2} offset={"s5"} className='center logo'>
-            <img src={logo} />
+            <img alt="qupp logo" src={logo} />
           </Col>
           <Col s={3} className=''>
             <CurrentUser currentUser={this.props.currentUser} />
@@ -161,9 +188,11 @@ class App extends Component {
                 <Button onClick={this.handleEditModeBtn} icon="settings" className="right orange lighten-2"></Button>
               </Col>
             </Row>
-            {Object.keys(this.state.playlist.songs).map(key => {
-                return <PlaylistItem editMode={this.state.editMode} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playlist.songs[key]} key={key} />
-            })}
+            <div className="playlist-con">
+              {Object.keys(this.state.playlist.songs).map(key => {
+                  return <PlaylistItem editMode={this.state.editMode} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playlist.songs[key]} key={key} />
+              })}
+            </div>
           </Col>
           <Col s={4} className='grid-example'>
             <h3 className="center">Search</h3>

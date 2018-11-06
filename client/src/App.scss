@@ -14,6 +14,13 @@ html, body {
     .playlistSettingsCol {
       height: 87px;
     }
+    .playlist-con {
+      height: 65vh;
+      overflow-y: scroll;
+      & > div {
+        margin-right: 0;
+      }
+    }
   }
   .btn, .btn-large {
     background: #6598B8;

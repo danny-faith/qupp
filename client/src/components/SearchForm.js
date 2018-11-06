@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Input, Button } from 'react-materialize';
+import { Row, Col, Input, Button } from 'react-materialize';
 import axios from 'axios';
 // import GET_ACCESS_TOKEN from '../accessToken';
 // import PropTypes from 'prop-types';
@@ -80,9 +80,13 @@ class SearchForm extends Component {
         return (
             <Row>
                 <form onSubmit={this.handleFormSubmit}>
-                    <Button waves="light">Search</Button>
                     <Row>
-                        <Input id={"searchInput"} defaultValue='hello' ref={this.searchQuery} placeholder="Prince I would die for you" s={12} label="Track search" />
+                        <Col s={8} offset={"s1"}>
+                            <Input id={"searchInput"} defaultValue='hello' ref={this.searchQuery} placeholder="Prince I would die for you" s={12} label="Track search" />
+                        </Col>
+                        <Col s={2}>
+                            <Button className="left" waves="light">Search</Button>
+                        </Col>
                     </Row>
                 </form>
             </Row>

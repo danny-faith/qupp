@@ -32,8 +32,9 @@ class LoginForm extends Component {
             this.props.updateLoginState(true);
         })
         .catch(function (error) {
-            console.log('error: ', error);
-            console.log('error.config: ', error.config);
+            window.M.toast({html: 'There was an error logging in. Please try again', classes: 'red lighten-1'});            
+            // console.log(error);
+            // console.log('error.config: ', error.config);
         })
         .then(res => {
             // console.log('but this one always runs??');

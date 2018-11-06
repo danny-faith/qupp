@@ -45,8 +45,9 @@ router.post('/',
             // failureRedirect: `http://localhost:${PORT}/login`,
             session: false
         }
-    ), (req, res) => {
+    ), (req, res, next) => {
         console.log('res: ', res);
+        // console.log('next: ', next);
         
         // console.log('herro', req.user); // this wont run if `successRedirect` is being used
         res.redirect(`/?username=${req.user.username}&avatar=${req.user.image}`);

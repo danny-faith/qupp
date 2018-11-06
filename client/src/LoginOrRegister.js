@@ -3,7 +3,6 @@ import { Row, Col } from 'react-materialize';
 import RegisterForm from './components/RegisterForm';
 import LoginForm from './components/LoginForm';
 import logo from './logo-v2.svg';
-import CurrentUser from './components/CurrentUser';
 
 
 class LoginOrRegister extends Component {

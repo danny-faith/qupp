@@ -6,7 +6,7 @@ class PlaylistItem extends Component {
   
     deleteSongFromPlaylistHandler = () => {
         // console.log('delete a song');
-        this.props.deleteSongFromPlaylist(this.props.data._id);
+        this.props.deleteSongFromPlaylist(this.props.data.spotId);
     }
     playSongHandler = () => {
         // console.log('play a song', this.props.data);
@@ -26,7 +26,7 @@ class PlaylistItem extends Component {
                     <p>{this.props.data.name}, {this.props.data.album}</p>
                     <p>Artists:
                         {this.props.data.artists.map(key => (
-                        <span key={key.name}> {key.name}</span>
+                            <span key={key.name}> {key.name}</span>
                         ))}
                     </p>
                 </Col>

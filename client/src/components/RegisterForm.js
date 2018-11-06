@@ -24,7 +24,7 @@ class RegisterForm extends Component {
 
         var found = username.match(regex) || []; // || empty array if nothing matches. Avoids me having to check for undefined or nu;; in the if statement. Probably a better way to do this.
         if (found.length > 0) {
-            return window.M.toast({html: 'Alphanumeric characters only in username', classes: 'red lighten-1'});            
+            return window.M.toast({html: 'Alphanumeric characters only in username', classes: 'red lighten-1'});
         }
         // Check to see if first password matches second password. ! then return with Mat' message
         if (password !== passwordRepeat) {
@@ -107,7 +107,7 @@ class RegisterForm extends Component {
                     <Col s={12}>
                         <Input
                             id={"registerPassword"}
-                            defaultValue="ggg"
+                            defaultValue="123"
                             type="password"
                             required
                             ref={this.password}
@@ -120,7 +120,7 @@ class RegisterForm extends Component {
                     <Col s={12}>
                         <Input
                             id={"registerPasswordRepeat"}
-                            defaultValue="ggg"
+                            defaultValue="123"
                             type="password"
                             required
                             ref={this.passwordRepeat}

@@ -23,10 +23,10 @@ router.post('/', (req, res) => {
   })
 });
 
-router.delete('/:songid', (req, res) => {
-    var songToDelete = req.params.songid;
-    // console.log('songToDelete: ', songToDelete);
-    Song.deleteOne({ _id : songToDelete }, function(err) {
+router.delete('/:songspotid', (req, res) => {
+    var songToDelete = req.params.songspotid;
+    console.log('songToDelete: ', songToDelete);
+    Song.deleteOne({ spotId : songToDelete }, function(err) {
         if (err) return handleError(err);
         res.sendStatus(204);
     });

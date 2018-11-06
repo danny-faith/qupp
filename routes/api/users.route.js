@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
         if (err) {
             // as I dont send a status, axios doesnt realise theres an error and so it doesn get caught by the catch.
             // add status back in and figure out why you cant send a status and the err object
-            console.log('there was an error: ', err);
+            // console.log('there was an error: ', err);
             
             return res.send(err); // if I do `res.status(xxx).send(err);` the `err` doesnt get sent and I get no info on why the new user didnt work
         }
