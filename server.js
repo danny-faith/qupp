@@ -25,7 +25,6 @@ const {
 const PORT = pt || 8080;
 
 // TODO: add RegEx to schemas
-// TODO: use MAterilize modal to tell user if a duplicate has been entered
 
 const app = express();
 

@@ -14,6 +14,10 @@ class Index extends Component {
             avatar: 'https://bodiezpro.com/wp-content/uploads/2015/09/medium-default-avatar.png'
         }
     }
+    /**
+     * Simply takes the current user sent back to this function from the
+     * <LoginOrRegister /> component which will get the current user from the <LoginForm />
+     */
     setCurrentUser = user => {
         let currentUser = {...this.state.currentUser};
         const {username, avatar} = user;        
@@ -25,6 +29,12 @@ class Index extends Component {
             currentUser
         })   
     }
+    /**
+     * updateLoginState() is passed down to <LoginOrRegister /> and <App />
+     * so both can modify the state.loggedIn
+     * <App /> has the logout button
+     * <LoginOrRegister /> modifies the loggedIn state if login is succesful via the login form
+     */
     updateLoginState = loginState => {
         let copyOfLoginState = {...this.state.loggedIn};
         copyOfLoginState = loginState;
@@ -34,6 +44,14 @@ class Index extends Component {
         });
     }
     render() {
+        /**
+         * Route `/`
+         * If state.loggedIn === true : then show the user the <App /> as they are logged in and have access to <App />
+         *                            : else redirect them to `/login`
+         * Route `/login`
+         * If state.loggedIn === true : then show the user the <App /> as they are logged in and shouwl be viewing <App />
+         *                            : else redirect them to <LoginOrRegister /> to login or register
+         */
         return(
             <Router>
                 <div>  

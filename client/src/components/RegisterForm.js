@@ -19,10 +19,9 @@ class RegisterForm extends Component {
         const email = this.email.current.state.value;
         const password = this.password.current.state.value;
         const passwordRepeat = this.passwordRepeat.current.state.value;
-        console.log('username: ', username);
-        
 
-        var found = username.match(regex) || []; // || empty array if nothing matches. Avoids me having to check for undefined or nu;; in the if statement. Probably a better way to do this.
+        var found = username.match(regex) || []; // || empty array if nothing matches. Avoids me having to check for undefined or null in the if statement. Probably a better way to do this.
+        // if entered username matches one of special characters in the regex then fire relevant Mat'
         if (found.length > 0) {
             return window.M.toast({html: 'Alphanumeric characters only in username', classes: 'red lighten-1'});
         }
@@ -31,6 +30,7 @@ class RegisterForm extends Component {
             return window.M.toast({html: 'Passwords do not match', classes: 'red lighten-1'});
         }
 
+        // build new user object
         const newUser = {
             username,
             email,
@@ -42,6 +42,10 @@ class RegisterForm extends Component {
                 window.M.toast({html: `Username: ${response.data.username} was created`, classes: 'green lighten-1'});
             })
             .catch(err => {
+                /**
+                 * if error is present, loop through errors in the response and alert them via Mat' Toast
+                 * mostly these are username and email already exists
+                 */
                 const resData = err.response.data.errors;
                 Object.keys(resData).forEach(key => {
                     window.M.toast({html: `${resData[key].path} ${resData[key].message}`, classes: 'red lighten-1'});

@@ -2,12 +2,15 @@ var express = require('express');
 var User = require('../../models/User');
 var router = express.Router();
 
-/* GET home page. */
+/**
+ * Endpoint: Create and add new user. `password` method creates an encrypted/hashed
+ * password using the password supplied by the user and sent in the body
+ */
 
 router.post('/', (req, res) => {
     const newUser = req.body;
     const user = new User(newUser);
-    user.setPassword(req.body.password);
+    user.setPassword(req.body.password); // method that creates the users password
     
     user.save(function(err, userModel) {
         if (err) {
@@ -16,6 +19,11 @@ router.post('/', (req, res) => {
         res.status(201).send(userModel);
     })
 });
+
+/**
+ * Endpoint: Not currently used. But simply returns an object containing the users details
+ * given the search term of the users username.
+ */
 
 router.get('/:username', (req, res, next) => {
     var { username } = req.params;
@@ -27,6 +35,10 @@ router.get('/:username', (req, res, next) => {
         }
     });
 });
+
+/**
+ * Endpoint: Not currently used. Simply returns all users.
+ */
 
 router.get('/', (req, res) => {
     User.find({}).exec(function(err, users) {

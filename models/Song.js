@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+/**
+ * Seperate artist schema defined as there can be multiple
+ * artists for one song.
+ */
+
 var artistSchema = new Schema({
     name: {
         type: String,
@@ -29,6 +34,3 @@ var songSchema = new Schema({
 var Song = mongoose.model('Song', songSchema);
 
 module.exports = Song;
-
-
-// var Artist = mongoose.model('Artist', artistSchema);

@@ -6,7 +6,12 @@ import axios from 'axios';
 class SearchForm extends Component {
     searchQuery = React.createRef();
     componentWillMount = () => {
-        // maybe use momentJS to tell when an hour has past
+        /**
+         * When component mounts, make call to Spotify to get access token
+         * in order to perform the search.
+         * This is a terrible way to manage the access token and 
+         * will not be in the final version of this project
+         */
         axios.get('http://localhost:8080/authspotify')
         .then((res) => {
             localStorage.setItem('SPOTIFY_ACCESS_TOKEN', res.data.access_token);
@@ -19,15 +24,26 @@ class SearchForm extends Component {
 
         const searchTerm = this.searchQuery.current.state.value;
 
+        /**
+         * Search Spotify using search term from Input
+         */
         axios.get(`https://api.spotify.com/v1/search?q=${searchTerm}&type=track&limit=20`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('SPOTIFY_ACCESS_TOKEN')}`
             }
         })
         .then(res => {
-            if (res.data.tracks.items.length === 0) {
+            if (res.data.tracks.items.length === 0) { 
+                /**
+                 * if no tracks found alert user with Mat' Toast
+                 * else create array of search results and add to state so they can be rendered
+                 */
                 window.M.toast({html: 'No tracks found!', classes: 'red lighten-2'});
             } else {
+                /**
+                 * map over the array of tracks returned by Spotify and create an array of objects
+                 * containing the properties needed from each track defined in the song schema.
+                 */
                 const searchResults = res.data.tracks.items.map(song => {
 
                     let image = '';
@@ -48,6 +64,9 @@ class SearchForm extends Component {
                     }
                 });
 
+                /**
+                 * Send the array of search results back up to app.js to be added to state.searchResults and rendered
+                 */
                 this.props.addSearchResultsToState(searchResults);
             }            
         });

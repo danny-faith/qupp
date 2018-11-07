@@ -4,7 +4,11 @@ import { Row, Col, Button } from 'react-materialize';
 
 class SearchResultItem extends Component {
   
-  addSongToPlaylistHandler = (song) => {
+  addSongToPlaylistHandler = () => {
+    /*
+     * Pass the song object up to app.js via `this.props.addSongToPlaylist()`
+     * using the song object inside `props.data` to send back
+     */
     this.props.addSongToPlaylist(this.props.data);
   }
   render() {

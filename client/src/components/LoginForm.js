@@ -26,11 +26,20 @@ class LoginForm extends Component {
             params: params
         })
         .then(res => {
+            /**
+             * extract user data out of the response send back from the login route/endpoint
+             */
             const userData = qs.parse(res.request.responseURL.split('?')[1]);
-            this.props.setCurrentUser(userData);
-            this.props.updateLoginState(true);
+            this.props.setCurrentUser(userData); // Set the current user to the user who logged in using the previosuly created `userData` object
+            this.props.updateLoginState(true); // set login state to true so React renders the <App />
         })
         .catch(function (error) {
+            /**
+             * Not a great error. This will need to be imporved to give specifics
+             * Use this but with data sent back from login.route.js.
+             * Similar to RegisterForm.js when adding a new User
+             * const resData = error.response.data.errors;
+             */
             window.M.toast({html: 'There was an error logging in. Please try again', classes: 'red lighten-1'});            
         });
     }

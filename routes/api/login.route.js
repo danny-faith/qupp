@@ -11,26 +11,31 @@ const {
 
 const PORT = pt || 8080;
 
-/* GET home page. */
+/*
+ * Setup Passport to use local strategy as I'm not currently using any third parties (Facebook, Github etc)
+ */
 
 passport.use(new LocalStrategy(
     function(username, password, done) {
       User.findOne({ username: username }, function(err, user) {
         if (err) { return done(err); }
         if (!user) {
-            console.log('Incorrect username.');
             return done(null, false, { message: 'Incorrect username.' });
         }
         if (user.validPassword(password) === false) {
-            console.log('wrong password');
             return done(null, false, { message: 'Incorrect password.' });
         }
-        console.log('Login SUCCESSFUL');
         
         return done(null, user);
       });
     }
-  ));
+));
+
+/*
+ * `POST` endpoint. Using passport.authticate to authenticate the user. Username and password are passed through as parameters to
+ * this endpoint from the `src/components/LoginForm.js` file via axios.
+ * Couple of comments below kept in for reference and for ease.
+ */
 
 router.post('/', 
     passport.authenticate('local', 

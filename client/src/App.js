@@ -12,6 +12,7 @@ import logo from './logo-v2.svg';
 import './App.scss';
 import CurrentUser from './components/CurrentUser';
 
+// set `SpotifyPlayer` styling
 const size = {
   width: '100%',
   height: 77,
@@ -31,7 +32,6 @@ class App extends Component {
   }
 
   componentDidMount = () => {
-
     axios.get('http://localhost:8080/songs/')
     .then((res) => {
       var songs = res.data;
@@ -53,43 +53,51 @@ class App extends Component {
         playlist
       });
     });
-
   }
-  addSearchResultsToState = (results) => {
 
+  addSearchResultsToState = (results) => {
     this.setState((prevState) => ({
       searchResults: results
     }));
-
   }
-  addSongToPlaylist = songToAdd => {
 
+  addSongToPlaylist = songToAdd => {
+    // copy playlist state
     const playlist = {...this.state.playlist};
 
+    /**
+     * check to see if song is already in playlist via Spotify Id
+     * if song is already there then return as well passing through Materialize Toast to let use know
+     */
     for(let song of playlist.songs) {
-      if (song.spotId === songToAdd.spotId) return window.M.toast({html: `"${songToAdd.name}" is a duplicate, cannot add`, classes: 'red lighten-1'});
+      if (song.spotId === songToAdd.spotId) return window.M.toast({html: `"${songToAdd.name}" is a duplicate, cannot add`, classes: 'red lighten-2'});
     }
 
+    // Optimistically add song to copied playlist state
     playlist.songs.push(songToAdd);
     this.setState({
       playlist
     });
 
+    /**
+     * Add song to DB and if successful(.then()) init Toast to inform user
+     */
     axios.post(`http://localhost:8080/songs/`, songToAdd)
       .then(res => {
-        console.log(res);
         window.M.toast({html: `Added: ${res.data.name} - ${res.data.album}`, classes: 'green lighten-1'});
         // SHOULD BE ERROR CATCHING IN HERE!!!
       })
       .catch(err => {
-
     });
   }
+
+  // Toggle edit mode 
   handleEditModeBtn = () => {
     this.setState((prevState) => ({
       editMode: !prevState.editMode
     }));
   }
+
   updatePlaylistName = (newPlaylistName) => {
     const playlistCopy = {...this.state.playlist};
     playlistCopy.name = newPlaylistName;
@@ -98,13 +106,15 @@ class App extends Component {
       editMode: false
     });
   }
+
+  // Spotify song URI as paramter and use that to set the songToPlay state and thus re-render the page and play song preview
   playSong = songUri => {
     const newState = {...this.state};
     newState.songToPlayUri = songUri;
     this.setState(newState);
   }
-  deleteSongFromPlaylist = songToDeleteSpotId => {
 
+  deleteSongFromPlaylist = songToDeleteSpotId => {
     axios.delete(`http://localhost:8080/songs/${songToDeleteSpotId}`)
       .then(() => {
         // Copy state.playlist
@@ -134,7 +144,9 @@ class App extends Component {
         console.log('error.config: ', error.config);
       });
   }
+
   render() {
+    // Show either playlist title or form to change playlist title depending on editmode
     let playlistName;
     if (this.state.editMode) {
       playlistName = <PlaylistRename updatePlaylistName={this.updatePlaylistName} playlistName={this.state.playlist.name} />

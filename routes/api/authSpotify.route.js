@@ -12,6 +12,9 @@ const {
 
 const CLIENT_ID_SECRET_64 = Base64.encode(CLIENT_ID + ':' + CLIENT_SECRET);
 
+/* 
+ * Create spotify axios instance
+ */
 
 const spotifyAxios = axios.create({
     baseURL: 'https://accounts.spotify.com/api/token',
@@ -24,6 +27,11 @@ const spotifyAxios = axios.create({
         grant_type: 'client_credentials'
     }
 });
+
+/* 
+ * Request token from Spotify API using above axios instance
+ * and return the token in the res object methods
+ */
 
 router.get('/', (req, res) => {
     spotifyAxios.post()
