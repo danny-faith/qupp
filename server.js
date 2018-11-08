@@ -62,7 +62,7 @@ app.use(function(req, res, next) {
  *****************************************/
 app.get('/*', (req, res) => {
   console.log('triggered route');
-  // res.json({stuff: 'HELLO WORLD'});
+  // res.json({stuff: 'HELLO WORLD'}); // comment
   res.sendFile(path.join(__dirname, '/../client/build/index.html'));
   // res.redirect('/?data=DanielBlythe');
 });
