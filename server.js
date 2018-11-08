@@ -5,6 +5,7 @@ const axios = require('axios');
 const cors = require('cors');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const path = require('path');
 require('dotenv').config();
 
 mongoose.Promise = global.Promise;
@@ -40,7 +41,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // need if statement around this to switch to look for the react build folder once in production
-app.use(express.static('public'));
+// app.use(express.static('public'));
+app.use( express.static( `${__dirname}/../client/build` ) );
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -77,5 +79,9 @@ app.use('/login', loginRouter);
 /* Routes END
  *****************************************/
 
+
+app.get('*', (req, res)=>{
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+})
 
 app.listen(process.env.PORT || 8080);

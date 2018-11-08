@@ -10,7 +10,7 @@ class SearchForm extends Component {
      * Using state to manage the search input value
      */
     state = {
-        searchValue : 'Helloo'
+        searchValue : ''
     }
 
     handleInputOnChange = event => {
@@ -22,7 +22,7 @@ class SearchForm extends Component {
         let searchValue = event.target.value;
         const found = searchValue.match(regex) || [];
         
-        if (found.length == 0) {
+        if (found.length === 0) {
             this.setState({ searchValue });
         } else {
             window.M.toast({html: 'Please do not use special characters( ` \' ) when searching', 'displayLength': 6000, classes: 'red lighten-1'});
