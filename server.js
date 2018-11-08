@@ -80,8 +80,10 @@ app.use('/login', loginRouter);
  *****************************************/
 
 
-app.get('*', (req, res)=>{
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-})
+app.get('*', (req, res) => {
+  console.log('triggered route');
+  // res.sendFile(path.join(__dirname, '../client/build/index.html'));
+  res.redirect('/');
+});
 
 app.listen(process.env.PORT || 8080);

@@ -53,8 +53,5 @@ router.post('/',
     }
 );
 
-router.get('/', (req, res)=>{
-    res.send('daniel!!!');
-});
 
 module.exports = router;
