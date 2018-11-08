@@ -66,9 +66,9 @@ var playlistRouter = require('./routes/api/playlist.route');
 var spotifyRouter = require('./routes/api/authSpotify.route');
 var loginRouter = require('./routes/api/login.route');
 
-app.get('/', (req, res) => {
-    res.status(200).send();
-});
+// app.get('/', (req, res) => {
+//     res.status(200).send();
+// });
 
 app.use('/users', usersRouter);
 app.use('/songs', songsRouter);
