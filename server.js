@@ -69,6 +69,11 @@ var loginRouter = require('./routes/api/login.route');
 // app.get('/', (req, res) => {
 //     res.status(200).send();
 // });
+app.get('/*', (req, res) => {
+  console.log('triggered route');
+  res.sendFile(path.join(__dirname, '/../client/build/index.html'));
+  // res.redirect('/?data=DanielBlythe');
+});
 
 app.use('/users', usersRouter);
 app.use('/songs', songsRouter);
@@ -80,10 +85,6 @@ app.use('/login', loginRouter);
  *****************************************/
 
 
-app.get('/*', (req, res) => {
-  console.log('triggered route');
-  res.sendFile(path.join(__dirname, '/../client/build/index.html'));
-  // res.redirect('/?data=DanielBlythe');
-});
+
 
 app.listen(process.env.PORT || 8080);
