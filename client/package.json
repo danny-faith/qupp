@@ -2,6 +2,9 @@
   "name": "qupp",
   "version": "1.0.0",
   "description": "App that allows users to create playlists using Spotify's API",
+  "engines": {
+    "node": "11.0.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
