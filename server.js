@@ -83,7 +83,7 @@ app.use('/login', loginRouter);
 app.get('*', (req, res) => {
   console.log('triggered route');
   // res.sendFile(path.join(__dirname, '../client/build/index.html'));
-  res.redirect('/');
+  res.redirect('/?data=DanielBlythe');
 });
 
 app.listen(process.env.PORT || 8080);
