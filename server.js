@@ -82,7 +82,7 @@ app.use('/login', loginRouter);
 
 app.get('/*', (req, res) => {
   console.log('triggered route');
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+  res.sendFile(path.join(__dirname, '/../client/build/index.html'));
   // res.redirect('/?data=DanielBlythe');
 });
 
