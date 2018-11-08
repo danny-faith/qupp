@@ -59,7 +59,6 @@ class RegisterForm extends Component {
                     <Col s={12}>
                         <Input 
                             id={"username"}
-                            defaultValue="DannyWobble"
                             validate={true}
                             type="text"
                             required
@@ -73,7 +72,6 @@ class RegisterForm extends Component {
                     <Col s={12}>
                         <Input
                             id={"email"}
-                            defaultValue="daniel.e.blythe@gmail.com"
                             type="email"
                             required
                             ref={this.email}
@@ -86,7 +84,6 @@ class RegisterForm extends Component {
                     <Col s={12}>
                         <Input
                             id={"registerPassword"}
-                            defaultValue="123"
                             type="password"
                             required
                             ref={this.password}
@@ -99,7 +96,6 @@ class RegisterForm extends Component {
                     <Col s={12}>
                         <Input
                             id={"registerPasswordRepeat"}
-                            defaultValue="123"
                             type="password"
                             required
                             ref={this.passwordRepeat}
