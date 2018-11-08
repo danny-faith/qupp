@@ -42,7 +42,7 @@ app.use(passport.session());
 
 // need if statement around this to switch to look for the react build folder once in production
 // app.use(express.static('public'));
-app.use( express.static( `${__dirname}/../client/build` ) );
+// app.use( express.static( `${__dirname}/../client/build` ) );
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
