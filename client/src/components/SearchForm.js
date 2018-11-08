@@ -1,10 +1,36 @@
 import React, { Component } from 'react';
 import { Row, Col, Input, Button } from 'react-materialize';
 import axios from 'axios';
+import { log } from 'util';
 // import PropTypes from 'prop-types';
+const regex = /[`']/g;
 
 class SearchForm extends Component {
+    /**
+     * Using state to manage the search input value
+     */
+    state = {
+        searchValue : 'Helloo'
+    }
+
+    handleInputOnChange = event => {
+        /**
+         * Checking input value everytime time a new character is entered
+         * for special characters defined in above `regex`.
+         * IF special characters are found alert the user using Mat' Toast
+         */
+        let searchValue = event.target.value;
+        const found = searchValue.match(regex) || [];
+        
+        if (found.length == 0) {
+            this.setState({ searchValue });
+        } else {
+            window.M.toast({html: 'Please do not use special characters( ` \' ) when searching', 'displayLength': 6000, classes: 'red lighten-1'});
+        }
+    }
+
     searchQuery = React.createRef();
+
     componentWillMount = () => {
         /**
          * When component mounts, make call to Spotify to get access token
@@ -20,7 +46,7 @@ class SearchForm extends Component {
     
     handleFormSubmit = event => {
         event.preventDefault();
-        // TODO  filter out disallowed characters ` <- that oen for starters
+        // TODO  filter out disallowed characters ` <- that one for starters
 
         const searchTerm = this.searchQuery.current.state.value;
 
@@ -38,7 +64,7 @@ class SearchForm extends Component {
                  * if no tracks found alert user with Mat' Toast
                  * else create array of search results and add to state so they can be rendered
                  */
-                window.M.toast({html: 'No tracks found!', classes: 'red lighten-2'});
+                window.M.toast({html: 'No tracks found!', classes: 'red lighten-1'});
             } else {
                 /**
                  * map over the array of tracks returned by Spotify and create an array of objects
@@ -77,7 +103,7 @@ class SearchForm extends Component {
                 <form onSubmit={this.handleFormSubmit}>
                     <Row>
                         <Col s={8} offset={"s1"}>
-                            <Input id={"searchInput"} defaultValue='hello' ref={this.searchQuery} placeholder="Prince I would die for you" s={12} label="Track search" />
+                            <Input id={"searchInput"} value={this.state.searchValue} onChange={this.handleInputOnChange} ref={this.searchQuery} placeholder="Prince I would die for you" s={12} label="Track search" />
                         </Col>
                         <Col s={2}>
                             <Button className="left" waves="light">Search</Button>
