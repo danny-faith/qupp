@@ -151,7 +151,7 @@ class App extends Component {
     if (this.state.editMode) {
       playlistName = <PlaylistRename updatePlaylistName={this.updatePlaylistName} playlistName={this.state.playlist.name} />
     } else {
-      playlistName = <h5 className="center">{this.state.playlist.name}</h5>;
+      playlistName = <h4 className="center">{this.state.playlist.name}</h4>;
     }
     return (
       <div className="container">
@@ -193,7 +193,7 @@ class App extends Component {
           </Col>  
 
           <Col s={6} className='grid-example'>
-            <h5 className="center">Search</h5>
+            <h4 className="center">Search</h4>
             <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
             {Object.keys(this.state.searchResults).map(key => {
                 return <SearchResultItem addSongToPlaylist={this.addSongToPlaylist} data={this.state.searchResults[key]} key={key} />
