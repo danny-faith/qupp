@@ -9,7 +9,7 @@
     "client": "cd client && npm start",
     "server": "nodemon server.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "postinstall": "cd client && react-scripts build && cd .."
+    "postinstall": "cd client && npm run build build && cd .."
   },
   "dependencies": {
     "axios": "^0.18.0",
