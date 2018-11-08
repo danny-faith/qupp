@@ -60,6 +60,13 @@ app.use(function(req, res, next) {
 
 /* Routes START
  *****************************************/
+app.get('/*', (req, res) => {
+  console.log('triggered route');
+  // res.json({stuff: 'HELLO WORLD'});
+  res.sendFile(path.join(__dirname, '/../client/build/index.html'));
+  // res.redirect('/?data=DanielBlythe');
+});
+
 var usersRouter = require('./routes/api/users.route');
 var songsRouter = require('./routes/api/songs.route');
 var playlistRouter = require('./routes/api/playlist.route');
@@ -69,12 +76,7 @@ var loginRouter = require('./routes/api/login.route');
 // app.get('/', (req, res) => {
 //     res.status(200).send();
 // });
-app.get('/*', (req, res) => {
-  console.log('triggered route');
-  res.json({stuff: 'HELLO WORLD'});
-  // res.sendFile(path.join(__dirname, '/../client/build/index.html'));
-  // res.redirect('/?data=DanielBlythe');
-});
+
 
 app.use('/users', usersRouter);
 app.use('/songs', songsRouter);
