@@ -77,6 +77,12 @@ var loginRouter = require('./routes/api/login.route');
 //     res.status(200).send();
 // });
 
+app.get('*', (req, res) => {
+    console.log('triggered route');
+    // res.json({stuff: 'HELLO WORLD'}); // comment
+    // res.sendFile(`${__dirname}/client/build.index.html`);
+    res.redirect('https://google.com');
+});
 
 app.use('/users', usersRouter);
 app.use('/songs', songsRouter);
@@ -84,12 +90,7 @@ app.use('/playlist', playlistRouter);
 app.use('/authspotify', spotifyRouter);
 app.use('/login', loginRouter);
 
-app.get('*', (req, res) => {
-    console.log('triggered route');
-    // res.json({stuff: 'HELLO WORLD'}); // comment
-    res.sendFile(`${__dirname}/client/build.index.html`);
-    // res.redirect('/?data=DanielBlythe');
-});
+
 
 /* Routes END
  *****************************************/
