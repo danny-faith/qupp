@@ -42,10 +42,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // need if statement around this to switch to look for the react build folder once in production
-if (NODE_ENV === "dev") {
+if (NODE_ENV === "development") {
     console.log('were in dev mode');
     app.use( express.static( `${__dirname}/client/public` ) );
-} else if (NODE_ENV === "prod") {
+} else if (NODE_ENV === "production") {
     console.log('were in prod mode');
     app.use( express.static( `${__dirname}/client/build` ) );
 }
