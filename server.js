@@ -62,12 +62,7 @@ app.use(function(req, res, next) {
 
 /* Routes START
  *****************************************/
-app.get('/*', (req, res) => {
-  console.log('triggered route');
-  // res.json({stuff: 'HELLO WORLD'}); // comment
-  res.sendFile(`${__dirname}/client/build.index.html`);
-  // res.redirect('/?data=DanielBlythe');
-});
+
 
 console.log('/* catch all path', `${__dirname}/client/build`);
 
@@ -88,6 +83,13 @@ app.use('/songs', songsRouter);
 app.use('/playlist', playlistRouter);
 app.use('/authspotify', spotifyRouter);
 app.use('/login', loginRouter);
+
+app.get('*', (req, res) => {
+    console.log('triggered route');
+    // res.json({stuff: 'HELLO WORLD'}); // comment
+    res.sendFile(`${__dirname}/client/build.index.html`);
+    // res.redirect('/?data=DanielBlythe');
+});
 
 /* Routes END
  *****************************************/
