@@ -11,7 +11,7 @@ class PlaylistRename extends Component {
      */
     renamePlaylistHandler = event => {
         event.preventDefault();
-        axios.put(`http://localhost:8080/playlist/${this.playlistId}`, {
+        axios.put(`/playlist/${this.playlistId}`, {
             name: this.playlistInput.current.state.value
         })
         .then((res) => {  

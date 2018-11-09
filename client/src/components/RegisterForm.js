@@ -37,7 +37,7 @@ class RegisterForm extends Component {
             password
         }
 
-        axios.post('http://localhost:8080/users/', newUser)
+        axios.post('/users/', newUser)
             .then(function (response) {
                 window.M.toast({html: `Username: ${response.data.username} was created`, classes: 'green lighten-1'});
             })

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Input, Button } from 'react-materialize';
 import axios from 'axios';
-import { log } from 'util';
 // import PropTypes from 'prop-types';
 const regex = /[`']/g;
 
@@ -38,7 +37,7 @@ class SearchForm extends Component {
          * This is a terrible way to manage the access token and 
          * will not be in the final version of this project
          */
-        axios.get('http://localhost:8080/authspotify')
+        axios.get('/authspotify')
         .then((res) => {
             localStorage.setItem('SPOTIFY_ACCESS_TOKEN', res.data.access_token);
         }); 

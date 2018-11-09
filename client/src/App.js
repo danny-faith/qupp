@@ -32,7 +32,7 @@ class App extends Component {
   }
 
   componentDidMount = () => {
-    axios.get('http://localhost:8080/songs/')
+    axios.get('/songs/')
     .then((res) => {
       var songs = res.data;
       const playlist = {...this.state.playlist};
@@ -43,7 +43,7 @@ class App extends Component {
       });
     });
 
-    axios.get('http://localhost:8080/playlist/')
+    axios.get('/playlist/')
     .then((res) => {
       const newPlaylistName = res.data[0].name;
       let playlist = {...this.state.playlist};
@@ -82,7 +82,7 @@ class App extends Component {
     /**
      * Add song to DB and if successful(.then()) init Toast to inform user
      */
-    axios.post(`http://localhost:8080/songs/`, songToAdd)
+    axios.post(`/songs/`, songToAdd)
       .then(res => {
         window.M.toast({html: `Added: ${res.data.name} - ${res.data.album}`, classes: 'green lighten-1'});
         // SHOULD BE ERROR CATCHING IN HERE!!!
@@ -115,7 +115,7 @@ class App extends Component {
   }
 
   deleteSongFromPlaylist = songToDeleteSpotId => {
-    axios.delete(`http://localhost:8080/songs/${songToDeleteSpotId}`)
+    axios.delete(`/songs/${songToDeleteSpotId}`)
       .then(() => {
         // Copy state.playlist
         const playlistCopy = [...this.state.playlist.songs];
