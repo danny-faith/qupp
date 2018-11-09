@@ -10,7 +10,7 @@ class SearchForm extends Component {
      * Using state to manage the search input value
      */
     state = {
-        searchValue : 'Helloo'
+        searchValue : ''
     }
 
     handleInputOnChange = event => {
