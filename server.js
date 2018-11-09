@@ -20,7 +20,8 @@ promise.then(function(db) {
 var Schema = mongoose.Schema;
 
 const {
-    PORT:pt
+    PORT:pt,
+    NODE_ENV
 } = process.env;
 
 const PORT = pt || 8080;
@@ -41,8 +42,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // need if statement around this to switch to look for the react build folder once in production
-// app.use(express.static('public'));
-app.use( express.static( `${__dirname}/client/build` ) );
+if (NODE_ENV === "dev") {
+    console.log('were in dev mode');
+    app.use( express.static( `${__dirname}/client/public` ) );
+} else if (NODE_ENV === "prod") {
+    console.log('were in prod mode');
+    app.use( express.static( `${__dirname}/client/build` ) );
+}
 console.log('express static: ', `${__dirname}/client/build`);
 
 
@@ -77,12 +83,7 @@ var loginRouter = require('./routes/api/login.route');
 //     res.status(200).send();
 // });
 
-app.get('*', (req, res) => {
-    console.log('triggered route');
-    // res.json({stuff: 'HELLO WORLD'}); // comment
-    // res.sendFile(`${__dirname}/client/build.index.html`);
-    res.redirect('https://google.com');
-});
+
 
 app.use('/users', usersRouter);
 app.use('/songs', songsRouter);
@@ -90,7 +91,12 @@ app.use('/playlist', playlistRouter);
 app.use('/authspotify', spotifyRouter);
 app.use('/login', loginRouter);
 
-
+app.get('*', (req, res) => {
+    console.log('triggered route');
+    // res.json({stuff: 'HELLO WORLD'}); // comment
+    // res.sendFile(`${__dirname}/client/build.index.html`);
+    res.redirect('https://google.com');
+});
 
 /* Routes END
  *****************************************/
