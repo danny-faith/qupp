@@ -30,8 +30,6 @@ const PORT = pt || 8080;
 
 const app = express();
 
-app.use(cors());
-
 app.use(require('cookie-parser')());
 app.use(require('express-session')({
     secret: 'keyboard cat',
@@ -44,6 +42,7 @@ app.use(passport.session());
 // need if statement around this to switch to look for the react build folder once in production
 if (NODE_ENV === "development") {
     console.log('were in dev mode');
+    app.use(cors());    
     app.use( express.static( `${__dirname}/client/public` ) );
 } else if (NODE_ENV === "production") {
     console.log('were in prod mode');
@@ -59,12 +58,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // set CORS headers on server as server listens on port 8080
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    next();
-});
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//     next();
+// });
 
 /* Routes START
  *****************************************/
