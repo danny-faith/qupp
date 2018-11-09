@@ -42,8 +42,8 @@ app.use(passport.session());
 
 // need if statement around this to switch to look for the react build folder once in production
 // app.use(express.static('public'));
-app.use( express.static( `${__dirname}/../client/build` ) );
-console.log('express static: ', `${__dirname}/../client/build`);
+app.use( express.static( `${__dirname}/client/build` ) );
+console.log('express static: ', `${__dirname}/client/build`);
 
 
 // parse application/x-www-form-urlencoded
@@ -65,11 +65,11 @@ app.use(function(req, res, next) {
 app.get('/*', (req, res) => {
   console.log('triggered route');
   // res.json({stuff: 'HELLO WORLD'}); // comment
-  res.sendFile(path.join(__dirname, '/../client/build/index.html'));
+  res.sendFile(`${__dirname}/client/build.index.html`);
   // res.redirect('/?data=DanielBlythe');
 });
 
-console.log('/* catch all path', path.join(__dirname, '/../client/build/index.html'));
+console.log('/* catch all path', `${__dirname}/client/build`);
 
 
 var usersRouter = require('./routes/api/users.route');
