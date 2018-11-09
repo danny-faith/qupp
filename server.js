@@ -42,7 +42,9 @@ app.use(passport.session());
 
 // need if statement around this to switch to look for the react build folder once in production
 // app.use(express.static('public'));
-// app.use( express.static( `${__dirname}/../client/build` ) );
+app.use( express.static( `${__dirname}/../client/build` ) );
+console.log('express static: ', `${__dirname}/../client/build`);
+
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -66,6 +68,9 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '/../client/build/index.html'));
   // res.redirect('/?data=DanielBlythe');
 });
+
+console.log('/* catch all path', path.join(__dirname, '/../client/build/index.html'));
+
 
 var usersRouter = require('./routes/api/users.route');
 var songsRouter = require('./routes/api/songs.route');
