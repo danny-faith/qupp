@@ -19,7 +19,7 @@ class LoginForm extends Component {
         
         axios({
             method: 'post',
-            url: '/login',
+            url: 'http://localhost:8080/login',
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
