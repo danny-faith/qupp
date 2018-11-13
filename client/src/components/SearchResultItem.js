@@ -11,6 +11,16 @@ class SearchResultItem extends Component {
      */
     this.props.addSongToPlaylist(this.props.data);
   }
+  handleAddSongToPlayQueue = () => {
+    const data = this.props.data;
+    const songToQueue = {
+        name: data.name,
+        album: data.album,
+        artists: data.artists,
+        uri: data.uri
+    }
+    this.props.addSongToPlayQueue(songToQueue);
+}
   render() {
     return(
       <Row>
@@ -27,6 +37,7 @@ class SearchResultItem extends Component {
         </Col>
         <Col s={5} className=''>
           <Button waves="light" className="btn-small right" onClick={this.addSongToPlaylistHandler}>Add</Button>
+          <Button className="btn-small green lighten-2 right" waves="light" icon="playlist_add" onClick={this.handleAddSongToPlayQueue}></Button>
         </Col>
       </Row>
     );
