@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { Row, Col, Button } from 'react-materialize';
 import axios from 'axios';
-// import songs from './loadPlaylist';
 import SpotifyPlayer from 'react-spotify-player';
+
 import SearchForm from './components/SearchForm';
 import SearchResultItem from './components/SearchResultItem';
 import PlaylistItem from './components/PlaylistItem';
 import PlaylistRename from './components/PlaylistRename';
 import LogoutBtn from './components/LogoutBtn';
+import QueueList from './components/QueueList';
+import CurrentUser from './components/CurrentUser';
+
 import logo from './logo-v2.svg';
 import './App.scss';
-import CurrentUser from './components/CurrentUser';
 
 // set `SpotifyPlayer` styling
 const size = {
@@ -27,14 +29,15 @@ class App extends Component {
       songs: [],
       name: ''
     },
+    playQueue: [],
     songToPlayUri: 'spotify:track:7o2AeQZzfCERsRmOM86EcB',
     editMode: false
   }
 
   componentDidMount = () => {
-    axios.get('http://localhost:8080/songs/')
+    axios.get('/songs/')
     .then((res) => {
-      var songs = res.data;
+      const songs = res.data;
       const playlist = {...this.state.playlist};
 
       playlist.songs = songs;
@@ -43,7 +46,7 @@ class App extends Component {
       });
     });
 
-    axios.get('http://localhost:8080/playlist/')
+    axios.get('/playlist/')
     .then((res) => {
       const newPlaylistName = res.data[0].name;
       let playlist = {...this.state.playlist};
@@ -82,7 +85,7 @@ class App extends Component {
     /**
      * Add song to DB and if successful(.then()) init Toast to inform user
      */
-    axios.post(`http://localhost:8080/songs/`, songToAdd)
+    axios.post(`/songs/`, songToAdd)
       .then(res => {
         window.M.toast({html: `Added: ${res.data.name} - ${res.data.album}`, classes: 'green lighten-1'});
         // SHOULD BE ERROR CATCHING IN HERE!!!
@@ -107,15 +110,57 @@ class App extends Component {
     });
   }
 
+  addPlaylistToQueue = () => {
+    const playlist = this.state.playlist;
+    const copyOfPlayQueue = this.state.playQueue.slice(0); // using splice to clone state as the spread cloning loses the splice() method
+    
+    const songsToQueue = playlist.songs.map(song => {
+      return {
+        name: song.name,
+        album: song.album,
+        artists: song.artists,
+        uri: song.uri
+      }
+    });
+
+    const newQueue = [
+      copyOfPlayQueue[0], // keep the first item in queue there as that doesnt want to be moved
+      ...songsToQueue, // spread all songs from playlist into the queue after the first item
+      ...copyOfPlayQueue.slice(1) // spread rest of the queue back into the queue after the new songs
+    ];
+    this.setState({
+      playQueue: newQueue
+    });
+  }
+
+  addSongToPlayQueue = (songToQueue) => {
+    let copyOfPlayQueue = this.state.playQueue.slice(0); // using splice to clone state as the spread cloning loses the splice() method
+    
+    // insert new song into play queue after the first song in queue
+    copyOfPlayQueue.splice(1, 0, songToQueue);
+    
+    this.setState({
+      playQueue: copyOfPlayQueue
+    });
+  }
+
+  removeSongFromPlayQueue = (indexToRemove) => {
+    let copyOfPlayQueue = this.state.playQueue.slice(0); // using splice to clone state as the spread cloning loses the splice() method
+    copyOfPlayQueue.splice(indexToRemove, 1);
+    this.setState({
+      playQueue: copyOfPlayQueue
+    });
+  }
+
   // Spotify song URI as paramter and use that to set the songToPlay state and thus re-render the page and play song preview
-  playSong = songUri => {
+  playSong = (songUri) => {
     const newState = {...this.state};
     newState.songToPlayUri = songUri;
     this.setState(newState);
   }
 
-  deleteSongFromPlaylist = songToDeleteSpotId => {
-    axios.delete(`http://localhost:8080/songs/${songToDeleteSpotId}`)
+  deleteSongFromPlaylist = (songToDeleteSpotId) => {
+    axios.delete(`/songs/${songToDeleteSpotId}`)
       .then(() => {
         // Copy state.playlist
         const playlistCopy = [...this.state.playlist.songs];
@@ -183,11 +228,12 @@ class App extends Component {
               </Col>
               <Col s={2} className="valign-wrapper playlistSettingsCol">
                 <Button onClick={this.handleEditModeBtn} icon="settings" className="right orange lighten-2"></Button>
+                <Button onClick={this.addPlaylistToQueue} icon="playlist_add" className="right green lighten-2"></Button>
               </Col>
             </Row>
             <div className="playlist-con">
               {Object.keys(this.state.playlist.songs).map(key => {
-                  return <PlaylistItem editMode={this.state.editMode} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playlist.songs[key]} key={key} />
+                  return <PlaylistItem editMode={this.state.editMode} addSongToPlayQueue={this.addSongToPlayQueue} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playlist.songs[key]} key={key} />
               })}
             </div>
           </Col>  
@@ -195,8 +241,12 @@ class App extends Component {
           <Col s={6} className='grid-example'>
             <h4 className="center">Search</h4>
             <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
+            
+            {Object.keys(this.state.playQueue).map(key => {
+              return <QueueList data={this.state.playQueue[key]} removeSongFromPlayQueue={this.removeSongFromPlayQueue} key={key} index={key} />
+            })}
             {Object.keys(this.state.searchResults).map(key => {
-                return <SearchResultItem addSongToPlaylist={this.addSongToPlaylist} data={this.state.searchResults[key]} key={key} />
+              return <SearchResultItem addSongToPlayQueue={this.addSongToPlayQueue} addSongToPlaylist={this.addSongToPlaylist} data={this.state.searchResults[key]} key={key} />
             })}
           </Col>
 

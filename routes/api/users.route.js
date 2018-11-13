@@ -26,6 +26,8 @@ router.post('/', (req, res) => {
  */
 
 router.get('/:username', (req, res, next) => {
+    console.log('get user');
+    
     var { username } = req.params;
     User.find({ username: username }).exec(function(err, user) {
         if (err) {
@@ -41,9 +43,8 @@ router.get('/:username', (req, res, next) => {
  */
 
 router.get('/', (req, res) => {
-    User.find({}).exec(function(err, users) {
-        res.status(200).json(users);
-    });
+    console.log('/login route requested');    
+    res.sendFile(`${__dirname}/client/build.index.html`);
 });
 
 module.exports = router;

@@ -5,10 +5,14 @@
   "author": "Daniel Blythe",
   "license": "ISC",
   "main": "server.js",
+  "engines": {
+    "node": "11.0.0"
+  },
   "scripts": {
     "client": "cd client && npm start",
-    "server": "nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "server": "nodemon --ignore 'client/' server.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "postinstall": "cd client && npm install && react-scripts build && cd .."
   },
   "dependencies": {
     "axios": "^0.18.0",

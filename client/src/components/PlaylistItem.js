@@ -17,6 +17,16 @@ class PlaylistItem extends Component {
     playSongHandler = () => {
         this.props.playSong(this.props.data.uri);
     }
+    handleAddSongToPlayQueue = () => {
+        const data = this.props.data;
+        const songToQueue = {
+            name: data.name,
+            album: data.album,
+            artists: data.artists,
+            uri: data.uri
+        }
+        this.props.addSongToPlayQueue(songToQueue);
+    }
     render() {
         /**
          * Depending on editmode state(bool). Show play/preview button or delete button
@@ -27,14 +37,14 @@ class PlaylistItem extends Component {
         if (this.props.editMode) {
             button = <Button className="btn-small right red lighten-2" waves="light" onClick={this.deleteSongFromPlaylistHandler}>Delete</Button>;
         } else {
-            button = <Button className="btn-small right" waves="light" onClick={this.playSongHandler}>Play</Button>;
+            // button = <Button className="btn-small right" waves="light" onClick={this.playSongHandler}>Play</Button>;
         }
         return(
             <Row>
                 <Col s={2}>
                     <img alt={'alt text'} src={this.props.data.image} />
                 </Col>
-                <Col s={6}>
+                <Col className="track-info" s={6}>
                     <p>{this.props.data.name}, {this.props.data.album}</p>
                     <p>Artists:
                         {this.props.data.artists.map(key => (
@@ -43,6 +53,7 @@ class PlaylistItem extends Component {
                     </p>
                 </Col>
                 <Col s={4}>
+                    <Button className="btn-small green lighten-2 right" waves="light" icon="playlist_add" onClick={this.handleAddSongToPlayQueue}></Button>
                     {button}
                 </Col>
             </Row>

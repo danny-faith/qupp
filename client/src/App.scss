@@ -22,11 +22,14 @@ html, body {
       overflow-y: scroll;
       & > div {
         margin-right: 0;
+        .track-info p {
+          margin-top: 0;
+        }
       }
     }
   }
   .btn, .btn-large {
-    background: #6598B8;
+    // background: #6598B8;
   }
 }
 

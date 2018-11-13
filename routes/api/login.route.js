@@ -45,6 +45,8 @@ router.post('/',
             session: false
         }
     ), (req, res, next) => {
+        console.log('/login route');
+        
         res.redirect(`/?username=${req.user.username}&avatar=${req.user.image}`);
         // jwt.sign({user: req.user}, 'secretKey', (err, token) => {
         //     // let JWTjj = token;
@@ -52,5 +54,6 @@ router.post('/',
         // });
     }
 );
+
 
 module.exports = router;
