@@ -29,38 +29,7 @@ class App extends Component {
       songs: [],
       name: ''
     },
-    playQueue: [
-      {
-        name: 'I would die 4 U',
-        artists: ['Prince'],
-        album: 'Purple Rain',
-        uri: 'spotify:track:7o2AeQZzfCERsRmOM86EcB'
-      },
-      {
-        name: 'Wheres my brother',
-        artists: ['Wiley'],
-        album: 'Race Against Time',
-        uri: 'spotify:track:7o2AeQZzfCERsRmOM86EcB'
-      },
-      {
-        name: 'Wheres my brother 2',
-        artists: ['Wiley 2'],
-        album: 'Race Against Time 2',
-        uri: 'spotify:track:7o2AeQZzfCERsRmOM86EcB'
-      },
-      {
-        name: 'Wheres my brother 3',
-        artists: ['Wiley 3'],
-        album: 'Race Against Time 3',
-        uri: 'spotify:track:7o2AeQZzfCERsRmOM86EcB'
-      },
-      {
-        name: 'Wheres my brother 4',
-        artists: ['Wiley 4'],
-        album: 'Race Against Time 4',
-        uri: 'spotify:track:7o2AeQZzfCERsRmOM86EcB'
-      }
-    ],
+    playQueue: [],
     songToPlayUri: 'spotify:track:7o2AeQZzfCERsRmOM86EcB',
     editMode: false
   }
