@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Button } from 'react-materialize';
 import axios from 'axios';
 import SpotifyPlayer from 'react-spotify-player';
+import base from './base';
 
 import SearchForm from './components/SearchForm';
 import SearchResultItem from './components/SearchResultItem';
@@ -29,22 +30,43 @@ class App extends Component {
       songs: [],
       name: ''
     },
-    playQueue: [],
+    playQueue: {},
+    playQueueTest: [],
     songToPlayUri: 'spotify:track:7o2AeQZzfCERsRmOM86EcB',
     editMode: false
   }
 
   componentDidMount = () => {
-    axios.get('/songs/')
-    .then((res) => {
-      const songs = res.data;
-      const playlist = {...this.state.playlist};
 
-      playlist.songs = songs;
-      this.setState({
-        playlist
-      });
+    // this.ref = base.syncState('playlist/name', {
+    //   context: this,
+    //   state: 'playlist.name'
+    // });
+
+    this.ref = base.syncState('playlist/test', {
+      context: this,
+      state: 'test'
     });
+
+    this.ref = base.syncState('playQueue', {
+      context: this,
+      state: 'playQueue'
+    });
+
+    // this.setState({
+    //   playQueueTest: ['setting state', 'songs']
+    // });
+
+    // axios.get('/songs/')
+    // .then((res) => {
+    //   const songs = res.data;
+    //   const playlist = {...this.state.playlist};
+
+    //   playlist.songs = songs;
+    //   this.setState({
+    //     playlist
+    //   });
+    // });
 
     axios.get('/playlist/')
     .then((res) => {
@@ -134,10 +156,14 @@ class App extends Component {
   }
 
   addSongToPlayQueue = (songToQueue) => {
-    let copyOfPlayQueue = this.state.playQueue.slice(0); // using splice to clone state as the spread cloning loses the splice() method
+    // let copyOfPlayQueue = this.state.playQueue.slice(0); // using splice to clone state as the spread cloning loses the splice() method
+    const copyOfPlayQueue = {...this.state.playQueue}; // using splice to clone state as the spread cloning loses the splice() method
+    console.log('copyOfPlayQueue: ', copyOfPlayQueue);
     
     // insert new song into play queue after the first song in queue
-    copyOfPlayQueue.splice(1, 0, songToQueue);
+    // copyOfPlayQueue.splice(1, 0, songToQueue);
+
+    copyOfPlayQueue[`song${Date.now()}`] = songToQueue;
     
     this.setState({
       playQueue: copyOfPlayQueue

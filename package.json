@@ -11,8 +11,7 @@
   "scripts": {
     "client": "cd client && npm start",
     "server": "nodemon --ignore 'client/' server.js",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "postinstall": "cd client && npm install && react-scripts build && cd .."
+    "dev": "concurrently --kill-others-on-fail \"npm run client\" \"npm run server\""
   },
   "dependencies": {
     "axios": "^0.18.0",
