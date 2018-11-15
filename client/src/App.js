@@ -27,25 +27,19 @@ class App extends Component {
   state = {
     searchResults: [],
     playlist: {
-      songs: [],
+      songs: {},
       name: ''
     },
     playQueue: {},
-    playQueueTest: [],
     songToPlayUri: 'spotify:track:7o2AeQZzfCERsRmOM86EcB',
     editMode: false
   }
 
   componentDidMount = () => {
 
-    // this.ref = base.syncState('playlist/name', {
-    //   context: this,
-    //   state: 'playlist.name'
-    // });
-
-    this.ref = base.syncState('playlist/test', {
+    this.ref = base.syncState('playlist', {
       context: this,
-      state: 'test'
+      state: 'playlist'
     });
 
     this.ref = base.syncState('playQueue', {
@@ -94,12 +88,19 @@ class App extends Component {
      * check to see if song is already in playlist via Spotify Id
      * if song is already there then return as well passing through Materialize Toast to let use know
      */
-    for(let song of playlist.songs) {
-      if (song.spotId === songToAdd.spotId) return window.M.toast({html: `"${songToAdd.name}" is a duplicate, cannot add`, classes: 'red lighten-2'});
-    }
+    // for(let song of playlist.songs) {
+    //   if (song.spotId === songToAdd.spotId) return window.M.toast({html: `"${songToAdd.name}" is a duplicate, cannot add`, classes: 'red lighten-2'});
+    // }
+    // console.log(songToAdd);
+    
+    Object.keys(playlist.songs).map(key => {
+      if (playlist.songs[key].spotId === songToAdd.spotId) return window.M.toast({html: `"${songToAdd.name}" is a duplicate, cannot add`, classes: 'red lighten-2'});
+    });
+    // console.log('something after');
+    
 
     // Optimistically add song to copied playlist state
-    playlist.songs.push(songToAdd);
+    playlist.songs[songToAdd.spotId] = songToAdd;
     this.setState({
       playlist
     });
@@ -107,13 +108,13 @@ class App extends Component {
     /**
      * Add song to DB and if successful(.then()) init Toast to inform user
      */
-    axios.post(`/songs/`, songToAdd)
-      .then(res => {
-        window.M.toast({html: `Added: ${res.data.name} - ${res.data.album}`, classes: 'green lighten-1'});
-        // SHOULD BE ERROR CATCHING IN HERE!!!
-      })
-      .catch(err => {
-    });
+    // axios.post(`/songs/`, songToAdd)
+    //   .then(res => {
+    //     window.M.toast({html: `Added: ${res.data.name} - ${res.data.album}`, classes: 'green lighten-1'});
+    //     // SHOULD BE ERROR CATCHING IN HERE!!!
+    //   })
+    //   .catch(err => {
+    // });
   }
 
   // Toggle edit mode 
@@ -156,23 +157,20 @@ class App extends Component {
   }
 
   addSongToPlayQueue = (songToQueue) => {
-    // let copyOfPlayQueue = this.state.playQueue.slice(0); // using splice to clone state as the spread cloning loses the splice() method
-    const copyOfPlayQueue = {...this.state.playQueue}; // using splice to clone state as the spread cloning loses the splice() method
-    console.log('copyOfPlayQueue: ', copyOfPlayQueue);
-    
-    // insert new song into play queue after the first song in queue
-    // copyOfPlayQueue.splice(1, 0, songToQueue);
+    const copyOfPlayQueue = {...this.state.playQueue};
 
-    copyOfPlayQueue[`song${Date.now()}`] = songToQueue;
+    copyOfPlayQueue[songToQueue.spotId] = songToQueue;
     
     this.setState({
       playQueue: copyOfPlayQueue
     });
   }
 
-  removeSongFromPlayQueue = (indexToRemove) => {
-    let copyOfPlayQueue = this.state.playQueue.slice(0); // using splice to clone state as the spread cloning loses the splice() method
-    copyOfPlayQueue.splice(indexToRemove, 1);
+  removeSongFromPlayQueue = (songToDeleteSpotId) => {
+    // let copyOfPlayQueue = this.state.playQueue.slice(0); // using splice to clone state as the spread cloning loses the splice() method
+    const copyOfPlayQueue = {...this.state.playQueue};
+    
+    copyOfPlayQueue[songToDeleteSpotId] = null;
     this.setState({
       playQueue: copyOfPlayQueue
     });
@@ -186,34 +184,20 @@ class App extends Component {
   }
 
   deleteSongFromPlaylist = (songToDeleteSpotId) => {
-    axios.delete(`/songs/${songToDeleteSpotId}`)
-      .then(() => {
         // Copy state.playlist
-        const playlistCopy = [...this.state.playlist.songs];
+        const playlistCopy = {...this.state.playlist.songs};
+        const { name, album } = playlistCopy[songToDeleteSpotId];
         
-        // Find the index of the object we want to delete
-        const index = playlistCopy.findIndex(obj => obj.spotId === songToDeleteSpotId);
-        
-        // Remove chosen object to delete by adding all other object back in around our chosen object
-        const newPlaylist = [
-            ...playlistCopy.slice(0, index),
-            ...playlistCopy.slice(index + 1)
-        ];
+        // delete the song by setting the song we want to delete to null
+        playlistCopy[songToDeleteSpotId] = null;
 
-        this.setState(prevState => ({
-            playlist: {
-              songs: newPlaylist,
-              name: prevState.playlist.name
-            }
-          })
-        );
+        this.setState({
+          playlist: {
+            songs: playlistCopy
+          }
+        });
 
-        window.M.toast({html: `Deleted: ${playlistCopy[index].name} - ${playlistCopy[index].album}`, classes: 'green lighten-1'});        
-      })
-      .catch(function (error) {
-        console.log('error: ', error);
-        console.log('error.config: ', error.config);
-      });
+        window.M.toast({html: `Deleted: ${name} - ${album}`, classes: 'green lighten-1'});        
   }
 
   render() {
@@ -224,6 +208,33 @@ class App extends Component {
     } else {
       playlistName = <h4 className="center">{this.state.playlist.name}</h4>;
     }
+    if (this.state.playlist.songs  === undefined) {
+    //   console.log('does this run?');
+      // const playlistItems = Object.keys(this.state.playlist.songs).map(key => {
+      //   return <PlaylistItem editMode={this.state.editMode} addSongToPlayQueue={this.addSongToPlayQueue} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playlist.songs[key]} key={key} />
+      // });
+      // console.log('playlistItems: ', playlistItems);
+  
+      
+    //   this.setState({
+    //     playlist: {
+    //       songs: {
+    //         '5be49e747b45f315429cf057': {
+    //           name: 'no data',
+    //           album: 'no data',
+    //           artists: [{
+    //             name: 'no data'
+    //           }],
+    //           image: 'no data',
+    //           spotId: 'no data',
+    //           uri: 'no data'
+    //         }
+    //       }
+    //     }
+    //   });
+    }
+    // console.log('this.state.playlist.songs: ', this.state.playlist.songs);
+    
     return (
       <div className="container">
 

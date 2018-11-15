@@ -23,6 +23,7 @@ class PlaylistItem extends Component {
             name: data.name,
             album: data.album,
             artists: data.artists,
+            spotId: data.spotId,
             uri: data.uri
         }
         this.props.addSongToPlayQueue(songToQueue);

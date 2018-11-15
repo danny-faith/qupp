@@ -3,7 +3,7 @@ import { Row, Col, Button } from 'react-materialize';
 
 class QueueList extends Component {
     handleRemoveSongFromPlayQueue = () => {
-        this.props.removeSongFromPlayQueue(this.props.index);
+        this.props.removeSongFromPlayQueue(this.props.data.spotId);
     }
     render() {
         return(

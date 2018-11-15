@@ -1,8 +1,13 @@
 import Rebase from 're-base';
 import firebase from 'firebase';
+require('dotenv').config();
+
+const {
+    FIREBASE_API_KEY
+} = process.env;
 
 const firebaseApp = firebase.initializeApp({
-    apiKey: "AIzaSyCIdDltj10KD8Tr6buAtmcmphzFT-BRQLI",
+    apiKey: FIREBASE_API_KEY,
     authDomain: "qupp-8353d.firebaseapp.com",
     databaseURL: "https://qupp-8353d.firebaseio.com"
 });
