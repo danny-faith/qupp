@@ -30,6 +30,7 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.0.5",
     "react-spotify-player": "^1.0.4",
+    "react-transition-group": "^2.5.0",
     "source-map-support": "^0.5.9"
   },
   "devDependencies": {},

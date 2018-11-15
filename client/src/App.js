@@ -278,10 +278,13 @@ class App extends Component {
           <Col s={6} className='grid-example'>
             <h4 className="center">Search</h4>
             <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
-            
-            {Object.keys(this.state.playQueue).map(key => {
+            <QueueList 
+              playQueue={this.state.playQueue}
+              removeSongFromPlayQueue={this.removeSongFromPlayQueue}
+            />
+            {/* {Object.keys(this.state.playQueue).map(key => {
               return <QueueList data={this.state.playQueue[key]} removeSongFromPlayQueue={this.removeSongFromPlayQueue} key={key} index={key} />
-            })}
+            })} */}
             {Object.keys(this.state.searchResults).map(key => {
               return <SearchResultItem addSongToPlayQueue={this.addSongToPlayQueue} addSongToPlaylist={this.addSongToPlaylist} data={this.state.searchResults[key]} key={key} />
             })}
