@@ -167,10 +167,9 @@ class App extends Component {
   }
 
   removeSongFromPlayQueue = (songToDeleteSpotId) => {
-    // let copyOfPlayQueue = this.state.playQueue.slice(0); // using splice to clone state as the spread cloning loses the splice() method
     const copyOfPlayQueue = {...this.state.playQueue};
-    
     copyOfPlayQueue[songToDeleteSpotId] = null;
+
     this.setState({
       playQueue: copyOfPlayQueue
     });
@@ -210,10 +209,7 @@ class App extends Component {
     }
     if (this.state.playlist.songs  === undefined) {
     //   console.log('does this run?');
-      // const playlistItems = Object.keys(this.state.playlist.songs).map(key => {
-      //   return <PlaylistItem editMode={this.state.editMode} addSongToPlayQueue={this.addSongToPlayQueue} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playlist.songs[key]} key={key} />
-      // });
-      // console.log('playlistItems: ', playlistItems);
+    // console.log('playlistItems: ', playlistItems);
   
       
     //   this.setState({
@@ -276,18 +272,17 @@ class App extends Component {
           </Col>  
 
           <Col s={6} className='grid-example'>
+
             <h4 className="center">Search</h4>
             <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
             <QueueList 
               playQueue={this.state.playQueue}
               removeSongFromPlayQueue={this.removeSongFromPlayQueue}
             />
-            {/* {Object.keys(this.state.playQueue).map(key => {
-              return <QueueList data={this.state.playQueue[key]} removeSongFromPlayQueue={this.removeSongFromPlayQueue} key={key} index={key} />
-            })} */}
             {Object.keys(this.state.searchResults).map(key => {
               return <SearchResultItem addSongToPlayQueue={this.addSongToPlayQueue} addSongToPlaylist={this.addSongToPlaylist} data={this.state.searchResults[key]} key={key} />
             })}
+
           </Col>
 
         </Row>

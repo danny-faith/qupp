@@ -3,9 +3,11 @@ import { Row, Col, Button } from 'react-materialize';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 class QueueList extends Component {
+
     handleRemoveSongFromPlayQueue = (key) => {
         this.props.removeSongFromPlayQueue(key);
     }
+
     renderOrder = key => {
         const track = this.props.playQueue[key];
         const transitionOptions = {
@@ -13,25 +15,7 @@ class QueueList extends Component {
             key,
             timeout: { enter: 500, exit: 500 }
         };
-        // const count = this.props.order[key];
-        // const isAvailable = fish && fish.status === "available";
-        // const transitionOptions = {
-        //   classNames: "order",
-        //   key,
-        //   timeout: { enter: 500, exit: 500 }
-        // };
-        // Make sure the fish is loaded before we continue!
-        // if (!fish) return null;
-    
-        // if (!isAvailable) {
-        //   return (
-        //     <CSSTransition {...transitionOptions}>
-        //       <li key={key}>
-        //         Sorry {fish ? fish.name : "fish"} is no longer available
-        //       </li>
-        //     </CSSTransition>
-        //   );
-        // }
+
         return (
             <CSSTransition {...transitionOptions}>
                 <Row key={key}>
@@ -48,7 +32,8 @@ class QueueList extends Component {
                 </Row>
             </CSSTransition>
         );
-      };
+    };
+
     render() {
         const trackIds = Object.keys(this.props.playQueue);
         return(
