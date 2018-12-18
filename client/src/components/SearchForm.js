@@ -69,6 +69,8 @@ class SearchForm extends Component {
                  * map over the array of tracks returned by Spotify and create an array of objects
                  * containing the properties needed from each track defined in the song schema.
                  */
+                console.log(res.data);
+                
                 const searchResults = res.data.tracks.items.map(song => {
 
                     let image = '';
@@ -85,7 +87,9 @@ class SearchForm extends Component {
                         spotId: song.id,
                         uri: song.uri,
                         artists: song.artists,
-                        image: image
+                        image: image,
+                        track_number: song.track_number,
+                        context_uri: song.album.uri
                     }
                 });
 

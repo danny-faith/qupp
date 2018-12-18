@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Button } from 'react-materialize';
+import axios from 'axios';
 // import PropTypes from 'prop-types';
 
 class PlaylistItem extends Component {
@@ -15,7 +16,25 @@ class PlaylistItem extends Component {
      * Pass the Spotify URI as argument to the playSong function passed down via props from App.js
      */
     playSongHandler = () => {
-        this.props.playSong(this.props.data.uri);
+        // this.props.playSong(this.props.data.uri);
+        axios.put(`https://api.spotify.com/v1/me/player/play?device_id=8fa77237fe6f04ee6b296f13789e4f081bb6339f`, {
+            headers: {
+                'Authorization': 'Bearer BQDJjeZUI--CAIILtC4w8N9x-t0DgntTYFcRulDtKodEz_ZVxyDLsKi4ThPd68RILesc7DTv95Y21hwBryXguWu-sazReJ5rqd7lMctqPtA87wOkYZnffuXcseQ7c9KggUzieupV36RUJ2Ws8u2HfpkC'
+            },
+            body: {
+                "context_uri": "spotify:album:7nXJ5k4XgRj5OLg9m8V3zc",
+                "offset": {
+                  "position": 6
+                },
+                "position_ms": 0
+            }
+        })
+        .then(res => {
+        })
+        .catch(err => {
+            console.dir(err);
+            
+        });
     }
     handleAddSongToPlayQueue = () => {
         const data = this.props.data;
@@ -38,7 +57,7 @@ class PlaylistItem extends Component {
         if (this.props.editMode) {
             button = <Button className="btn-small right red lighten-2" waves="light" onClick={this.deleteSongFromPlaylistHandler}>Delete</Button>;
         } else {
-            // button = <Button className="btn-small right" waves="light" onClick={this.playSongHandler}>Play</Button>;
+            button = <Button className="btn-small right" waves="light" onClick={this.playSongHandler}>Play</Button>;
         }
         return(
             <Row>

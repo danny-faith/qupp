@@ -1,4 +1,8 @@
+* {
+  transition: .3s ease;
+}
 html, body {
+  transition: .3s ease;
   background-color: #fff;
   .container {
     max-width: 95%;
@@ -39,8 +43,8 @@ html, body {
 .queue-enter {
   -webkit-transform: translateX(-120%);
           transform: translateX(-120%);
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
+  // -webkit-transition: 0.5s;
+  // transition: 0.5s;
   // max-height: 0;
   // padding: 0 !important;
 }
@@ -51,8 +55,8 @@ html, body {
   // padding: 2rem 0 !important;
 }
 .queue-exit {
-  -webkit-transition: 0.5s;
-  transition: 0.5s;
+  // -webkit-transition: 0.5s;
+  // transition: 0.5s;
   -webkit-transform: translateX(0);
           transform: translateX(0);
 }

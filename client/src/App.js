@@ -32,10 +32,54 @@ class App extends Component {
     },
     playQueue: {},
     songToPlayUri: 'spotify:track:7o2AeQZzfCERsRmOM86EcB',
-    editMode: false
+    editMode: false,
+    token: '',
+    deviceId: ''
+  }
+
+  createEventHandlers() {
+    this.player.on('initialization_error', e => { console.error(e); });
+    this.player.on('authentication_error', e => {
+      console.error(e);
+      // this.setState({ loggedIn: false });
+    });
+    this.player.on('account_error', e => { console.error(e); });
+    this.player.on('playback_error', e => { console.error(e); });
+  
+    // Playback status updates
+    this.player.on('player_state_changed', state => { console.log(state); });
+  
+    // Ready
+    this.player.on('ready', data => {
+      let { device_id } = data;
+      console.log("Let the music play on!");
+      this.setState({ deviceId: device_id });
+    });
   }
 
   componentDidMount = () => {
+
+    this.player = new window.Spotify.Player({
+      name: "qupp Spotify Player",
+      getOAuthToken: cb => { cb('BQC6DnLP1cTxO1KwzTX6mULn4LGoIe2TlcpfgUfTpy-fxq9ZBkdQF_KJVi7vbV6TK0BPfNy373qcylk5a035hDR1qQ1O6nJwLSztXX3CBcaIrdoVSGo4_gvXv-QCbRUkvUHYA8o-HhTcjBlUynvcNC5NX-dn-Q'); },
+    });
+    // set up the player's event handlers
+    this.createEventHandlers();
+    
+    // finally, connect!
+    // this.player.connect();
+
+    this.player.getVolume().then(volume => {
+      let volume_percentage = volume * 100;
+      console.log(`The volume of the player is ${volume_percentage}%`);
+    });
+
+    this.player.connect().then(success => {
+      if (success) {
+        console.log('The Web Playback SDK successfully connected to Spotify!');
+      }
+    });
+    
 
     this.ref = base.syncState('playlist', {
       context: this,
