@@ -1,11 +1,17 @@
 var express = require('express');
 var User = require('../../models/User');
 var router = express.Router();
-const validateRegisterInput = require('../../validation/register.js');
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+
+// Load validation
+const validateRegisterInput = require('../../validation/register.js');
+const validateLoginInput = require('../../validation/login.js');
+
+require('dotenv').config();
+const { SECRET } = process.env;
 
 /**
  * Endpoint: Create and add new user. `password` method creates an encrypted/hashed
@@ -91,6 +97,45 @@ router.post('/register', (req, res) => {
                 });
             }
         });
+});
+
+//  @route GET api/users/login
+//  @description Login User / Returning JWT Token
+//  @access Public
+router.post('/login', (req, res) => {
+    const { errors, isValid } = validateLoginInput(req.body);
+
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+    const { email } = req.body;
+    const { password } = req.body;
+    User.findOne({email})
+        .then(user => {
+            //  Check for user
+            if (!user) {
+                errors.email = 'User not found';
+                return res.status(404).json(errors);
+            }
+
+            //  Check password
+            bcrypt.compare(password, user.password)
+                .then(isMatch => {
+                    if (isMatch) {
+                        // res.json({msg: 'Success'});
+                        // User matched
+                        const payload = { id: user.id, name: user.username, avatar:user.avatar } // create payload
+                        // Sign token
+                        jwt.sign(payload, SECRET, { expiresIn: 3600}, (err, token) => {
+                            res.json({success: true, token: 'Bearer ' + token});
+                        });
+                        
+                    } else {
+                        errors.password = 'Password incorrect';
+                        return res.status(400).json(errors);
+                    }
+                });
+        });// .catch
 });
 
 module.exports = router;
