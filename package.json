@@ -16,14 +16,16 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-preset-es2015-node6": "^0.4.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
+    "gravatar": "^1.8.0",
     "js-base64": "^2.4.9",
-    "jsonwebtoken": "^8.3.0",
+    "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.3.4",
     "mongoose-unique-validator": "^2.0.2",
     "morgan": "^1.9.1",
@@ -32,7 +34,8 @@
     "passport-local": "^1.0.0",
     "query-string": "^6.2.0",
     "source-map-support": "^0.5.9",
-    "spotify-web-api-node": "^4.0.0"
+    "spotify-web-api-node": "^4.0.0",
+    "validator": "^10.10.0"
   },
   "devDependencies": {
     "concurrently": "^4.0.1",

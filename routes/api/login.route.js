@@ -45,10 +45,20 @@ router.post('/',
             session: false
         }
     ), (req, res, next) => {
-        console.log('/login route');
-        
-        res.redirect(`/?username=${req.user.username}&avatar=${req.user.image}`);
-        // jwt.sign({user: req.user}, 'secretKey', (err, token) => {
+        // console.log('/login route', req.user);
+        const payload = { id:req.user.id, username: req.user.username, avatar:req.user.image };
+        // res.redirect(`/?username=${req.user.username}&avatar=${req.user.image}`);
+        jwt.sign(payload, 'secretKey', { expiresIn: 3600}, (err, token) => {
+            // let JWTjj = token;
+            // TODO need to redirect the user to the homepage here I think
+            res.json({
+                success: true,
+                token
+            });
+            console.log('token: ', token);
+            
+        });
+        // .sign({user: req.user}, 'secretKey', (err, token) => {
         //     // let JWTjj = token;
         //     res.json({token});
         // });

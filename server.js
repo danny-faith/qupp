@@ -81,9 +81,7 @@ var loginRouter = require('./routes/api/login.route');
 //     res.status(200).send();
 // });
 
-
-
-app.use('/users', usersRouter);
+app.use('/api/users', usersRouter);
 app.use('/songs', songsRouter);
 app.use('/playlist', playlistRouter);
 app.use('/authspotify', spotifyRouter);
