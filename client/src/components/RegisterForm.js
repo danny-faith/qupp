@@ -20,24 +20,26 @@ class RegisterForm extends Component {
         const password = this.password.current.state.value;
         const passwordRepeat = this.passwordRepeat.current.state.value;
 
-        var found = username.match(regex) || []; // || empty array if nothing matches. Avoids me having to check for undefined or null in the if statement. Probably a better way to do this.
+        // var found = username.match(regex) || []; // || empty array if nothing matches. Avoids me having to check for undefined or null in the if statement. Probably a better way to do this.
         // if entered username matches one of special characters in the regex then fire relevant Mat'
-        if (found.length > 0) {
-            return window.M.toast({html: 'Alphanumeric characters only in username', classes: 'red lighten-1'});
-        }
+        // if (found.length > 0) {
+        //     return window.M.toast({html: 'Alphanumeric characters only in username', classes: 'red lighten-1'});
+        // }
         // Check to see if first password matches second password. ! then return with Mat' message
-        if (password !== passwordRepeat) {
-            return window.M.toast({html: 'Passwords do not match', classes: 'red lighten-1'});
-        }
+        // if (password !== passwordRepeat) {
+        //     return window.M.toast({html: 'Passwords do not match', classes: 'red lighten-1'});
+        // }
+        
 
         // build new user object
         const newUser = {
             username,
             email,
-            password
+            password,
+            passwordRepeat
         }
 
-        axios.post('/users/', newUser)
+        axios.post('/api/users/register', newUser)
             .then(function (response) {
                 window.M.toast({html: `Username: ${response.data.username} was created`, classes: 'green lighten-1'});
             })
@@ -46,10 +48,13 @@ class RegisterForm extends Component {
                  * if error is present, loop through errors in the response and alert them via Mat' Toast
                  * mostly these are username and email already exists
                  */
-                const resData = err.response.data.errors;
-                Object.keys(resData).forEach(key => {
-                    window.M.toast({html: `${resData[key].path} ${resData[key].message}`, classes: 'red lighten-1'});
-                });
+                // const resData = err.response.data;
+                // console.log('resData: ', resData);
+                
+                // Object.keys(resData).forEach(key => {
+                //     window.M.toast({html: `${resData[key]}`, classes: 'red lighten-1'});
+                //     console.log(resData[key]);
+                // });
             });
     }
     render() {
@@ -61,11 +66,12 @@ class RegisterForm extends Component {
                             id={"username"}
                             validate={true}
                             type="text"
-                            required
                             ref={this.username}
                             placeholder="Username"
                             s={12}
-                            label="Username" />
+                            label="Username" 
+                            defaultValue="daniel"
+                            />
                     </Col>
                 </Row>
                 <Row>
@@ -73,11 +79,12 @@ class RegisterForm extends Component {
                         <Input
                             id={"email"}
                             type="email"
-                            required
                             ref={this.email}
                             placeholder="Email"
                             s={12}
-                            label="Email" />
+                            label="Email"
+                            defaultValue="daniel.blythe@gmail.com"
+                            />
                     </Col>
                 </Row>
                 <Row>
@@ -85,23 +92,25 @@ class RegisterForm extends Component {
                         <Input
                             id={"registerPassword"}
                             type="password"
-                            required
                             ref={this.password}
                             placeholder="Password"
                             s={12}
-                            label="Password" />
+                            label="Password"
+                            defaultValue="password"
+                            />
                     </Col>
                 </Row>
                 <Row>
                     <Col s={12}>
                         <Input
-                            id={"registerPasswordRepeat"}
+                            id={"passwordRepeat"}
                             type="password"
-                            required
                             ref={this.passwordRepeat}
                             placeholder="Password"
                             s={12}
-                            label="Repeat password" />
+                            label="Confirm password"
+                            defaultValue="password"
+                            />
                     </Col>
                 </Row>
                 <Row>

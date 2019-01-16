@@ -85,7 +85,7 @@ app.use('/api/users', usersRouter);
 app.use('/songs', songsRouter);
 app.use('/playlist', playlistRouter);
 app.use('/authspotify', spotifyRouter);
-app.use('/login', loginRouter);
+// app.use('/login', loginRouter);
 
 app.get('*', (req, res) => {
     console.log('triggered route');

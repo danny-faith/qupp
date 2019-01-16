@@ -15,18 +15,20 @@ var secret = "secret";
 var userSchema = new mongoose.Schema({
   username: {
     type: String,
-    unique: true,
-    required: [true, "can't be blank"],
-    match: [/^[a-zA-Z0-9]+$/, 'is invalid'], 
-    index: true
+    required: true
+    // unique: true,
+    // required: [true, "can't be blank"],
+    // match: [/^[a-zA-Z0-9]+$/, 'is invalid'], 
+    // index: true
   },
   email: {
     type: String,
-    lowercase: true,
-    unique: true, 
-    required: [true, "can't be blank"], 
-    match: [/\S+@\S+\.\S+/, 'is invalid'], 
-    index: true
+    required: true
+    // lowercase: true,
+    // unique: true, 
+    // required: [true, "can't be blank"], 
+    // match: [/\S+@\S+\.\S+/, 'is invalid'], 
+    // index: true
   },
   avatar: {
     type: String
@@ -89,7 +91,7 @@ userSchema.methods.toAuthJSON = function() {
   };
 };
 
-userSchema.plugin(uniqueValidator, {message: 'is already taken.'}); // I believe sets message for unique property on User shcema
+// userSchema.plugin(uniqueValidator, {message: 'is already taken.'}); // I believe sets message for unique property on User shcema
 var User = mongoose.model('User', userSchema);
 
 module.exports = User;
