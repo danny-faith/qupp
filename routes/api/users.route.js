@@ -69,69 +69,44 @@ router.post('/register', (req, res) => {
         return res.status(400).json(errors);
     }
 
-    // errors.username = (user.username === req.body.username) ? 'Username already exists' : null;
-    // console.log('errors: ', errors);
-    // check to see if username is taken with User.findOne
-
-    // do same as validation file and check first for email address and if found add error message to errors obj
-    // then do the same for username, adding to errors obj if needed
-    // finally if errors obj is empty then build new user and save
+    // Todo: could refactor this to two promises and use promise.all([emailPromise, usernamePromise]); to check for usernames and emails
 
     async function doesUsernameExist() {
-        console.log('start username promise');
-        
         let promise = new Promise((resolve, reject) => {
             User.findOne({ username: req.body.username})
-            .then((user) => {
-                // console.log('username ', user);
-                // console.log('we found a user with that username');
-                console.log('looking for username');
-                
-                if (user) {
-                    console.log('username found');
-                    errors.username = "Username already exists";
-                    resolve(errors);
-                } else {
-                    reject();
-                }
-            }); 
-        });
+                .then((user) => {
+                    if (user) {
+                        errors.username = 'Username already exists';
+                        resolve(errors);
+                    } else {
+                        reject('no username found');
+                    }
+                }); 
+        }).catch(err => console.log(err));
 
-        let result = await promise;
+        // Wait for promise to resvole or reject then run doesEmailExist
+        await promise;
 
-        console.log('Username result: ', result);
         doesEmailExist();
-        // return result;
     }
 
     async function doesEmailExist() {
-        console.log('start email promise');
-        
         let promise = new Promise((resolve, reject) => {
             User.findOne({ email: req.body.email})
-            .then((user) => {
-                // console.log('username ', user);
-                // console.log('we found a user with that username');
-                console.log('looking for email');
-                
-                if (user) {
-                    console.log('email found');
-                    errors.email = "Username already exists";
-                    resolve(errors);
-                } else {
-                    reject();
-                }
-            }); 
-        });
+                .then((user) => {
+                    if (user) {
+                        errors.email = 'Email already exists';
+                        resolve(errors);
+                    } else {
+                        reject('No Email found');
+                    }
+                }); 
+        }).catch(err => console.log(err));
 
-        let result = await promise;
-        
+        // Wait for promise to resvole or reject then carry on with adding a new user if there were no errors
+        await promise;
 
-        console.log('Email result: ', result);
-        // return result;
-        console.log('here are the errors: ', errors);
-        
-
+        // This only runs after the above await promise finishes
         if (!isEmpty(errors)) { 
             // Errors are present so return and send errors
             return res.status(400).json(errors);
@@ -162,33 +137,9 @@ router.post('/register', (req, res) => {
         
     }
 
+    // Start username and email duplicate checking process which leads to adding user if username and email are avaliable
+    // Could switch this to an IIFE to avoid this call below
     doesUsernameExist();    
-
-    // User.findOne({ username: req.body.username})
-    //     .then((user) => {
-    //         // console.log('username ', user);
-    //         console.log('we found a user with that username');
-            
-    //         if (user) {
-    //             errors.username = "Username already exists";
-    //         }
-    //     });
-
-
-    // User.findOne({ email: req.body.email })
-    //     .then((user) => {
-    //         console.log('something');
-            
-    //         if (user) {
-    //             console.log('email ', user);
-    //             console.log('we found a user with that email');            
-    //             errors.email = 'Email already exists';
-    //             return res.status(400).json(errors);
-    //         }   
-    //     });
-
-        // console.log('here are the errors: ', errors);
-    
 });
 
 //  @route GET api/users/login
