@@ -63,11 +63,7 @@ router.get('/', (req, res) => {
 //  @description Register user
 //  @access Public
 router.post('/register', (req, res) => {
-    const { errors, isValid } = validateRegisterInput(req.body);
-
-    if (!isValid) {
-        return res.status(400).json(errors);
-    }
+    const { errors } = validateRegisterInput(req.body);
 
     // Todo: could refactor this to two promises and use promise.all([emailPromise, usernamePromise]); to check for usernames and emails
 

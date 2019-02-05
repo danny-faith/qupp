@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   background-color: #fff;
   .container {
     max-width: 95%;
@@ -31,14 +32,18 @@ html, body {
       overflow: hidden;
     }
   }
-  .btn, .btn-large {
+  .btn,
+  .btn-large {
     // background: #6598B8;
   }
+}
+.no-margin {
+  margin: 0;
 }
 
 .queue-enter {
   -webkit-transform: translateX(-120%);
-          transform: translateX(-120%);
+  transform: translateX(-120%);
   -webkit-transition: 0.5s;
   transition: 0.5s;
   // max-height: 0;
@@ -47,18 +52,18 @@ html, body {
 .queue-enter.queue-enter-active {
   // max-height: 89px;
   -webkit-transform: translateX(0);
-          transform: translateX(0);
+  transform: translateX(0);
   // padding: 2rem 0 !important;
 }
 .queue-exit {
   -webkit-transition: 0.5s;
   transition: 0.5s;
   -webkit-transform: translateX(0);
-          transform: translateX(0);
+  transform: translateX(0);
 }
 .queue-exit.queue-exit-active {
   -webkit-transform: translateX(120%);
-          transform: translateX(120%);
+  transform: translateX(120%);
   padding: 0;
 }
 
