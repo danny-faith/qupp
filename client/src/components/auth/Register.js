@@ -8,10 +8,10 @@ import classnames from 'classnames';
 
 class Register extends Component {
 	state = {
-		username: 'Daniel',
-		email: 'daniel.e.blythe@gmail.com',
-		password: 'daniel',
-		password2: 'daniel',
+		username: '',
+		email: '',
+		password: '',
+		password2: '',
 		errors: {}
 	}
 	onChange = e => {
@@ -52,7 +52,7 @@ class Register extends Component {
 									s={12}
 									label="Username"
 									onChange={this.onChange}
-									defaultValue={this.state.username}
+									value={this.state.username}
 									/>
 									{errors.username && (<p className="red-text col no-margin">{errors.username}</p>)}
 							</Col>
@@ -70,7 +70,7 @@ class Register extends Component {
 									s={12}
 									label="Email"
 									onChange={this.onChange}
-									defaultValue={this.state.email}
+									value={this.state.email}
 									/>
 									{errors.email && (<p className="red-text col no-margin">{errors.email}</p>)}
 							</Col>
@@ -88,7 +88,7 @@ class Register extends Component {
 									s={12}
 									label="Password"
 									onChange={this.onChange}
-									defaultValue={this.state.password}
+									value={this.state.password}
 									/>
 									{errors.password && (<p className="red-text col no-margin">{errors.password}</p>)}
 							</Col>
@@ -106,7 +106,7 @@ class Register extends Component {
 									s={12}
 									label="Confirm password"
 									onChange={this.onChange}
-									defaultValue={this.state.password2}
+									value={this.state.password2}
 									/>
 									{errors.password2 && (<p className="red-text col no-margin">{errors.password2}</p>)}
 							</Col>
@@ -123,7 +123,7 @@ class Register extends Component {
 		}
 }
 
-Register.PropTypes = {
+Register.propTypes = {
 	registerUser: PropTypes.func.isRequired,
 	auth: PropTypes.object.isRequired,
 	errors: PropTypes.object.isRequired,
