@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import logo from '../logo-v2.svg';
 
-export default class Landing extends Component {
+class Landing extends Component {
+  componentDidMount = () => {
+    if (this.props.auth.isAuthenticated) {
+        this.props.history.push('/dashboard');
+    }
+  }
   render() {
     return (
         <div>
             <img alt="qupp logo" src={logo} />
-            <Link to="/register">Register</Link>
-            <Link to="/login">Login</Link>
         </div>
     )
   }
 }
+
+Landing.propTypes = {
+	auth: PropTypes.object.isRequired
+}
+
+const mapStateToProps = (state) => ({
+	auth: state.auth
+});
+
+export default connect(mapStateToProps)(Landing);
