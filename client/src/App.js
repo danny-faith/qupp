@@ -13,6 +13,7 @@ import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 
 import './App.scss';
+import PasswordReset from './components/auth/PasswordReset';
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -46,6 +47,7 @@ class App extends Component {
             <div className="container">
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/forgotten-password" component={PasswordReset} />
             </div>
             {/* <Footer /> */}
           </div>

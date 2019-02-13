@@ -8,16 +8,35 @@ import { withRouter } from 'react-router-dom';
 import logo from '../logo-v2.svg';
 
 class Navbar extends Component {
+    userRef = React.createRef();
+
     onLogoutClick = (e) => {
 		e.preventDefault();
 		this.props.logoutUser(this.props.history);
-	}
+    }
+    componentDidMount() {
+        window.M.Dropdown.init(this.userRef.current);
+    }
     render() {
         const { isAuthenticated, user } = this.props.auth;
 
         const authLinks = (
             <ul id="nav-mobile" className="right hide-on-small-and-down">
-                <li><a href="#" onClick={this.onLogoutClick}>Logout</a></li>
+                <li>
+                    <a href="#" onClick={this.onLogoutClick}>Logout</a>
+                </li>
+                <li className="avatar">
+                    <a ref={this.userRef} data-target="dropdown1" className="dropdown-trigger">
+                        {/* <img src={user.avatar} />  */}
+                        {user.name}
+                    </a>
+                    <ul id="dropdown1" className="dropdown-content">
+                        <li><a href="#!">Profile</a></li>
+                        <li><a href="#!">two</a></li>
+                        <li className="divider"></li>
+                        <li><a href="#!">three</a></li>
+                    </ul>
+                </li>
             </ul>
         );
 
