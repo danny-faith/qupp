@@ -1,15 +1,17 @@
-var express = require('express');
-var User = require('../../models/User');
-var router = express.Router();
+const express = require('express');
+const User = require('../../models/User');
+const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
+// const passport = require('passport');
 const isEmpty = require('../../validation/is-empty');
+const nodemailer = require("nodemailer");
 
 // Load validation
 const validateRegisterInput = require('../../validation/register.js');
 const validateLoginInput = require('../../validation/login.js');
+const validateForgotPasswordInput = require('../../validation/forgotPassword.js');
 
 require('dotenv').config();
 const { SECRET } = process.env;
@@ -174,6 +176,24 @@ router.post('/login', (req, res) => {
                     }
                 });
         });// .catch
+});
+
+router.post('/forgot-password', (req, res) => {
+    const { errors, isValid } = validateForgotPasswordInput(req.body);
+
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    User.findOne({ email: req.body.email })
+        .then(user => {
+            if (!user) {
+                errors.email = "No account found";
+                return res.status(404).json(errors);
+            }
+            return res.json(user);
+        })
+        .catch(err => res.json(err));
 });
 
 module.exports = router;

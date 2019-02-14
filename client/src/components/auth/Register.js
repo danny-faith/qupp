@@ -42,7 +42,7 @@ class Register extends Component {
 		return (
 			<Row>
 				<Col s={6} className="offset-s3">
-					<h1 className="center">Register</h1>
+					<h1 className="center white-text">Register</h1>
 					<form noValidate onSubmit={this.onSubmit}>
 						<Row>
 							<Col s={12}>

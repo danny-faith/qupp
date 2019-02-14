@@ -3,6 +3,7 @@ import { Row, Col, Button, Input } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { forgotPasswordEmailSearch } from '../../actions/authActions';
 
 class ForgotPassword extends Component {
     state = {
@@ -18,7 +19,7 @@ class ForgotPassword extends Component {
         const userData = {
             email: this.state.email
         }
-    // this.props.loginUser(userData);
+    this.props.forgotPasswordEmailSearch(userData);
     }
     componentDidMount = () => {
         if (this.props.auth.isAuthenticated) {
@@ -34,15 +35,43 @@ class ForgotPassword extends Component {
         }
     }
   render() {
+	const { errors } = this.state;
     return (
-      <div>
-        
-      </div>
+		<Row>
+			<Col s={6} className="offset-s3">
+				<h2 className="center white-text">Forgot password?</h2>
+				<form noValidate onSubmit={this.onSubmit}>
+					<Row>
+						<Col s={12}>
+							<Input
+							id={"email"}
+							className={classnames({
+							'invalid': errors.email
+							})} 
+							type="email"
+							name="email"
+							s={12}
+							label="Email address"
+							onChange={this.onChange}
+							value={this.state.email}
+							/>
+							{errors.email && (<p className="red-text col no-margin">{errors.email}</p>)}
+						</Col>
+					</Row>
+					<Row>
+						<Col s={12}>
+							<Button className="btn-small right" waves="light">Login</Button>
+						</Col>
+					</Row>
+				</form>
+			</Col>
+		</Row>
     )
   }
 }
 
 ForgotPassword.propTypes = {
+    forgotPasswordEmailSearch: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 };
@@ -52,4 +81,4 @@ const mapStateToProps = (state) => ({
     errors: state.errors
 });
   
-export default connect(mapStateToProps)(ForgotPassword);
+export default connect(mapStateToProps, { forgotPasswordEmailSearch })(ForgotPassword);

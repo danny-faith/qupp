@@ -56,5 +56,17 @@ export const logoutUser = (history) => (dispatch) => {
     dispatch(setCurrentUser({}));
     // Send user back to landing once logged out
     history.push('/');
+}
 
+export const forgotPasswordEmailSearch = (email) => (dispatch) => {
+    axios.post('/api/users/forgot-password', email)
+        .then(res => {
+            console.log('response: ', res);
+        })
+        .catch(err => {
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        });
 }
