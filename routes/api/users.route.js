@@ -226,7 +226,7 @@ router.post('/forgot-password', (req, res) => {
                 if (err) {
                     console.log(err);
                     errors.mailFailed = "There was an error sending the email";
-                    return res.status(500).json(err);
+                    return res.status(500).json(errors);
                 }
                 console.log("Info: ", info);
                 res.json(user);
