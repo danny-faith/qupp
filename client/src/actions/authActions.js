@@ -1,7 +1,6 @@
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
-
 import { GET_ERRORS, SET_CURRENT_USER } from './types';
 
 // Register User
@@ -61,12 +60,18 @@ export const logoutUser = (history) => (dispatch) => {
 export const forgotPasswordEmailSearch = (email) => (dispatch) => {
     axios.post('/api/users/forgot-password', email)
         .then(res => {
-            console.log('response: ', res);
+            window.M.toast({html: `Password reset email sent to:&nbsp;<strong>${res.data.email}</strong>`, classes: 'green lighten-'})
         })
         .catch(err => {
+            
+            // This method of detecting if the error was the email service and not validation seems clunky
+            if (err.response.data.hasOwnProperty('mailFailed')) {
+                window.M.toast({html: "There was an error sending the email. Please try again.", classes: 'red lighten-1'});      
+            }
+            
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data
-            })
+            });
         });
 }

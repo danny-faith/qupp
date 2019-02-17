@@ -19,7 +19,7 @@ input:-webkit-autofill,
 input:-internal-autofill-selected,
 input[type="text"]:focus:not([readonly]),
 input[type="password"]:focus:not([readonly]) {
-  box-shadow: 0 0 0px 1000px rgb(94, 94, 94) inset;
+  box-shadow: 0 0 0px 1000px rgb(94, 94, 94) inset !important;
 }
 .input-field label {
   top: 0.2rem;

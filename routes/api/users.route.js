@@ -14,7 +14,13 @@ const validateLoginInput = require('../../validation/login.js');
 const validateForgotPasswordInput = require('../../validation/forgotPassword.js');
 
 require('dotenv').config();
-const { SECRET } = process.env;
+const { 
+    SECRET,
+    SMTP_HOST, 
+    SMTP_PORT, 
+    SMTP_AUTH_USER, 
+    SMTP_AUTH_PASS 
+} = process.env;
 
 /**
  * Endpoint: Create and add new user. `password` method creates an encrypted/hashed
@@ -191,7 +197,42 @@ router.post('/forgot-password', (req, res) => {
                 errors.email = "No account found";
                 return res.status(404).json(errors);
             }
-            return res.json(user);
+            // User found, carry on
+            
+            // host: SMTP_HOST,
+            // port: SMTP_PORT,
+            // auth: {
+            //     user: SMTP_AUTH_USER,
+            //     pass: SMTP_AUTH_PASS
+            // Setup email
+            const transporter = nodemailer.createTransport({
+                host: SMTP_HOST,
+                port: SMTP_PORT,
+                auth: {
+                    user: SMTP_AUTH_USER,
+                    pass: SMTP_AUTH_PASS
+                }
+            });
+
+            // Setup email options
+            const mailOptions = {
+                from: '"qupp" <resetpassword@qupp.co.uk>',
+                to: req.body.email,
+                subject: "qupp: password reset",
+                text: "This is an email test using Mailtrap.io"
+            };
+
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    console.log(err);
+                    errors.mailFailed = "There was an error sending the email";
+                    return res.status(500).json(err);
+                }
+                console.log("Info: ", info);
+                res.json(user);
+              });
+
+            // return res.json(user);
         })
         .catch(err => res.json(err));
 });
