@@ -19,7 +19,11 @@ class ForgotPassword extends Component {
         const userData = {
             email: this.state.email
         }
-    this.props.forgotPasswordEmailSearch(userData);
+
+        this.props.forgotPasswordEmailSearch(userData);
+        // Add state = { emailSent: false }
+        // TODO if emailSent state == true then clear errors and clear email input 
+        // TODO update success message to be in form of form validation
     }
     componentDidMount = () => {
         if (this.props.auth.isAuthenticated) {

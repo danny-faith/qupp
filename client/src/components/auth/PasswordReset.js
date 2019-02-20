@@ -3,11 +3,12 @@ import { Row, Col, Button, Input } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { verifyPasswordResetRequest } from '../../actions/authActions';
 
 class PasswordReset extends Component {
   state = {
     password: '',
-    password2: '',
+		password2: '',
     errors: {}
   }
   onChange = e => {
@@ -16,13 +17,25 @@ class PasswordReset extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    const userData = {
-      password: this.state.password,
-      password2: this.state.password2
+    const newPassword = {
+      password: this.state.password
     }
-    // this.props.loginUser(userData);
+    this.props.updatePassword(newPassword);
 	}
-	componentDidMount = () => {
+	componentWillMount = () => {
+		const payload = {};
+		
+		this.props.location.search
+			.replace('?', '')
+			.split('&')
+			.map(query => {
+				const values = query.split('=');
+				payload[values[0]] = values[1];
+		});
+
+		this.props.verifyPasswordResetRequest(payload);
+	}
+	componentDidMount = () => {		
 		if (this.props.auth.isAuthenticated) {
 				this.props.history.push('/dashboard');
 		}
@@ -90,6 +103,7 @@ class PasswordReset extends Component {
 }
 
 PasswordReset.propTypes = {
+	verifyPasswordResetRequest: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -99,4 +113,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps)(PasswordReset);
+export default connect(mapStateToProps,  { verifyPasswordResetRequest })(PasswordReset);

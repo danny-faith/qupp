@@ -8,9 +8,10 @@ import store from './store';
 
 import Navbar from './components/Navbar';
 // import Footer from './components/layout/Footer';
-import Landing from './components/Landing';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
+import Dashboard from './components/Dashboard';
+import Landing from './components/Landing';
 
 import './App.scss';
 import PasswordReset from './components/auth/PasswordReset';
@@ -48,7 +49,9 @@ class App extends Component {
             <div className="container">
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/dashboard" component={Dashboard} />
               <Route exact path="/forgotten-password" component={ForgotPassword} />
+              <Route exact path="/reset-password" component={PasswordReset} />
             </div>
             {/* <Footer /> */}
           </div>

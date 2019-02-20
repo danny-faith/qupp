@@ -41,6 +41,12 @@ var userSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+  resetPasswordToken: String,
+  resetPasswordTokenExpires: Date, 
+  resetPasswordTokenUsed: {
+    type: Boolean,
+    default: false
   }
   // image: {
   //   type: String,

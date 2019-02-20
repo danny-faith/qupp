@@ -1,4 +1,9 @@
-import { SET_CURRENT_USER, FORGOT_PASSWORD_EMAIL_SEARCH } from '../actions/types';
+import { 
+    SET_CURRENT_USER, 
+    FORGOT_PASSWORD_EMAIL_SEARCH, 
+    VERIFY_USER_FOR_PASSWORD_RESET 
+} from '../actions/types';
+
 import isEmpty from '../validation/is-empty';
 
 const initialState = {
@@ -18,6 +23,12 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 email: action.payload
+            }
+        case VERIFY_USER_FOR_PASSWORD_RESET:
+            return {
+                ...state,
+                email: action.payload,
+                token: action.payload
             }
         default: 
             return state;

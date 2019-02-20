@@ -4,6 +4,7 @@ const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const genUserHash = require ('../utils/genUserHash');
 // const passport = require('passport');
 const isEmpty = require('../../validation/is-empty');
 const nodemailer = require("nodemailer");
@@ -19,7 +20,8 @@ const {
     SMTP_HOST, 
     SMTP_PORT, 
     SMTP_AUTH_USER, 
-    SMTP_AUTH_PASS 
+    SMTP_AUTH_PASS,
+    ENV
 } = process.env;
 
 /**
@@ -184,6 +186,9 @@ router.post('/login', (req, res) => {
         });// .catch
 });
 
+//  @route POST api/users/forgot-password
+//  @description Find user's email address and send forgot password email
+//  @access Public
 router.post('/forgot-password', (req, res) => {
     const { errors, isValid } = validateForgotPasswordInput(req.body);
 
@@ -198,13 +203,15 @@ router.post('/forgot-password', (req, res) => {
                 return res.status(404).json(errors);
             }
             // User found, carry on
+            // const hash = genUserHash('daniel.e.blythe');
+
+            // Generate hash
+            const hash = `847698468926489526789523985762894`; // expires in 1 hour
+            user.resetPasswordToken = hash;
+            user.resetPasswordTokenExpires = Date.now() + 60000;
             
-            // host: SMTP_HOST,
-            // port: SMTP_PORT,
-            // auth: {
-            //     user: SMTP_AUTH_USER,
-            //     pass: SMTP_AUTH_PASS
             // Setup email
+            // The below shouldn't be here. Should be in a config file somewhere
             const transporter = nodemailer.createTransport({
                 host: SMTP_HOST,
                 port: SMTP_PORT,
@@ -213,28 +220,110 @@ router.post('/forgot-password', (req, res) => {
                     pass: SMTP_AUTH_PASS
                 }
             });
-
+            
             // Setup email options
             const mailOptions = {
                 from: '"qupp" <resetpassword@qupp.co.uk>',
                 to: req.body.email,
                 subject: "qupp: password reset",
-                text: "This is an email test using Mailtrap.io"
+                text: "This is an email test using Mailtrap.io",
+                // change localhost to read from .env file
+                html: `<a href='${ENV}/reset-password?email=${req.body.email}&token=${hash}'>Password reset link</a>`
             };
-
+            
             transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
                     console.log(err);
                     errors.mailFailed = "There was an error sending the email";
                     return res.status(500).json(errors);
                 }
-                console.log("Info: ", info);
-                res.json(user);
-              });
+                // console.log("Info: ", info);
+                // if sending email successful store against user along with whether or not token has been used
+                user.save()
+                    .then(user => res.json(user))
+                    .catch(err => res.status(500).json(err));
 
-            // return res.json(user);
+                // return res.json(user);
+            });
+
+            return res.json(user);
         })
         .catch(err => res.json(err));
 });
+
+router.post('/verify-password-reset', (req, res) => {
+    const errors = {};
+
+    User.findOne({ resetPasswordToken: req.body.token, resetPasswordTokenExpires: { $gt: Date.now() } })
+        .then(user => {
+            // console.log('user.resetPasswordToken: ', user.resetPasswordToken);
+            // console.log('req.body.token: ', req.body.token););
+            if (!user) {
+                errors.verifyPasswordRest = 'Password reset token is invalid or has expired.';
+                return res.status(400).json(errors);
+            }
+            console.log('its all good bro, reset that password');
+            
+            // Decode token
+            // Extract expiry date / time
+
+            // if (user.resetPasswordTokenUsed) {
+            //     errors.verifyPasswordRest = 'Password reset token has been used, please create another on the Forgot password page.';
+            // }
+            
+            // if (tokenHasTimeExpired) {
+            //     errors.verifyPasswordRest = 'Token has expired. Please create another on the Forgot password page.';
+            // }
+
+            // // bcrypt.compare()
+            // if (!user.resetPasswordToken === req.body.token) {
+            //     // return errors.tokenMatch = 'Tokens did not match';
+            //     errors.verifyPasswordRest = 'Tokens did not match';
+            // }
+            
+            // if (!user) {
+            //     errors.verifyPasswordRest = 'Email address does not exist';
+            // }
+
+            
+            return res.json(user)
+        })
+        .catch(err => res.status(404).json(err));
+});
+
+// router.post('/verify-password-reset', (req, res) => {
+//     const errors = {};
+
+//     User.findOne({ email: req.body.email })
+//         .then(user => {
+//             // console.log('user.resetPasswordToken: ', user.resetPasswordToken);
+//             // console.log('req.body.token: ', req.body.token););
+            
+//             // Decode token
+//             // Extract expiry date / time
+
+//             if (user.resetPasswordTokenUsed) {
+//                 errors.verifyPasswordRest = 'Password reset token has been used, please create another on the Forgot password page.';
+//             }
+            
+//             if (tokenHasTimeExpired) {
+//                 errors.verifyPasswordRest = 'Token has expired. Please create another on the Forgot password page.';
+//             }
+
+//             // bcrypt.compare()
+//             if (!user.resetPasswordToken === req.body.token) {
+//                 // return errors.tokenMatch = 'Tokens did not match';
+//                 errors.verifyPasswordRest = 'Tokens did not match';
+//             }
+            
+//             if (!user) {
+//                 errors.verifyPasswordRest = 'Email address does not exist';
+//             }
+
+            
+//             return res.json(user)
+//         })
+//         .catch(err => res.json(err));
+// });
 
 module.exports = router;
