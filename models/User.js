@@ -43,11 +43,7 @@ var userSchema = new mongoose.Schema({
     default: Date.now
   },
   resetPasswordToken: String,
-  resetPasswordTokenExpires: Date, 
-  resetPasswordTokenUsed: {
-    type: Boolean,
-    default: false
-  }
+  resetPasswordTokenExpires: Date
   // image: {
   //   type: String,
   //   default: 'https://bodiezpro.com/wp-content/uploads/2015/09/medium-default-avatar.png'

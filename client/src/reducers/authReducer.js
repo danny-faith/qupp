@@ -24,7 +24,7 @@ export default function(state = initialState, action) {
                 ...state,
                 email: action.payload
             }
-        case VERIFY_USER_FOR_PASSWORD_RESET:
+        case VERIFY_USER_FOR_PASSWORD_RESET:        
             return {
                 ...state,
                 email: action.payload,

@@ -4,8 +4,7 @@ const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const genUserHash = require ('../utils/genUserHash');
-// const passport = require('passport');
+const crypto = require('crypto');
 const isEmpty = require('../../validation/is-empty');
 const nodemailer = require("nodemailer");
 
@@ -13,6 +12,7 @@ const nodemailer = require("nodemailer");
 const validateRegisterInput = require('../../validation/register.js');
 const validateLoginInput = require('../../validation/login.js');
 const validateForgotPasswordInput = require('../../validation/forgotPassword.js');
+const validateSetPassword = require('../../validation/setPassword.js');
 
 require('dotenv').config();
 const { 
@@ -203,12 +203,11 @@ router.post('/forgot-password', (req, res) => {
                 return res.status(404).json(errors);
             }
             // User found, carry on
-            // const hash = genUserHash('daniel.e.blythe');
-
-            // Generate hash
-            const hash = `847698468926489526789523985762894`; // expires in 1 hour
-            user.resetPasswordToken = hash;
-            user.resetPasswordTokenExpires = Date.now() + 60000;
+            
+            const token = crypto.randomBytes(20).toString('hex');
+            
+            user.resetPasswordToken = token;
+            user.resetPasswordTokenExpires = Date.now() + 3600000; // expires in 1 hour
             
             // Setup email
             // The below shouldn't be here. Should be in a config file somewhere
@@ -227,103 +226,58 @@ router.post('/forgot-password', (req, res) => {
                 to: req.body.email,
                 subject: "qupp: password reset",
                 text: "This is an email test using Mailtrap.io",
-                // change localhost to read from .env file
-                html: `<a href='${ENV}/reset-password?email=${req.body.email}&token=${hash}'>Password reset link</a>`
+                html: `<a href='${ENV}/reset-password?token=${token}'>Password reset link</a>`
             };
             
             transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
-                    console.log(err);
                     errors.mailFailed = "There was an error sending the email";
                     return res.status(500).json(errors);
                 }
-                // console.log("Info: ", info);
                 // if sending email successful store against user along with whether or not token has been used
                 user.save()
                     .then(user => res.json(user))
                     .catch(err => res.status(500).json(err));
 
-                // return res.json(user);
             });
-
-            return res.json(user);
         })
         .catch(err => res.json(err));
 });
 
-router.post('/verify-password-reset', (req, res) => {
-    const errors = {};
+router.post('/forgot-password-reset', (req, res) => {
+    const { errors, isValid } = validateSetPassword(req.body);
+    const { token, password } = req.body;
 
-    User.findOne({ resetPasswordToken: req.body.token, resetPasswordTokenExpires: { $gt: Date.now() } })
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    User.findOne({ resetPasswordToken: token, resetPasswordTokenExpires: { $gt: Date.now() } })
         .then(user => {
-            // console.log('user.resetPasswordToken: ', user.resetPasswordToken);
-            // console.log('req.body.token: ', req.body.token););
+
+            // If no user is returned then token doesnt exist or 
             if (!user) {
                 errors.verifyPasswordRest = 'Password reset token is invalid or has expired.';
                 return res.status(400).json(errors);
             }
-            console.log('its all good bro, reset that password');
-            
-            // Decode token
-            // Extract expiry date / time
 
-            // if (user.resetPasswordTokenUsed) {
-            //     errors.verifyPasswordRest = 'Password reset token has been used, please create another on the Forgot password page.';
-            // }
-            
-            // if (tokenHasTimeExpired) {
-            //     errors.verifyPasswordRest = 'Token has expired. Please create another on the Forgot password page.';
-            // }
+            // Clear password reset token and reset expiry time
+            user.resetPasswordToken = '';
+            user.resetPasswordTokenExpires = '';
 
-            // // bcrypt.compare()
-            // if (!user.resetPasswordToken === req.body.token) {
-            //     // return errors.tokenMatch = 'Tokens did not match';
-            //     errors.verifyPasswordRest = 'Tokens did not match';
-            // }
-            
-            // if (!user) {
-            //     errors.verifyPasswordRest = 'Email address does not exist';
-            // }
-
-            
-            return res.json(user)
+            // Generate hash of new password
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(password, salt, (err, hash) => {
+                    if (err) throw err;
+                    user.password = hash;
+                    user
+                        .save()
+                        .then(user => res.json(user))
+                        .catch(err => console.log(err));
+                });
+            });
         })
         .catch(err => res.status(404).json(err));
 });
-
-// router.post('/verify-password-reset', (req, res) => {
-//     const errors = {};
-
-//     User.findOne({ email: req.body.email })
-//         .then(user => {
-//             // console.log('user.resetPasswordToken: ', user.resetPasswordToken);
-//             // console.log('req.body.token: ', req.body.token););
-            
-//             // Decode token
-//             // Extract expiry date / time
-
-//             if (user.resetPasswordTokenUsed) {
-//                 errors.verifyPasswordRest = 'Password reset token has been used, please create another on the Forgot password page.';
-//             }
-            
-//             if (tokenHasTimeExpired) {
-//                 errors.verifyPasswordRest = 'Token has expired. Please create another on the Forgot password page.';
-//             }
-
-//             // bcrypt.compare()
-//             if (!user.resetPasswordToken === req.body.token) {
-//                 // return errors.tokenMatch = 'Tokens did not match';
-//                 errors.verifyPasswordRest = 'Tokens did not match';
-//             }
-            
-//             if (!user) {
-//                 errors.verifyPasswordRest = 'Email address does not exist';
-//             }
-
-            
-//             return res.json(user)
-//         })
-//         .catch(err => res.json(err));
-// });
 
 module.exports = router;
