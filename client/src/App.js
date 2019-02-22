@@ -12,6 +12,7 @@ import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Dashboard from './components/Dashboard';
 import Landing from './components/Landing';
+import AppOld from './AppOld';
 
 import './App.scss';
 import PasswordReset from './components/auth/PasswordReset';
@@ -52,6 +53,7 @@ class App extends Component {
               <Route exact path="/dashboard" component={Dashboard} />
               <Route exact path="/forgotten-password" component={ForgotPassword} />
               <Route exact path="/reset-password" component={PasswordReset} />
+              {/* <Route exact path="/dashboard" component={AppOld} /> */}
             </div>
             {/* <Footer /> */}
           </div>

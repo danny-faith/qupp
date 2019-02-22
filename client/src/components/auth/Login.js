@@ -43,7 +43,7 @@ class Login extends Component {
     return (
       <Row>
 				<Col s={6} className="offset-s3">
-					<h2 className="center white-text">Login</h2>
+					<h2 className="center">Login</h2>
 					<form noValidate onSubmit={this.onSubmit}>
             <Row>
 							<Col s={12}>

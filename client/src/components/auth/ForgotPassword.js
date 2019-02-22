@@ -43,7 +43,7 @@ class ForgotPassword extends Component {
     return (
 		<Row>
 			<Col s={6} className="offset-s3">
-				<h2 className="center white-text">Forgot password?</h2>
+				<h2 className="center">Forgot password?</h2>
 				<form noValidate onSubmit={this.onSubmit}>
 					<Row>
 						<Col s={12}>
