@@ -12,11 +12,14 @@ import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Dashboard from './components/Dashboard';
 import Landing from './components/Landing';
+import MyAccountPage from './pages/MyAccountPage';
 import AppOld from './AppOld';
 
 import './App.scss';
-import PasswordReset from './components/auth/PasswordReset';
-import ForgotPassword from './components/auth/ForgotPassword';
+
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import UpdatePasswordPage from './pages/UpdatePasswordPage';
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -51,8 +54,10 @@ class App extends Component {
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/dashboard" component={Dashboard} />
-              <Route exact path="/forgotten-password" component={ForgotPassword} />
-              <Route exact path="/reset-password" component={PasswordReset} />
+              <Route exact path="/my-account" component={MyAccountPage} />
+              <Route exact path="/forgotten-password" component={ForgotPasswordPage} />
+              <Route exact path="/reset-password" component={ResetPasswordPage} />
+              <Route exact path="/update-password" component={UpdatePasswordPage} />
               {/* <Route exact path="/dashboard" component={AppOld} /> */}
             </div>
             {/* <Footer /> */}

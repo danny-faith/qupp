@@ -77,11 +77,12 @@ export const forgotPasswordEmailSearch = (email) => (dispatch) => {
         });
 }
 
-export const updatePassword = (payload) => (dispatch) => {
-    
-    axios.post('/api/users/forgot-password-reset', payload)
+export const changePassword = (payload) => (dispatch) => {
+    // TODO User needs to be either logged out or re logged in automatically if they were already logged in
+    axios.post(`/api/users/forgot-password-reset`, payload)
         .then(res => {
             // dispatch
+            // Clear form fields and clear errors
             console.log(res.data);
             // console.log('dispatch', dispatch);
             window.M.toast({html: `Password succesfully reset`, classes: 'green lighten-2'});            

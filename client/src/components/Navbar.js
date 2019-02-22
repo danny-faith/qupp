@@ -9,13 +9,45 @@ import logo from '../logo-v2.svg';
 
 class Navbar extends Component {
     userRef = React.createRef();
+    state = {
+        isAuthenticated2: false
+    }
 
     onLogoutClick = (e) => {
 		e.preventDefault();
 		this.props.logoutUser(this.props.history);
     }
-    componentDidMount() {
+    componentDidMount = () => {
+        if (this.state.isAuthenticated2) {
+            window.M.Dropdown.init(this.userRef.current);
+        }
         window.M.Dropdown.init(this.userRef.current);
+    }
+    componentWillReceiveProps = (nextProps) => {
+        console.log(nextProps);
+        
+        if (nextProps.auth.isAuthenticated) {
+            console.log('there are authenticated');
+            this.setState({
+                isAuthenticated2: true
+            });
+            window.M.Dropdown.init(this.userRef.current);
+            
+        } else {
+            console.log('there are not authenticated');
+            window.M.Dropdown.init(this.userRef.current);
+        }
+    }
+    componentWillUpdate = () => {
+        console.log('componentWillUpdate');
+        if (this.state.isAuthenticated2) {
+            console.log('hello?');
+            
+            window.M.Dropdown.init(this.userRef.current);
+        } else {
+            console.log('me?');
+            
+        }
     }
     render() {
         const { isAuthenticated, user } = this.props.auth;
@@ -31,7 +63,7 @@ class Navbar extends Component {
                         {user.name}
                     </a>
                     <ul id="dropdown1" className="dropdown-content">
-                        <li><a href="#!">Profile</a></li>
+                        <li><Link to="/my-account">Account</Link></li>
                         <li><a href="#!">two</a></li>
                         <li className="divider"></li>
                         <li><a href="#!">three</a></li>

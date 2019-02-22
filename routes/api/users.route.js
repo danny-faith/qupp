@@ -246,38 +246,55 @@ router.post('/forgot-password', (req, res) => {
 
 router.post('/forgot-password-reset', (req, res) => {
     const { errors, isValid } = validateSetPassword(req.body);
-    const { token, password } = req.body;
-
+    const { token, password, isAuthenticated, userId } = req.body;
+    
     if (!isValid) {
         return res.status(400).json(errors);
     }
-
-    User.findOne({ resetPasswordToken: token, resetPasswordTokenExpires: { $gt: Date.now() } })
-        .then(user => {
-
-            // If no user is returned then token doesnt exist or 
-            if (!user) {
-                errors.verifyPasswordRest = 'Password reset token is invalid or has expired.';
-                return res.status(400).json(errors);
-            }
-
-            // Clear password reset token and reset expiry time
-            user.resetPasswordToken = '';
-            user.resetPasswordTokenExpires = '';
-
-            // Generate hash of new password
-            bcrypt.genSalt(10, (err, salt) => {
-                bcrypt.hash(password, salt, (err, hash) => {
-                    if (err) throw err;
-                    user.password = hash;
-                    user
-                        .save()
-                        .then(user => res.json(user))
-                        .catch(err => console.log(err));
+    if (!isAuthenticated) {
+        User.findOne({ resetPasswordToken: token, resetPasswordTokenExpires: { $gt: Date.now() } })
+            .then(user => {            
+    
+                // If no user is returned then token doesnt exist or 
+                if (!user) {
+                    errors.verifyPasswordRest = 'Password reset token is invalid or has expired.';
+                    return res.status(400).json(errors);
+                }
+    
+                // Clear password reset token and reset expiry time
+                user.resetPasswordToken = '';
+                user.resetPasswordTokenExpires = '';
+    
+                // Generate hash of new password
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(password, salt, (err, hash) => {
+                        if (err) throw err;
+                        user.password = hash;
+                        user
+                            .save()
+                            .then(user => res.json(user))
+                            .catch(err => console.log(err));
+                    });
                 });
-            });
-        })
-        .catch(err => res.status(404).json(err));
+            })
+            .catch(err => res.status(404).json(err));
+    } else {
+        User.findOne({ _id: userId })
+            .then(user => {
+                // Generate hash of new password
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(password, salt, (err, hash) => {
+                        if (err) throw err;
+                        user.password = hash;
+                        user
+                            .save()
+                            .then(user => res.json(user))
+                            .catch(err => console.log(err));
+                    });
+                });
+            })
+            .catch(err => res.status(404).json(err));
+    }
 });
 
 module.exports = router;
