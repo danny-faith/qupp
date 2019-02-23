@@ -1,0 +1,15 @@
+nav {
+  // background-color: pink;
+  position: relative;
+  .avatar {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    img {
+      max-width: 50px;
+      max-height: 50px;
+      border-radius: 100%;
+      margin-right: 10px;
+    }
+  }
+}
