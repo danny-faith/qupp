@@ -24,7 +24,7 @@ class Navbar extends Component {
         window.M.Dropdown.init(this.userRef.current);
     }
     componentWillReceiveProps = (nextProps) => {
-        console.log(nextProps);
+        // console.log(nextProps);
         
         if (nextProps.auth.isAuthenticated) {
             console.log('there are authenticated');

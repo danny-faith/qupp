@@ -70,6 +70,7 @@ class ChangePassword extends Component {
 							value={this.state.password2}
 							/>
 							{errors.password2 && (<p className="red-text col no-margin">{errors.password2}</p>)}
+							{errors.verifyPasswordRest && (<p className="red-text col no-margin">{errors.verifyPasswordRest}</p>)}
 					</Col>
 				</Row>
 				<Row>
