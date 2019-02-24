@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const isEmpty = require('../../validation/is-empty');
 const nodemailer = require("nodemailer");
+const passport = require('passport');
 
 // Load validation
 const validateRegisterInput = require('../../validation/register.js');
@@ -47,18 +48,18 @@ router.post('/', (req, res) => {
  * given the search term of the users username.
  */
 
-router.get('/:username', (req, res, next) => {
-    console.log('get user');
+// router.get('/:username', (req, res, next) => {
+//     console.log('get user');
     
-    var { username } = req.params;
-    User.find({ username: username }).exec(function(err, user) {
-        if (err) {
-            next();
-        } else {
-            res.status(200).json(user);
-        }
-    });
-});
+//     var { username } = req.params;
+//     User.find({ username: username }).exec(function(err, user) {
+//         if (err) {
+//             next();
+//         } else {
+//             res.status(200).json(user);
+//         }
+//     });
+// });
 
 /**
  * Endpoint: Not currently used. Simply returns all users.
@@ -244,6 +245,14 @@ router.post('/forgot-password', (req, res) => {
         .catch(err => res.json(err));
 });
 
+//  @route POST api/users/forgot-password-reset
+//  @description Reset password
+//  @access Private (can be accessed publicly if user has token)
+// TODO USe code below and make this route still works
+// passport.authenticate('jwt', { session: false })
+//  Maybe not as users without toke will instantly get turned away.
+// route needs to be Public but only with token. And if no token then user must be able to send isAuthenticated true.
+// Now I think about it, someone could pass isAuthenticated === true via React dev tools and bypass the token stage, I think anyway. Must test
 router.post('/forgot-password-reset', (req, res) => {
     const { errors, isValid } = validateSetPassword(req.body);
     const { token, password, isAuthenticated, userId } = req.body;
@@ -295,6 +304,15 @@ router.post('/forgot-password-reset', (req, res) => {
             })
             .catch(err => res.status(404).json(err));
     }
+});
+
+//  @route GET api/users/current
+//  @description Returns current users
+//  @access Private
+router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+    console.log('/current route');
+    
+    res.json(req.user);
 });
 
 module.exports = router;

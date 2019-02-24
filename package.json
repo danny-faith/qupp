@@ -32,6 +32,7 @@
     "node-sass": "^4.9.4",
     "nodemailer": "^5.1.1",
     "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "query-string": "^6.2.0",
     "source-map-support": "^0.5.9",

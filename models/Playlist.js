@@ -7,7 +7,14 @@ var Schema = mongoose.Schema;
  */
 
 var playlistSchema = new Schema({
-    name: String,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+    },
+    name: {
+        type: String,
+        required: true
+    },
     desc: String,
     createdAt : {
         type: Date,

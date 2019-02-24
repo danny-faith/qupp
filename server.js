@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const axios = require('axios');
 const cors = require('cors');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+// const LocalStrategy = require('passport-local').Strategy;
 const path = require('path');
 require('dotenv').config();
 
@@ -20,15 +20,20 @@ promise.then(function(db) {
 var Schema = mongoose.Schema;
 
 const {
-    PORT:pt,
-    NODE_ENV
+  PORT:pt,
+  NODE_ENV
 } = process.env;
 
 const PORT = pt || 8080;
 
-// TODO: add RegEx to schemas
+var usersRouter = require('./routes/api/users');
+var songsRouter = require('./routes/api/songs.route');
+var playlistRouter = require('./routes/api/playlist.route');
+var spotifyRouter = require('./routes/api/authSpotify.route');
+var loginRouter = require('./routes/api/login.route');
 
 const app = express();
+
 app.use(cors());
 app.use(require('cookie-parser')());
 app.use(require('express-session')({
@@ -36,8 +41,14 @@ app.use(require('express-session')({
     resave: true,
     saveUninitialized: true
   }));
+// app.use(passport.initialize());
+// app.use(passport.session());
+
+// Passport middleware
 app.use(passport.initialize());
-app.use(passport.session());
+
+// Passport config
+require('./config/passport')(passport);
 
 // need if statement around this to switch to look for the react build folder once in production
 if (NODE_ENV === "development") {
@@ -71,11 +82,6 @@ app.use(function(req, res, next) {
 console.log('/* catch all path', `${__dirname}/client/build`);
 
 
-var usersRouter = require('./routes/api/users.route');
-var songsRouter = require('./routes/api/songs.route');
-var playlistRouter = require('./routes/api/playlist.route');
-var spotifyRouter = require('./routes/api/authSpotify.route');
-var loginRouter = require('./routes/api/login.route');
 
 // app.get('/', (req, res) => {
 //     res.status(200).send();
@@ -83,12 +89,12 @@ var loginRouter = require('./routes/api/login.route');
 
 app.use('/api/users', usersRouter);
 app.use('/songs', songsRouter);
-app.use('/playlist', playlistRouter);
+app.use('/api/playlists', playlistRouter);
 app.use('/authspotify', spotifyRouter);
 // app.use('/login', loginRouter);
 
 app.get('*', (req, res) => {
-    console.log('triggered route');
+    console.log('Catch all route');
     // res.json({stuff: 'HELLO WORLD'}); // comment
     // res.sendFile(`${__dirname}/client/build.index.html`);
     res.redirect('https://google.com');
