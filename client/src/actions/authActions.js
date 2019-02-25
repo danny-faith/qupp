@@ -95,3 +95,12 @@ export const changePassword = (payload) => (dispatch) => {
             console.log(err);
         });
 }
+
+export const createPlaylist = (payload) => (dispatch) => {
+    console.log('createPlaylist: ', payload);
+    axios.post('/api/playlists', payload)
+        .then(playlist => {
+
+        })
+        .catch(err => console.log(err));
+}

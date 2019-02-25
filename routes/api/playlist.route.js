@@ -12,12 +12,14 @@ const Playlist = require('../../models/Playlist');
 //  @description Create playlist
 //  @access Private
 router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+    console.log(req.body);
     const { errors, isValid } = validatePlaylistInput(req.body);
     
     if (!isValid) {
         return res.status(400).json(errors);
     }
     // Add edit playlist in here
+    
     
     var newPlaylist = {
         user: req.user.id,

@@ -10,7 +10,7 @@ import Navbar from './components/Navbar';
 // import Footer from './components/layout/Footer';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
-import Dashboard from './components/Dashboard';
+import Dashboard from './pages/Dashboard';
 import Landing from './components/Landing';
 import MyAccountPage from './pages/MyAccountPage';
 import AppOld from './AppOld';
