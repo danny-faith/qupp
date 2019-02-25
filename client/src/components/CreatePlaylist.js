@@ -17,36 +17,36 @@ class CreatePlaylist extends Component {
         }
         this.props.createPlaylist(newPlaylist);
     }
-  onChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
-  }
-  render() {
-    const errors = this.state;
+    onChange = (e) => {
+        this.setState({ [e.target.name]: e.target.value });
+    }
+    render() {
+        const errors = this.state;
 
-    return (
-        <Row>
-            <Col s={12}>
-                <h5>{this.props.title}</h5>
-                <form onSubmit={this.onSubmit}>
-                    <Input
-                        id={"name"}
-                        className={classnames({
-                            'invalid': errors.name
-                        })} 
-                        type="text"
-                        name="name"
-                        s={12}
-                        label="Playlist name"
-                        onChange={this.onChange}
-                        value={this.state.name}
-                    />
-                    {/* {errors.name && (<p className="red-text col no-margin">{errors.playlist_name}</p>)} */}
-                    <Button className="right">Create playlist</Button>
-                </form>
-            </Col>
-        </Row>
-    )
-  }
+        return (
+            <Row>
+                <Col s={12}>
+                    <h5>{this.props.title}</h5>
+                    <form onSubmit={this.onSubmit}>
+                        <Input
+                            id={"name"}
+                            className={classnames({
+                                'invalid': errors.name
+                            })} 
+                            type="text"
+                            name="name"
+                            s={12}
+                            label="Playlist name"
+                            onChange={this.onChange}
+                            value={this.state.name}
+                        />
+                        {/* {errors.name && (<p className="red-text col no-margin">{errors.playlist_name}</p>)} */}
+                        <Button className="right">Create playlist</Button>
+                    </form>
+                </Col>
+            </Row>
+        )
+    }
 }
 
 CreatePlaylist.propTypes = {
