@@ -8,39 +8,12 @@ const validatePlaylistInput = require('../../validation/playlist');
 // Load Playlist model
 const Playlist = require('../../models/Playlist');
 
-//  @route POST api/playlist
-//  @description Create playlist
-//  @access Private
-router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log(req.body);
-    const { errors, isValid } = validatePlaylistInput(req.body);
-    
-    if (!isValid) {
-        return res.status(400).json(errors);
-    }
-    // Add edit playlist in here
-    
-    
-    var newPlaylist = {
-        user: req.user.id,
-        name: req.body.name,
-        desc: (req.body.description) ? req.body.description : ''
-    }
-    var playlist = new Playlist(newPlaylist);
-    playlist.save(function(err, playlistModel) {
-        if (err) {
-            return res.status(500).send(err);
-        }
-        res.status(201).send(playlistModel);
-    })
-});
-
 //  @route GET api/playlists/user:user_id
 //  @description Get all playlists by user
 //  @access Public
 router.get('/user/:user_id', (req, res) => {
     const errors = {};
-    console.log('req.params.user_id: ', req.params.user_id);
+    // console.log('req.params.user_id: ', req.params.user_id);
     
 
     Playlist.find({ user: req.params.user_id })
@@ -53,6 +26,37 @@ router.get('/user/:user_id', (req, res) => {
             console.log(playlists);
         })
 });
+
+//  @route POST api/playlist
+//  @description Create playlist
+//  @access Private
+router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+    console.log(req.body);
+    const { errors, isValid } = validatePlaylistInput(req.body);
+    
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+    // Add edit playlist in here
+    // Playlist.findOne
+
+    // TODO see if res.body.slug is taken as slug should be unique
+    
+    var newPlaylist = {
+        user: req.user.id,
+        name: req.body.name,
+        slug: req.body.slug,
+        desc: (req.body.description) ? req.body.description : ''
+    }
+    var playlist = new Playlist(newPlaylist);
+    playlist.save(function(err, playlistModel) {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        res.status(201).send(playlistModel);
+    })
+});
+
 
 /**
  * This `GET` endpoint is not currently used. But is just a simple

@@ -30,8 +30,8 @@ const TextFieldGroup = ({
                 onChange={onChange}
                 disabled={disabled}
             />
-            {info && (<span class="helper-text">Helper text</span>)}
-            {error && (<p className="red-text col no-margin">{error}</p>)}
+            {error && (<p className="red-text col s12 no-margin">{error}</p>)}
+            {info && (<p className="helper-text col s12">{info}</p>)}
         </Col>
   )
 }

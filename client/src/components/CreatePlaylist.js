@@ -1,46 +1,58 @@
 import React, { Component } from 'react';
 import { Row, Col, Button, Input } from 'react-materialize';
 import classnames from 'classnames';
-import { createPlaylist } from '../actions/authActions';
+import { createPlaylist } from '../actions/playlistActions';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import TextFieldGroup from './common/TextFieldGroup';
 
 class CreatePlaylist extends Component {
     state = {
         name: '',
+        slug: '',
         errors: {}
     }
     onSubmit = (e) => {
         e.preventDefault();
         const newPlaylist = {
-            name: this.state.name
+            name: this.state.name,
+            slug: this.state.slug
         }
         this.props.createPlaylist(newPlaylist);
     }
     onChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
     }
+    componentWillReceiveProps = (nextProps) => {
+		if (nextProps.errors) {
+			this.setState({errors: nextProps.errors});
+		}
+	}
     render() {
-        const errors = this.state;
+        const { errors } = this.state;
 
         return (
             <Row>
                 <Col s={12}>
                     <h5>{this.props.title}</h5>
                     <form onSubmit={this.onSubmit}>
-                        <Input
-                            id={"name"}
-                            className={classnames({
-                                'invalid': errors.name
-                            })} 
-                            type="text"
-                            name="name"
-                            s={12}
-                            label="Playlist name"
-                            onChange={this.onChange}
-                            value={this.state.name}
-                        />
-                        {/* {errors.name && (<p className="red-text col no-margin">{errors.playlist_name}</p>)} */}
+                        <TextFieldGroup
+								name="name"
+								type="text"
+								label="Name"
+								value={this.state.name}
+								onChange={this.onChange}
+								error={errors.name}
+              				/>
+                        <TextFieldGroup
+								name="slug"
+								type="text"
+								label="Slug"
+								value={this.state.slug}
+								onChange={this.onChange}
+								error={errors.slug}
+                                info="Please supply an easy to read URL for your playlist. No spaces, special characters or uppercase. Use underscores for spaces. E.g. daniels_party_jan"
+              				/>
                         <Button className="right">Create playlist</Button>
                     </form>
                 </Col>

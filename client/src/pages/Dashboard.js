@@ -16,9 +16,6 @@ class Dashboard extends Component {
       if (!nextProps.auth.isAuthenticated) {
           this.props.history.push('/login');
       }
-      if (nextProps.errors) {
-          this.setState({errors: nextProps.errors});
-      }
   }
   render() {
     return (
@@ -33,13 +30,11 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-	auth: PropTypes.object.isRequired,
-	errors: PropTypes.object.isRequired,
+	auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
-	auth: state.auth,
-	errors: state.errors
+	auth: state.auth
 });
 
 export default connect(mapStateToProps)(withRouter(Dashboard));

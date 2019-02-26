@@ -15,6 +15,10 @@ var playlistSchema = new Schema({
         type: String,
         required: true
     },
+    slug: {
+        type: String,
+        required: true
+    },
     desc: String,
     createdAt : {
         type: Date,
@@ -22,6 +26,4 @@ var playlistSchema = new Schema({
     }
 });
 
-var Playlist = mongoose.model('Playlist', playlistSchema);
-
-module.exports = Playlist;
+module.exports = Playlist = mongoose.model('Playlist', playlistSchema);

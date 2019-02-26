@@ -1,8 +1,7 @@
 import { 
     SET_CURRENT_USER, 
     FORGOT_PASSWORD_EMAIL_SEARCH, 
-    VERIFY_USER_FOR_PASSWORD_RESET,
-    CREATE_PLAYLIST
+    VERIFY_USER_FOR_PASSWORD_RESET
 } from '../actions/types';
 
 import isEmpty from '../validation/is-empty';
@@ -30,10 +29,6 @@ export default function(state = initialState, action) {
                 ...state,
                 email: action.payload,
                 token: action.payload
-            }
-        case CREATE_PLAYLIST:
-            return {
-                ...state
             }
         default: 
             return state;
