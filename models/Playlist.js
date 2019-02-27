@@ -11,6 +11,7 @@ var playlistSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
+    // Firebase id or seomthing to link it to Firebase
     name: {
         type: String,
         required: true

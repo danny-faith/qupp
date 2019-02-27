@@ -30,6 +30,11 @@ export default function(state = initialState, action) {
                 ...state,
                 playlist: action.payload
             }
+        case GET_PLAYLISTS:
+            return {
+                ...state,
+                playlists: action.payload
+            }
         default: 
             return state;
     }

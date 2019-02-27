@@ -8,30 +8,55 @@ const validatePlaylistInput = require('../../validation/playlist');
 // Load Playlist model
 const Playlist = require('../../models/Playlist');
 
+
+
+//  @route GET api/playlists/
+//  @description Get all playlists
+//  @access Public
+router.get('/', (req, res) => {
+    const errors = {};    
+
+    Playlist.find()
+        .then(playlists => res.json(playlists))
+        .catch(() => {
+            errors.playlists = 'No playlists found';
+            return res.status(404).json(errors);
+        });
+});
+
 //  @route GET api/playlists/user:user_id
 //  @description Get all playlists by user
 //  @access Public
 router.get('/user/:user_id', (req, res) => {
-    const errors = {};
-    // console.log('req.params.user_id: ', req.params.user_id);
-    
+    const errors = {};    
 
     Playlist.find({ user: req.params.user_id })
-        .then(playlists => {
-            if (!playlists) {
-                errors.playlists = 'No playlists found';
-                res.status(404).json(errors);
-            }
-            res.json(playlists);
-            console.log(playlists);
-        })
+        .then(playlists => res.json(playlists))
+        .catch(() => {
+            errors.playlists = 'No playlists found';
+            return res.status(404).json(errors);
+        });
+});
+
+//  @route GET api/playlists/:playlist_id
+//  @description Get playlist by playlist ID
+//  @access Public
+router.get('/:_id', (req, res) => {
+    const errors = {};    
+
+    Playlist.find({ _id: req.params._id })
+        .then(playlist => res.json(playlist))
+        .catch(() => {
+            errors.playlist = 'No playlists found';
+            return res.status(404).json(errors);
+        });
 });
 
 //  @route POST api/playlist
 //  @description Create playlist
 //  @access Private
 router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     const { errors, isValid } = validatePlaylistInput(req.body);
     
     if (!isValid) {
