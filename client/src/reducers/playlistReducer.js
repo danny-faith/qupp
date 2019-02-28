@@ -3,7 +3,8 @@ import {
     GET_PLAYLIST,
     PLAYLIST_LOADING,
     PLAYLIST_NOT_FOUND,
-    GET_PLAYLISTS
+    GET_PLAYLISTS,
+    CLEAR_PLAYLISTS
 } from '../actions/types';
 
 import isEmpty from '../validation/is-empty';
@@ -34,6 +35,11 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 playlists: action.payload
+            }
+        case CLEAR_PLAYLISTS:
+            return {
+                ...state,
+                playlists: {}
             }
         default: 
             return state;

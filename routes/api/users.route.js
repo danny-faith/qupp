@@ -30,18 +30,18 @@ const {
  * password using the password supplied by the user and sent in the body
  */
 
-router.post('/', (req, res) => {
-    const newUser = req.body;
-    const user = new User(newUser);
-    user.setPassword(req.body.password); // method that creates the users password
+// router.post('/', (req, res) => {
+//     const newUser = req.body;
+//     const user = new User(newUser);
+//     user.setPassword(req.body.password); // method that creates the users password
     
-    user.save(function(err, userModel) {
-        if (err) {
-            return res.status(500).send(err);
-        }
-        res.status(201).send(userModel);
-    })
-});
+//     user.save(function(err, userModel) {
+//         if (err) {
+//             return res.status(500).send(err);
+//         }
+//         res.status(201).send(userModel);
+//     })
+// });
 
 /**
  * Endpoint: Not currently used. But simply returns an object containing the users details
@@ -65,10 +65,10 @@ router.post('/', (req, res) => {
  * Endpoint: Not currently used. Simply returns all users.
  */
 
-router.get('/', (req, res) => {
-    console.log('/login route requested');    
-    res.sendFile(`${__dirname}/client/build.index.html`);
-});
+// router.get('/', (req, res) => {
+//     console.log('/login route requested');    
+//     res.sendFile(`${__dirname}/client/build.index.html`);
+// });
 
 //  @route GET api/users/register
 //  @description Register user

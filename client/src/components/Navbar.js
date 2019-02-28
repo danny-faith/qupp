@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logoutUser } from './../actions/authActions';
+import { clearPlaylists } from './../actions/playlistActions';
 import { withRouter } from 'react-router-dom';
 
 import logo from '../logo-v2.svg';
@@ -16,6 +17,7 @@ class Navbar extends Component {
     onLogoutClick = (e) => {
 		e.preventDefault();
 		this.props.logoutUser(this.props.history);
+		this.props.clearPlaylists();
     }
     componentDidMount = () => {
         if (this.state.isAuthenticated2) {
@@ -93,6 +95,7 @@ class Navbar extends Component {
 }
 
 Navbar.propTypes = {
+	clearPlaylists: PropTypes.func.isRequired,
 	logoutUser: PropTypes.func.isRequired,
 	auth: PropTypes.object.isRequired
 }
@@ -101,4 +104,4 @@ const mapStateToProps = (state) => ({
     auth: state.auth
 });
 
-export default connect(mapStateToProps, { logoutUser })(withRouter(Navbar));
+export default connect(mapStateToProps, { logoutUser, clearPlaylists })(withRouter(Navbar));

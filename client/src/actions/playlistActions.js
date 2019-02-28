@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_ERRORS, PLAYLIST_LOADING, GET_PLAYLIST, GET_PLAYLISTS } from './types';
+import { GET_ERRORS, PLAYLIST_LOADING, GET_PLAYLIST, GET_PLAYLISTS, CLEAR_PLAYLISTS } from './types';
 
 export const getPlaylists = () => (dispatch) => {        
     axios.get('/api/playlists')
@@ -24,6 +24,12 @@ export const createPlaylist = (payload) => (dispatch) => {
             });
             console.log(err);
         });
+}
+
+export const clearPlaylists = () => (dispatch) => {
+    dispatch({
+        type: CLEAR_PLAYLISTS
+    })
 }
 
 // export const getCurrentPlaylist = () => dispatch => {

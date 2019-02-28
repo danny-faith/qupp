@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const isEmpty = require('../../validation/is-empty');
 
 // Load playlist validation
 const validatePlaylistInput = require('../../validation/playlist');
@@ -28,7 +29,7 @@ router.get('/all', (req, res) => {
 //  @access Private
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     const errors = {};  
-    console.log(req.user);
+    // console.log(req.user);
       
 
     Playlist.find({ user: req.user._id })
@@ -40,10 +41,25 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         });
 });
 
-// //  @route GET api/playlists/user:user_id
-// //  @description Get all playlists by user
-// //  @access Public
-// router.get('/user/:user_id', (req, res) => {
+//  @route GET api/playlists/user:user_id
+//  @description Get all playlists by user
+//  @access Public
+router.get('/user/:user_id', (req, res) => {
+    const errors = {};    
+
+    Playlist.find({ user: req.params.user_id })
+        .then(playlists => res.json(playlists))
+        .catch(() => {
+            errors.playlists = 'No playlists found';
+            return res.status(404).json(errors);
+        });
+});
+
+//  @route GET api/playlists/user:username
+//  @description Get all playlists by username
+//  @access Public
+// TODO: need to search for the user first to get their ID, then use their ID to search for thier playlist. Like above
+// router.get('/user/:username', (req, res) => {
 //     const errors = {};    
 
 //     Playlist.find({ user: req.params.user_id })
@@ -72,30 +88,51 @@ router.get('/:_id', (req, res) => {
 //  @description Create playlist
 //  @access Private
 router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-    // console.log(req.body);
-    const { errors, isValid } = validatePlaylistInput(req.body);
-    
-    if (!isValid) {
-        return res.status(400).json(errors);
-    }
-    // Add edit playlist in here
-    // Playlist.findOne
+    const { errors } = validatePlaylistInput(req.body);
 
-    // TODO see if res.body.slug is taken as slug should be unique
-    
-    var newPlaylist = {
-        user: req.user.id,
-        name: req.body.name,
-        slug: req.body.slug,
-        desc: (req.body.description) ? req.body.description : ''
-    }
-    var playlist = new Playlist(newPlaylist);
-    playlist.save(function(err, playlistModel) {
-        if (err) {
-            return res.status(500).send(err);
+    // Check to see if slug already exists
+    (async function doesSlugExist() {
+        
+        let promise = new Promise((resolve, reject) => {
+            Playlist.findOne({ slug: req.body.slug})
+                .then((playlist) => {
+                    console.log(playlist);
+                    
+                    if (playlist) {
+                        errors.playlist = 'Slug already exists';
+                        resolve(errors);
+                    } else {
+                        reject('no playlist found with that slug');
+                    }
+                }); 
+        }).catch(err => console.log(err));
+
+        // Wait for promise to resvole or reject
+        await promise;
+
+        // Check for any validation errors or from slug check
+        if (!isEmpty(errors)) {
+            return res.status(400).json(errors);
+        } else {
+            // Check to see if we're editing the playlist
+            var newPlaylist = {
+                user: req.user.id,
+                name: req.body.name,
+                slug: req.body.slug,
+                desc: (req.body.description) ? req.body.description : ''
+            }
+            var playlist = new Playlist(newPlaylist);
+            playlist.save(function(err, playlistModel) {
+                if (err) {
+                    return res.status(500).send(err);
+                }
+                res.status(201).send(playlistModel);
+            });
         }
-        res.status(201).send(playlistModel);
-    })
+    })(); // IIFE
+    
+    // Add edit playlist in here
+    
 });
 
 //  @route DELETE api/playlists/
