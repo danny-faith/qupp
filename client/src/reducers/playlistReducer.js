@@ -29,12 +29,14 @@ export default function(state = initialState, action) {
         case GET_PLAYLIST:
             return {
                 ...state,
-                playlist: action.payload
+                playlist: action.payload,
+                loading: false
             }
         case GET_PLAYLISTS:
             return {
                 ...state,
-                playlists: action.payload
+                playlists: action.payload,
+                loading: false
             }
         case CLEAR_PLAYLISTS:
             return {

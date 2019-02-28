@@ -1,9 +1,17 @@
 import axios from 'axios';
-import { GET_ERRORS, PLAYLIST_LOADING, GET_PLAYLIST, GET_PLAYLISTS, CLEAR_PLAYLISTS } from './types';
+import { 
+    GET_ERRORS, 
+    PLAYLIST_LOADING, 
+    GET_PLAYLIST, 
+    GET_PLAYLISTS, 
+    CLEAR_PLAYLISTS 
+} from './types';
 
-export const getPlaylists = () => (dispatch) => {        
+export const getPlaylists = () => (dispatch) => {  
+    dispatch(setPlaylistLoading());
+     
     axios.get('/api/playlists')
-        .then(res => 
+        .then(res =>
             dispatch({
                 type: GET_PLAYLISTS,
                 payload: res.data

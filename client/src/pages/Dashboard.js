@@ -5,11 +5,12 @@ import { Link, withRouter } from 'react-router-dom';
 import PlaylistListItem from '../components/PlaylistListItem';
 import CreatePlaylist from '../components/CreatePlaylist';
 import { getPlaylists } from '../actions/playlistActions';
+import Spinner from '../components/common/Spinner';
 
 
 class Dashboard extends Component {
   state = {
-    playlists: []
+    data: []
   }
   componentDidMount = () => {
     this.props.getPlaylists(this.props.auth.user);
@@ -18,26 +19,35 @@ class Dashboard extends Component {
     
     if (nextProps.playlists) {
       this.setState({
-        playlists: nextProps.playlists
+        data: nextProps.playlists
       })
     }
   }
   render() {
-    const playlists = this.state.playlists;
-    
-    return (
-      <div>
-        <h1>Dashboard</h1>
-        <h2>Playlists</h2>
-        <CreatePlaylist title="Create a playlist"/>
-        {playlists.map(item => 
+    const loading = this.props.playlists.loading;
+    const playlists = this.props.playlists.playlists;
+    let playlistContent;
+
+    if (playlists === null || loading) {
+      playlistContent = <Spinner />
+    } else {
+      playlistContent = playlists
+        .map(item => 
           <PlaylistListItem 
             key={item._id}
             id={item._id}
             name={item.name} 
             shareLink={item.share_link}
           />
-        )}
+        );
+    }
+    
+    return (
+      <div>
+        <h1>Dashboard</h1>
+        <h2>Playlists</h2>
+        <CreatePlaylist title="Create a playlist"/>
+        {playlistContent}
       </div>
     )
   }
@@ -53,7 +63,7 @@ Dashboard.propTypes = {
 
 const mapStateToProps = (state) => ({
 	auth: state.auth,
-	playlists: state.playlist.playlists
+	playlists: state.playlist
 });
 
 export default connect(mapStateToProps, { getPlaylists })(Dashboard);

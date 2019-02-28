@@ -95,11 +95,9 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
         
         let promise = new Promise((resolve, reject) => {
             Playlist.findOne({ slug: req.body.slug})
-                .then((playlist) => {
-                    console.log(playlist);
-                    
+                .then((playlist) => {                    
                     if (playlist) {
-                        errors.playlist = 'Slug already exists';
+                        errors.slug = 'Slug already exists';
                         resolve(errors);
                     } else {
                         reject('no playlist found with that slug');
@@ -129,10 +127,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
                 res.status(201).send(playlistModel);
             });
         }
-    })(); // IIFE
-    
-    // Add edit playlist in here
-    
+    })(); // IIFE    
 });
 
 //  @route DELETE api/playlists/

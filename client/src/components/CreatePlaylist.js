@@ -24,6 +24,8 @@ class CreatePlaylist extends Component {
         this.setState({ [e.target.name]: e.target.value });
     }
     componentWillReceiveProps = (nextProps) => {
+        console.log('nextProps: ', nextProps);
+        
 		if (nextProps.errors) {
 			this.setState({errors: nextProps.errors});
 		}
