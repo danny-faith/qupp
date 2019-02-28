@@ -8,15 +8,14 @@ const validatePlaylistInput = require('../../validation/playlist');
 // Load Playlist model
 const Playlist = require('../../models/Playlist');
 
-
-
 //  @route GET api/playlists/
 //  @description Get all playlists
 //  @access Public
-router.get('/', (req, res) => {
+router.get('/all', (req, res) => {
     const errors = {};    
 
     Playlist.find()
+        .sort({ createdAt: 'desc' })
         .then(playlists => res.json(playlists))
         .catch(() => {
             errors.playlists = 'No playlists found';
@@ -24,19 +23,36 @@ router.get('/', (req, res) => {
         });
 });
 
-//  @route GET api/playlists/user:user_id
+//  @route GET api/playlists/
 //  @description Get all playlists by user
-//  @access Public
-router.get('/user/:user_id', (req, res) => {
-    const errors = {};    
+//  @access Private
+router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const errors = {};  
+    console.log(req.user);
+      
 
-    Playlist.find({ user: req.params.user_id })
+    Playlist.find({ user: req.user._id })
+        .sort({ createdAt: 'desc' })
         .then(playlists => res.json(playlists))
         .catch(() => {
             errors.playlists = 'No playlists found';
             return res.status(404).json(errors);
         });
 });
+
+// //  @route GET api/playlists/user:user_id
+// //  @description Get all playlists by user
+// //  @access Public
+// router.get('/user/:user_id', (req, res) => {
+//     const errors = {};    
+
+//     Playlist.find({ user: req.params.user_id })
+//         .then(playlists => res.json(playlists))
+//         .catch(() => {
+//             errors.playlists = 'No playlists found';
+//             return res.status(404).json(errors);
+//         });
+// });
 
 //  @route GET api/playlists/:playlist_id
 //  @description Get playlist by playlist ID
@@ -82,6 +98,18 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
     })
 });
 
+//  @route DELETE api/playlists/
+//  @description Delete a playlist
+//  @access Private
+router.delete('/:playlist_id', 
+    passport.authenticate('jwt', { session: false }), 
+    (req, res) => {
+        Playlist.findByIdAndDelete(req.params.playlist_id)
+            .then(() => res.json({ success: true }))
+            .catch(() => res.status(404).json({ success: false}));
+        
+    }
+);
 
 /**
  * This `GET` endpoint is not currently used. But is just a simple

@@ -23,12 +23,21 @@ class Dashboard extends Component {
     }
   }
   render() {
+    const playlists = this.state.playlists;
+    
     return (
       <div>
         <h1>Dashboard</h1>
         <h2>Playlists</h2>
-        <CreatePlaylist title="No playlists found"/>
-        {/* <PlaylistListItem /> */}
+        <CreatePlaylist title="Create a playlist"/>
+        {playlists.map(item => 
+          <PlaylistListItem 
+            key={item._id}
+            id={item._id}
+            name={item.name} 
+            shareLink={item.share_link}
+          />
+        )}
       </div>
     )
   }

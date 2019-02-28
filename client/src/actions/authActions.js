@@ -83,7 +83,7 @@ export const changePassword = (payload) => (dispatch) => {
         .then(res => {
             // dispatch
             // Clear form fields and clear errors
-            console.log(res.data);
+            // console.log(res.data);
             // console.log('dispatch', dispatch);
             window.M.toast({html: `Password succesfully reset`, classes: 'green lighten-2'});            
         })

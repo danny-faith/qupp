@@ -16,7 +16,7 @@ const TextFieldGroup = ({
     disabled
 }) => {
   return (
-		<Col s={12}>
+		<React.Fragment>
             <Input
                 type={type} 
                 className={classnames('form-control form-control-lg', {
@@ -32,7 +32,7 @@ const TextFieldGroup = ({
             />
             {error && (<p className="red-text col s12 no-margin">{error}</p>)}
             {info && (<p className="helper-text col s12">{info}</p>)}
-        </Col>
+        </React.Fragment>
   )
 }
 

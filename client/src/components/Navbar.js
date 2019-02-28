@@ -27,25 +27,25 @@ class Navbar extends Component {
         // console.log(nextProps);
         
         if (nextProps.auth.isAuthenticated) {
-            console.log('there are authenticated');
+            // console.log('there are authenticated');
             this.setState({
                 isAuthenticated2: true
             });
             window.M.Dropdown.init(this.userRef.current);
             
         } else {
-            console.log('there are not authenticated');
+            // console.log('there are not authenticated');
             window.M.Dropdown.init(this.userRef.current);
         }
     }
     componentWillUpdate = () => {
-        console.log('componentWillUpdate');
+        // console.log('componentWillUpdate');
         if (this.state.isAuthenticated2) {
-            console.log('hello?');
+            // console.log('hello?');
             
             window.M.Dropdown.init(this.userRef.current);
         } else {
-            console.log('me?');
+            // console.log('me?');
             
         }
     }
@@ -64,7 +64,7 @@ class Navbar extends Component {
                     </a>
                     <ul id="dropdown1" className="dropdown-content">
                         <li><Link to="/my-account">Account</Link></li>
-                        <li><a href="#!">two</a></li>
+                        <li><Link to="/dashboard">Dashboard</Link></li>
                         <li className="divider"></li>
                         <li><a href="#!">three</a></li>
                     </ul>

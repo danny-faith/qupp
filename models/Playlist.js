@@ -20,6 +20,7 @@ var playlistSchema = new Schema({
         type: String,
         required: true
     },
+    share_link: String,
     desc: String,
     createdAt : {
         type: Date,
