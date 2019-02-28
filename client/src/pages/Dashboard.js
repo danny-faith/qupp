@@ -29,7 +29,7 @@ class Dashboard extends Component {
     let playlistContent;
 
     if (playlists === null || loading) {
-      playlistContent = <Spinner />
+      playlistContent = <Spinner />;
     } else {
       playlistContent = playlists
         .map(item => 
