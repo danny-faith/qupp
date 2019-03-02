@@ -20,6 +20,19 @@ export const getPlaylists = () => (dispatch) => {
         .catch(err => console.log(err));
 }
 
+export const getPlaylist = () => (dispatch) => {  
+    dispatch(setPlaylistLoading());
+     
+    // axios.get('/api/playlists')
+    //     .then(res =>
+    //         dispatch({
+    //             type: GET_PLAYLIST,
+    //             payload: res.data
+    //         })
+    //     )
+    //     .catch(err => console.log(err));
+}
+
 export const createPlaylist = (payload) => (dispatch) => {
     axios.post('/api/playlists', payload)
         .then(res => {

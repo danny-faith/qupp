@@ -12,6 +12,8 @@ class PlaylistListItem extends Component {
         this.props.deletePlaylist(this.props.id);
     }
     render() {
+        console.log(this.props.id);
+        
         const share_link = (this.props.share_link) ? this.props.share_link : 'GENERATE SHARE LINK' ;
         return (
             <Row>
@@ -20,7 +22,7 @@ class PlaylistListItem extends Component {
                 </Col>
                 <Col s={4}>
                     <Button onClick={this.handleDeleteClick} className="right red lighten-1" waves='light'><Icon>delete</Icon></Button>
-                    <Button className="right" waves='light'><Icon>visibility</Icon></Button>
+                    <Button node="a" href={`/playlist/${this.props.id}`} className="right" waves='light'><Icon>visibility</Icon></Button>
                     <Button className="right yellow darken-3" waves='light'><Icon>edit</Icon></Button>
                 </Col>
                 <Col s={8}>

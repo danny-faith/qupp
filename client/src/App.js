@@ -22,6 +22,7 @@ import './App.scss';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import UpdatePasswordPage from './pages/UpdatePasswordPage';
+import QuppListPage from './pages/QuppListPage';
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -52,6 +53,7 @@ class App extends Component {
           <div className="App">
             <Navbar />
             <Route exact path="/" component={Landing} />
+            <Route exact path="/playlist/:playlist_id" component={QuppListPage} />
             <div className="container">
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
