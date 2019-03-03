@@ -156,7 +156,7 @@ class App extends Component {
     });
   }
 
-  addSongToPlayQueue = (songToQueue) => {
+  addSongToQueue = (songToQueue) => {
     const copyOfPlayQueue = {...this.state.playQueue};
 
     copyOfPlayQueue[songToQueue.spotId] = songToQueue;
@@ -266,7 +266,7 @@ class App extends Component {
             </Row>
             <div className="playlist-con">
               {Object.keys(this.state.playlist.songs).map(key => {
-                  return <PlaylistItem editMode={this.state.editMode} addSongToPlayQueue={this.addSongToPlayQueue} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playlist.songs[key]} key={key} />
+                  return <PlaylistItem editMode={this.state.editMode} addSongToQueue={this.addSongToQueue} playSong={this.playSong} deleteSongFromPlaylist={this.deleteSongFromPlaylist} data={this.state.playlist.songs[key]} key={key} />
               })}
             </div>
           </Col>  
@@ -280,7 +280,7 @@ class App extends Component {
               removeSongFromPlayQueue={this.removeSongFromPlayQueue}
             />
             {Object.keys(this.state.searchResults).map(key => {
-              return <SearchResultItem addSongToPlayQueue={this.addSongToPlayQueue} addSongToPlaylist={this.addSongToPlaylist} data={this.state.searchResults[key]} key={key} />
+              return <SearchResultItem addSongToQueue={this.addSongToQueue} addSongToPlaylist={this.addSongToPlaylist} data={this.state.searchResults[key]} key={key} />
             })}
 
           </Col>

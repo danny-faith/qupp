@@ -37,6 +37,7 @@ class Dashboard extends Component {
             key={item._id}
             id={item._id}
             name={item.name} 
+            slug={item.slug} 
             shareLink={item.share_link}
           />
         );

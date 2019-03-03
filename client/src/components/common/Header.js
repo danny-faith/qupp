@@ -12,7 +12,7 @@ export default function Header(props) {
   const theme = 'black'; // or 'white'
   return (
     <div className="header text-center py-8">
-      <h1 className="text-5xl my-0">Daniel's party</h1>
+      <h1 className="text-5xl my-0">{props.playlistname}</h1>
       <p className="text-1xl mt-2 mb-0">{props.username}</p>
       <p className="text-1xl mt-0">{props.songs} songs in qupplist</p>
       <Row>

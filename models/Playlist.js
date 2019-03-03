@@ -20,6 +20,10 @@ var playlistSchema = new Schema({
         type: String,
         required: true
     },
+    collaborative:  {
+        type: Boolean,
+        default: true
+    },
     share_link: String,
     desc: String,
     createdAt : {
