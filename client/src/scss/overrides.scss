@@ -24,3 +24,10 @@ input[type="password"]:focus:not([readonly]) {
 .input-field label {
   top: 0.2rem;
 }
+.fixed-action-btn {
+  position: relative;
+  float: right;
+  top: auto;
+  right: auto;
+  bottom: auto;
+}

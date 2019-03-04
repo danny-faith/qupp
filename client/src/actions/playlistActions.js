@@ -7,6 +7,7 @@ import {
     CLEAR_PLAYLISTS 
 } from './types';
 
+// Get all playlists by current user
 export const getPlaylists = () => (dispatch) => {  
     dispatch(setPlaylistLoading());
      
@@ -20,17 +21,18 @@ export const getPlaylists = () => (dispatch) => {
         .catch(err => console.log(err));
 }
 
-export const getPlaylist = () => (dispatch) => {  
-    dispatch(setPlaylistLoading());
+// Get specific playlist by playlist ID
+export const getPlaylist = (playlist_id) => (dispatch) => {  
+    // dispatch(setPlaylistLoading());
      
-    // axios.get('/api/playlists')
-    //     .then(res =>
-    //         dispatch({
-    //             type: GET_PLAYLIST,
-    //             payload: res.data
-    //         })
-    //     )
-    //     .catch(err => console.log(err));
+    axios.get(`/api/playlists/${playlist_id}`)
+        .then(res =>
+            dispatch({
+                type: GET_PLAYLIST,
+                payload: res.data
+            })
+        )
+        .catch(err => console.log(err));
 }
 
 export const createPlaylist = (payload) => (dispatch) => {

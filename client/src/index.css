@@ -5663,7 +5663,7 @@
 @import url("./scss/landing.scss");
 @import url("./scss/overrides.scss");
 
-@media (min-width: 576px) {
+@media (min-width: 600px) {
   .sm\:list-reset {
     list-style: none !important;
     padding: 0 !important;
@@ -11299,7 +11299,7 @@
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .md\:list-reset {
     list-style: none !important;
     padding: 0 !important;
@@ -16935,7 +16935,7 @@
   }
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .lg\:list-reset {
     list-style: none !important;
     padding: 0 !important;
@@ -22571,7 +22571,7 @@
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1500px) {
   .xl\:list-reset {
     list-style: none !important;
     padding: 0 !important;

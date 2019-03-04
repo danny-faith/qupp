@@ -10,7 +10,6 @@ import SearchForm from '../components/SearchForm';
 import Header from '../components/common/Header';
 import Song from '../components/playlist/Song';
 
-
 class QuppListPage extends Component {
   state = { 
     playlist: {
@@ -24,44 +23,31 @@ class QuppListPage extends Component {
       context: this,
       state: 'playlist'
     });
+    this.props.getPlaylist(this.props.match.params.playlist_id);    
   }
   addSearchResultsToState = (results) => {
     this.setState(() => ({
       searchResults: results
     }));
   }
-  addSongToPlaylist = (songToAdd) => {
+  addSongToQueueOrPlaylist = (songToAdd, type) => {
     // Copy playlist state
     const playlist = {...this.state.playlist};
-    if (this.state.playlist.hasOwnProperty('songs')) {
-      playlist.songs[songToAdd.spotId] = songToAdd;
+
+    if (this.state.playlist.hasOwnProperty(type)) {
+      playlist[type][songToAdd.spotId] = songToAdd;
     } else {
-      playlist.songs = [];
-      playlist.songs[songToAdd.spotId] = songToAdd;
+      playlist[type] = [];
+      playlist[type][songToAdd.spotId] = songToAdd;
     }
-    playlist.songs[songToAdd.spotId] = songToAdd;
-    this.setState({
-      playlist
-    });
-  }
-  addSongToQueue = (songToAdd) => {
-    // Copy playlist state
-    
-    const playlist = {...this.state.playlist};
-    console.log(playlist);
-    if (this.state.playlist.hasOwnProperty('queue')) {
-      playlist.queue[songToAdd.spotId] = songToAdd;
-    } else {
-      playlist.queue = [];
-      playlist.queue[songToAdd.spotId] = songToAdd;
-    }
-    // playlist.queue[songToAdd.spotId] = songToAdd;
+
     this.setState({
       playlist
     });
   }
   render() {
     let playlistContent = '';
+    let playlistName = '';
     // wonder if isEmpty would work below?
     if (this.state.playlist.hasOwnProperty('songs') && Object.keys(this.state.playlist.songs).length > 0){
       playlistContent = 
@@ -69,15 +55,17 @@ class QuppListPage extends Component {
       .keys(this.state.playlist.songs)
       .map(key => 
         <Song 
+          addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
           addSongToQueue={this.addSongToQueue} 
           addSongToPlaylist={this.addSongToPlaylist} 
           data={this.state.playlist.songs[key]} 
+          type="qupplist"
           colour="grey"
           key={key}
         />
       );
     } else {
-       playlistContent = "No songs in playlist, search to add some!";
+      playlistContent = "No songs in playlist, search to add some!";
     }
     let queueContent = '';
     
@@ -87,6 +75,7 @@ class QuppListPage extends Component {
       .keys(this.state.playlist.queue)
       .map(key => 
         <Song 
+          addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
           addSongToQueue={this.addSongToQueue} 
           addSongToPlaylist={this.addSongToPlaylist} 
           data={this.state.playlist.queue[key]} 
@@ -97,50 +86,42 @@ class QuppListPage extends Component {
     } else {
        queueContent = "No songs in queue, search to add some!";
     }
+    if (this.props.playlists.playlist !== null) {
+      // Store playlist name to be passed down to Header comp' for displaying
+      playlistName = this.props.playlists.playlist[0].name;;
+    }
+    
     return (
-        <Fragment>
-          <Header songs={25} username={this.props.auth.user.name} playlistname={'ggg'} />
-          <div className="container">
-            <Row>
-              <Col s={12} m={6}>
-                <h1>qupplist</h1>
-                {playlistContent}
-                {/* <Song colour="green" />
-                <Song colour="green" />
-                <Song colour="green" />
-                <Song colour="green" />
-                <Song colour="green" />
-                <Song colour="green" />
-                <Song colour="green" />
-                <Song colour="green" />
-                <Song colour="green" />
-                <Song colour="green" /> */}
-              </Col>
-              <Col s={12} m={6}>
-                <h1>queue</h1>
-                {queueContent}
-                {/* <Song colour="yellow" />
-                <Song colour="yellow" />
-                <Song colour="yellow" />
-                <Song colour="grey" />
-                <Song colour="grey" /> */}
-
-                <h1>search</h1>
-                <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
-                {Object
-                  .keys(this.state.searchResults)
-                  .map(key => 
-                    <Song 
-                      addSongToQueue={this.addSongToQueue} 
-                      addSongToPlaylist={this.addSongToPlaylist} 
-                      data={this.state.searchResults[key]} 
-                      key={key}
-                    />
-                  )}
-              </Col>
-            </Row>
-          </div>
-        </Fragment>
+      <Fragment>
+        <Header songs={Object.keys(this.state.playlist.songs).length} username={this.props.auth.user.name} playlistname={playlistName} />
+        <div className="container">
+          <Row className="flex flex-wrap md:block flex-col-reverse">
+            <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
+              <h1 className="text-blue darken-1">qupplist</h1>
+              {playlistContent}
+            </Col>
+            <Col className="" s={12} m={10} l={6} xl={4} offset="m1">
+              <h1>search</h1>
+              <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
+              {Object
+                .keys(this.state.searchResults)
+                .map(key => 
+                  <Song 
+                    addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
+                    addSongToQueue={this.addSongToQueue} 
+                    addSongToPlaylist={this.addSongToPlaylist} 
+                    type="search"
+                    data={this.state.searchResults[key]} 
+                    key={key}
+                  />
+                )
+              }
+              <h1 className="text-yellow darken-1">queue</h1>
+              {queueContent}
+            </Col>
+          </Row>
+        </div>
+      </Fragment>
     )
   }
 }
