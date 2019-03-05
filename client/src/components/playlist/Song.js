@@ -20,8 +20,14 @@ export default class Song extends Component {
     }
     this.props.addSongToQueueOrPlaylist(songToAdd, e.currentTarget.dataset.type);
   }
-  removeSongFromPlaylist = () => {
-    // const copyOfPlaylist = {...this.state.playlist};
+  handleRemoveSong = (e) => {
+    // const copyOfPlaylist = {...this.state};
+    // console.log(copyOfPlaylist);
+    this.props.removeSongFromQueueOrPlaylist(this.props.data.spotId, e.currentTarget.dataset.type);
+    
+    // const index = copyOfPlaylist.songs.find(x => x.spotId === this.props.data.spotId);
+    // console.log('index: ', index);
+    
     // copyOfPlaylist.songs[this.props.data.spotId] = null;
 
     // this.setState({
@@ -29,24 +35,25 @@ export default class Song extends Component {
     // });
   }
   render () {
-    let addSongButtons = '';
+    let songButtons = '';
     if (this.props.type === 'search') {
-      addSongButtons = (
+      songButtons = (
         <Button ref={this.myRef} floating fab='horizontal' icon='more_horiz' className='pink' large style={{bottom: '0px', right: '0px'}}>
           <Button onClick={this.handleAddSong} data-type="songs" floating icon='playlist_add' className='blue'/>
           <Button onClick={this.handleAddSong} data-type="queue" floating icon='playlist_add' className='yellow darken-1' />
         </Button>
       );
     } else if (this.props.type === 'qupplist') {
-      addSongButtons = (
+      songButtons = (
         <Button ref={this.myRef} floating fab='horizontal' icon='more_horiz' className='pink' large style={{bottom: '0px', right: '0px'}}>
-          <Button onClick={this.removeSongFromPlaylist} floating icon='delete' className='red darken-1'/>
+          <Button onClick={this.handleRemoveSong} data-type="songs" floating icon='delete' className='red darken-1'/>
           <Button onClick={this.handleAddSong} data-type="queue" floating icon='playlist_add' className='yellow darken-1'/>
         </Button>
       );
-    } else {
-      addSongButtons = (
+    } else if (this.props.type === 'queue') {
+      songButtons = (
         <Button ref={this.myRef} floating fab='horizontal' icon='more_horiz' className='pink' large style={{bottom: '0px', right: '0px'}}>
+          <Button onClick={this.handleRemoveSong} data-type="queue" floating icon='delete' className='red darken-1'/>
           <Button onClick={this.handleAddSong} data-type="songs" floating icon='playlist_add' className='blue darken-1'/>
         </Button>
       );
@@ -66,7 +73,7 @@ export default class Song extends Component {
             </p>
           </Col>
           <Col s={2} className="pl-0 relative">
-          {addSongButtons}
+          {songButtons}
           </Col>
       </Row>
     )

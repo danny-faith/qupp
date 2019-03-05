@@ -31,7 +31,7 @@ class QuppListPage extends Component {
     }));
   }
   addSongToQueueOrPlaylist = (songToAdd, type) => {
-    // Copy playlist state
+
     const playlist = {...this.state.playlist};
 
     if (this.state.playlist.hasOwnProperty(type)) {
@@ -45,9 +45,20 @@ class QuppListPage extends Component {
       playlist
     });
   }
+  removeSongFromQueueOrPlaylist = (songIdToRemove, type) => {
+    
+    const copyOfPlaylist = {...this.state.playlist};
+    const index = copyOfPlaylist[type].findIndex(x => x.spotId === songIdToRemove);
+    copyOfPlaylist[type].splice(index, 1);
+    
+    this.setState({
+      playlist: copyOfPlaylist
+    });
+  }
   render() {
     let playlistContent = '';
     let playlistName = '';
+    let queueContent = '';
     // wonder if isEmpty would work below?
     if (this.state.playlist.hasOwnProperty('songs') && Object.keys(this.state.playlist.songs).length > 0){
       playlistContent = 
@@ -55,6 +66,7 @@ class QuppListPage extends Component {
       .keys(this.state.playlist.songs)
       .map(key => 
         <Song 
+          removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
           addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
           addSongToQueue={this.addSongToQueue} 
           addSongToPlaylist={this.addSongToPlaylist} 
@@ -67,7 +79,6 @@ class QuppListPage extends Component {
     } else {
       playlistContent = "No songs in playlist, search to add some!";
     }
-    let queueContent = '';
     
     if (this.state.playlist.hasOwnProperty('queue') && Object.keys(this.state.playlist.queue).length > 0){
       queueContent = 
@@ -75,10 +86,10 @@ class QuppListPage extends Component {
       .keys(this.state.playlist.queue)
       .map(key => 
         <Song 
+          removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
           addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
-          addSongToQueue={this.addSongToQueue} 
-          addSongToPlaylist={this.addSongToPlaylist} 
           data={this.state.playlist.queue[key]} 
+          type="queue"
           colour="grey"
           key={key}
         />
@@ -90,7 +101,7 @@ class QuppListPage extends Component {
       // Store playlist name to be passed down to Header comp' for displaying
       playlistName = this.props.playlists.playlist[0].name;;
     }
-    
+
     return (
       <Fragment>
         <Header songs={(this.state.playlist.songs === undefined) ? 0 : this.state.playlist.songs.length} username={this.props.auth.user.name} playlistname={playlistName} />
