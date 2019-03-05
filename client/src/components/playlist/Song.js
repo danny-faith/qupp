@@ -20,20 +20,35 @@ export default class Song extends Component {
     }
     this.props.addSongToQueueOrPlaylist(songToAdd, e.currentTarget.dataset.type);
   }
+  removeSongFromPlaylist = () => {
+    // const copyOfPlaylist = {...this.state.playlist};
+    // copyOfPlaylist.songs[this.props.data.spotId] = null;
+
+    // this.setState({
+    //   playlist: copyOfPlaylist
+    // });
+  }
   render () {
     let addSongButtons = '';
     if (this.props.type === 'search') {
       addSongButtons = (
         <Button ref={this.myRef} floating fab='horizontal' icon='more_horiz' className='pink' large style={{bottom: '0px', right: '0px'}}>
-            <Button onClick={this.handleAddSong} data-type="songs" floating icon='playlist_add' className='blue'/>
-            <Button onClick={this.handleAddSong} data-type="queue" floating icon='playlist_add' className='yellow darken-1' />
-          </Button>
+          <Button onClick={this.handleAddSong} data-type="songs" floating icon='playlist_add' className='blue'/>
+          <Button onClick={this.handleAddSong} data-type="queue" floating icon='playlist_add' className='yellow darken-1' />
+        </Button>
+      );
+    } else if (this.props.type === 'qupplist') {
+      addSongButtons = (
+        <Button ref={this.myRef} floating fab='horizontal' icon='more_horiz' className='pink' large style={{bottom: '0px', right: '0px'}}>
+          <Button onClick={this.removeSongFromPlaylist} floating icon='delete' className='red darken-1'/>
+          <Button onClick={this.handleAddSong} data-type="queue" floating icon='playlist_add' className='yellow darken-1'/>
+        </Button>
       );
     } else {
       addSongButtons = (
         <Button ref={this.myRef} floating fab='horizontal' icon='more_horiz' className='pink' large style={{bottom: '0px', right: '0px'}}>
-            <Button onClick={this.handleAddSong} data-type="songs" floating icon='playlist_add' className='yellow darken-1'/>
-          </Button>
+          <Button onClick={this.handleAddSong} data-type="songs" floating icon='playlist_add' className='blue darken-1'/>
+        </Button>
       );
     }
     const classes = `${this.props.colour} py-3 darken-2 mb-0`;

@@ -13,8 +13,8 @@ import Song from '../components/playlist/Song';
 class QuppListPage extends Component {
   state = { 
     playlist: {
-      songs: {},
-      queue: {},
+      songs: [],
+      queue: [],
     },
     searchResults: []
   }
@@ -35,10 +35,10 @@ class QuppListPage extends Component {
     const playlist = {...this.state.playlist};
 
     if (this.state.playlist.hasOwnProperty(type)) {
-      playlist[type][songToAdd.spotId] = songToAdd;
+      playlist[type].unshift(songToAdd);
     } else {
       playlist[type] = [];
-      playlist[type][songToAdd.spotId] = songToAdd;
+      playlist[type].unshift(songToAdd);
     }
 
     this.setState({
@@ -93,7 +93,7 @@ class QuppListPage extends Component {
     
     return (
       <Fragment>
-        <Header songs={Object.keys(this.state.playlist.songs).length} username={this.props.auth.user.name} playlistname={playlistName} />
+        <Header songs={(this.state.playlist.songs === undefined) ? 0 : this.state.playlist.songs.length} username={this.props.auth.user.name} playlistname={playlistName} />
         <div className="container">
           <Row className="flex flex-wrap md:block flex-col-reverse">
             <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
