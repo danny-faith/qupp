@@ -15,7 +15,7 @@ import Login from './components/auth/Login';
 import Dashboard from './pages/Dashboard';
 import Landing from './components/Landing';
 import MyAccountPage from './pages/MyAccountPage';
-import AppOld from './AppOld';
+import Error404 from './pages/Error404';
 
 import './App.scss';
 
@@ -68,6 +68,7 @@ class App extends Component {
               </Switch> */}
               <Route exact path="/forgotten-password" component={ForgotPasswordPage} />
               <Route exact path="/reset-password" component={ResetPasswordPage} />
+              <Route exact component={Error404} />
             </div>
             {/* <Footer /> */}
           </div>
