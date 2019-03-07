@@ -1,10 +1,11 @@
 import { 
     CREATE_PLAYLIST,
     GET_PLAYLIST,
-    PLAYLIST_LOADING,
+    PLAYLISTS_LOADING,
     PLAYLIST_NOT_FOUND,
     GET_PLAYLISTS,
-    CLEAR_PLAYLISTS
+    CLEAR_PLAYLISTS,
+    CLEAR_PLAYLIST
 } from '../actions/types';
 
 import isEmpty from '../validation/is-empty';
@@ -21,7 +22,7 @@ export default function(state = initialState, action) {
             return {
                 ...state
             }
-        case PLAYLIST_LOADING:
+        case PLAYLISTS_LOADING:
             return {
                 ...state,
                 loading: true
@@ -42,6 +43,11 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 playlists: {}
+            }
+        case CLEAR_PLAYLIST:
+            return {
+                ...state,
+                playlist: {}
             }
         default: 
             return state;

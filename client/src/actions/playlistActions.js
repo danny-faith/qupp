@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { 
     GET_ERRORS, 
+    PLAYLISTS_LOADING, 
     PLAYLIST_LOADING, 
     GET_PLAYLIST, 
     GET_PLAYLISTS, 
-    CLEAR_PLAYLISTS 
+    CLEAR_PLAYLISTS,
+    CLEAR_PLAYLIST
 } from './types';
 
 // Get all playlists by current user
@@ -55,6 +57,12 @@ export const clearPlaylists = () => (dispatch) => {
     })
 }
 
+export const clearPlaylist = () => (dispatch) => {
+    dispatch({
+        type: CLEAR_PLAYLIST
+    })
+}
+
 // export const getCurrentPlaylist = () => dispatch => {
 //     dispatch(setPlaylistLoading());
 //     axios
@@ -76,7 +84,7 @@ export const clearPlaylists = () => (dispatch) => {
 
 export const setPlaylistLoading = () => {
     return {
-        type: PLAYLIST_LOADING
+        type: PLAYLISTS_LOADING
     }
 }
 

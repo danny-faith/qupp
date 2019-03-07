@@ -52,24 +52,24 @@ class App extends Component {
         <Router>
           <div className="App">
             <Navbar />
-            <Route exact path="/" component={Landing} />
-            <Route exact path="/playlist/:playlist_id" component={QuppListPage} />
-            <div className="container">
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/login" component={Login} />
-              <Switch>
-                <PrivateRoute exact path="/dashboard" component={Dashboard} />
-              </Switch>
-              <Switch>
-                <PrivateRoute exact path="/my-account" component={MyAccountPage} />
-              </Switch>
-              {/* <Switch>
-                <PrivateRoute exact path="/my-account/update-password" component={UpdatePasswordPage} />
-              </Switch> */}
-              <Route exact path="/forgotten-password" component={ForgotPasswordPage} />
-              <Route exact path="/reset-password" component={ResetPasswordPage} />
-              <Route exact component={Error404} />
-            </div>
+              <Route exact path="/" component={Landing} />
+              <Route exact path="/playlist/:playlist_id" component={QuppListPage} />
+              <div className="container">
+                <Route exact path="/register" component={Register} />
+                <Route exact path="/login" component={Login} />
+                <Switch>
+                  <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                </Switch>
+                
+                <Switch>
+                  <PrivateRoute exact path="/my-account" component={MyAccountPage} />
+                </Switch>
+                <Route exact path="/forgotten-password" component={ForgotPasswordPage} />
+                <Route exact path="/reset-password" component={ResetPasswordPage} />
+                <Switch>
+                  {/* <Route component={Error404} /> */}
+                </Switch>
+              </div>
             {/* <Footer /> */}
           </div>
         </Router>

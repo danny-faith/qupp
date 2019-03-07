@@ -2,9 +2,10 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import base from '../base';
 import PropTypes from 'prop-types';
-import { getPlaylist } from '../actions/playlistActions';
+import { getPlaylist, clearPlaylists } from '../actions/playlistActions';
+import isEmpty from '../utils/isEmpty';
 
-import { Row, Col } from 'react-materialize';
+import { Row, Col, Button } from 'react-materialize';
 
 import SearchForm from '../components/SearchForm';
 import Header from '../components/common/Header';
@@ -23,6 +24,7 @@ class QuppListPage extends Component {
       context: this,
       state: 'playlist'
     });
+    this.props.clearPlaylists();
     this.props.getPlaylist(this.props.match.params.playlist_id);    
   }
   addSearchResultsToState = (results) => {
@@ -97,8 +99,9 @@ class QuppListPage extends Component {
     } else {
        queueContent = "No songs in queue, search to add some!";
     }
-    if (this.props.playlists.playlist !== null) {
-      // Store playlist name to be passed down to Header comp' for displaying
+
+    if (!isEmpty(this.props.playlists.playlist)) {
+      
       playlistName = this.props.playlists.playlist[0].name;;
     }
 
@@ -114,6 +117,7 @@ class QuppListPage extends Component {
             <Col className="" s={12} m={10} l={6} xl={4} offset="m1">
               <h1>search</h1>
               <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
+              <Button className="yellow darken-1 text-black font-bold" onClick={() => {this.setState({searchResults: []})}}>Clear</Button>
               {Object
                 .keys(this.state.searchResults)
                 .map(key => 
@@ -139,6 +143,7 @@ class QuppListPage extends Component {
 
 QuppListPage.propTypes = {
   getPlaylist: PropTypes.func.isRequired,
+  clearPlaylists: PropTypes.func.isRequired,
 	playlist: PropTypes.object,
 	auth: PropTypes.object.isRequired
 }
@@ -148,4 +153,4 @@ const mapStateToProps = (state) => ({
 	playlists: state.playlist
 });
 
-export default connect(mapStateToProps, { getPlaylist })(QuppListPage);
+export default connect(mapStateToProps, { getPlaylist, clearPlaylists })(QuppListPage);

@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link, withRouter } from 'react-router-dom';
+// import { Link, withRouter } from 'react-router-dom';
 import PlaylistListItem from '../components/PlaylistListItem';
+import isEmpty from '../utils/isEmpty';
 import CreatePlaylist from '../components/CreatePlaylist';
-import { getPlaylists } from '../actions/playlistActions';
+import { getPlaylists, clearPlaylist } from '../actions/playlistActions';
 import Spinner from '../components/common/Spinner';
-
 
 class Dashboard extends Component {
   state = {
     data: []
   }
   componentDidMount = () => {
+    
     this.props.getPlaylists(this.props.auth.user);
+    this.props.clearPlaylist();
+  }
+  componentWillMount = () => {
+    
   }
   componentWillReceiveProps = (nextProps) => {
     
@@ -26,9 +31,10 @@ class Dashboard extends Component {
   render() {
     const loading = this.props.playlists.loading;
     const playlists = this.props.playlists.playlists;
+    
     let playlistContent;
-
-    if (playlists === null || loading) {
+    
+    if (isEmpty(playlists) || loading) {
       playlistContent = <Spinner />;
     } else {
       playlistContent = playlists
@@ -58,6 +64,7 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   getPlaylists: PropTypes.func.isRequired,
+  clearPlaylist: PropTypes.func.isRequired,
 	playlist: PropTypes.object,
 	auth: PropTypes.object.isRequired
 }
@@ -67,4 +74,4 @@ const mapStateToProps = (state) => ({
 	playlists: state.playlist
 });
 
-export default connect(mapStateToProps, { getPlaylists })(Dashboard);
+export default connect(mapStateToProps, { getPlaylists, clearPlaylist })(Dashboard);
