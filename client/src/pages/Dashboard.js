@@ -14,8 +14,8 @@ class Dashboard extends Component {
   }
   componentDidMount = () => {
     
-    this.props.getPlaylists(this.props.auth.user);
     this.props.clearPlaylist();
+    this.props.getPlaylists(this.props.auth.user);
   }
   componentWillMount = () => {
     
@@ -33,7 +33,7 @@ class Dashboard extends Component {
     const playlists = this.props.playlists.playlists;
     
     let playlistContent;
-    
+
     if (isEmpty(playlists) || loading) {
       playlistContent = <Spinner />;
     } else {

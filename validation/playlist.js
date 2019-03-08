@@ -16,7 +16,7 @@ module.exports = function validateRegisterInput(data) {
         errors.name = 'Playlist name field is required';
     }
 
-    if (!Validator.isAscii(data.slug)) {
+    if (!Validator.isAlpha(data.slug)) {
         errors.slug = 'Slug contained special characters';
     }
 
