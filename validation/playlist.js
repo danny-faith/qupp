@@ -3,7 +3,6 @@ const isEmpty = require('./is-empty');
 
 module.exports = function validateRegisterInput(data) {
     let errors = {};
-    const regex = new RegExp('[!@#$%^&*(),.?":{}|<>]','g')
 
     data.name = !isEmpty(data.name) ? data.name : '';
     data.slug = !isEmpty(data.slug) ? data.slug : '';
@@ -17,7 +16,7 @@ module.exports = function validateRegisterInput(data) {
     }
 
     if (!Validator.isAlpha(data.slug)) {
-        errors.slug = 'Slug contained special characters';
+        errors.slug = 'Please do not use special characters';
     }
 
     if (!Validator.isLowercase(data.slug)) {

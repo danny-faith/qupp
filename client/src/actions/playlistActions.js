@@ -4,7 +4,8 @@ import {
     PLAYLISTS_LOADING, 
     PLAYLIST_LOADING, 
     GET_PLAYLIST, 
-    GET_PLAYLISTS, 
+    GET_PLAYLISTS,
+    GET_ALL_PLAYLISTS,
     CLEAR_PLAYLISTS,
     CLEAR_PLAYLIST
 } from './types';
@@ -17,6 +18,20 @@ export const getPlaylists = () => (dispatch) => {
         .then(res =>
             dispatch({
                 type: GET_PLAYLISTS,
+                payload: res.data
+            })
+        )
+        .catch(err => console.log(err));
+}
+
+// Get all playlists
+export const getAllPlaylists = () => (dispatch) => {  
+    dispatch(setPlaylistLoading());
+     
+    axios.get('/api/playlists/all')
+        .then(res =>
+            dispatch({
+                type: GET_ALL_PLAYLISTS,
                 payload: res.data
             })
         )

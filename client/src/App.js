@@ -9,12 +9,14 @@ import store from './store';
 import PrivateRoute from './components/common/PrivateRoute';
 
 import Navbar from './components/Navbar';
+import Sidenav from './components/layout/Sidenav';
 // import Footer from './components/layout/Footer';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import Dashboard from './pages/Dashboard';
 import Landing from './components/Landing';
 import MyAccountPage from './pages/MyAccountPage';
+import ViewAllPlaylists from './pages/ViewAllPlaylists';
 import Error404 from './pages/Error404';
 
 import './App.scss';
@@ -52,6 +54,7 @@ class App extends Component {
         <Router>
           <div className="App">
             <Navbar />
+            <Sidenav />
               <Route exact path="/" component={Landing} />
               <Route exact path="/playlist/:playlist_id" component={QuppListPage} />
               <div className="container">
@@ -60,10 +63,10 @@ class App extends Component {
                 <Switch>
                   <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 </Switch>
-                
                 <Switch>
                   <PrivateRoute exact path="/my-account" component={MyAccountPage} />
                 </Switch>
+                <Route exact path="/playlists" component={ViewAllPlaylists} />
                 <Route exact path="/forgotten-password" component={ForgotPasswordPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Switch>

@@ -4,6 +4,7 @@ import {
     PLAYLISTS_LOADING,
     PLAYLIST_NOT_FOUND,
     GET_PLAYLISTS,
+    GET_ALL_PLAYLISTS,
     CLEAR_PLAYLISTS,
     CLEAR_PLAYLIST
 } from '../actions/types';
@@ -34,6 +35,12 @@ export default function(state = initialState, action) {
                 loading: false
             }
         case GET_PLAYLISTS:
+            return {
+                ...state,
+                playlists: action.payload,
+                loading: false
+            }
+        case GET_ALL_PLAYLISTS:
             return {
                 ...state,
                 playlists: action.payload,
