@@ -151,7 +151,7 @@ router.post('/register', (req, res) => {
     doesUsernameExist();    
 });
 
-//  @route GET api/users/login
+//  @route POST api/users/login
 //  @description Login User / Returning JWT Token
 //  @access Public
 router.post('/login', (req, res) => {
@@ -188,6 +188,11 @@ router.post('/login', (req, res) => {
                 });
         });// .catch
 });
+
+//  @route POST api/users/reset-jwt
+//  @description Return new JWT
+//  @access Private
+// TODO
 
 //  @route POST api/users/forgot-password
 //  @description Find user's email address and send forgot password email
