@@ -8,6 +8,8 @@ const crypto = require('crypto');
 const isEmpty = require('../../validation/is-empty');
 const nodemailer = require("nodemailer");
 const passport = require('passport');
+const multer  = require('multer');
+
 
 // Load validation
 const validateRegisterInput = require('../../validation/register.js');
@@ -173,7 +175,7 @@ router.post('/login', (req, res) => {
                 .then(isMatch => {
                     if (isMatch) {
                         // User matched
-                        const payload = { id: user.id, name: user.username, avatar:user.avatar } // create payload
+                        const payload = { id: user.id, username: user.username, avatar:user.avatar } // create payload
                         // Sign token
                         jwt.sign(payload, SECRET, { expiresIn: 3600}, (err, token) => {
                             res.json({success: true, token: 'Bearer ' + token});
@@ -305,6 +307,68 @@ router.post('/forgot-password-reset', (req, res) => {
             .catch(err => res.status(404).json(err));
     }
 });
+
+//  @route POST api/users/avatar
+//  @description Upload an avatar for the current user
+//  @access Private
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'client/public/img/uploads/avatars/')
+    },
+    filename: function (req, file, cb) {
+      cb(null, `${new Date().toISOString()}-${file.originalname}`)
+    }
+});
+const fileFilter = (req, file, cb) => {
+    const acceptedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+    if (acceptedMimeTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('File type not accepted'), false);
+    }
+}
+const avatarUpload = multer({ 
+    storage,
+    fileFilter,
+    limits: {
+        fileSize: 1024 * 1024 * 4
+    } 
+}).single('avatar');
+
+router.post(
+    '/avatar', 
+    passport.authenticate('jwt', { session: false }), 
+    (req, res) => {
+        const errors = {};
+        
+        avatarUpload(req, res, (err) => {
+            if (err instanceof multer.MulterError) {
+                // console.log('error', err);
+                
+                errors.filesize = err.message;
+                return res.status(413).json(errors);
+                
+            } else if (err) {
+                // catch all other errors including unknown and fileFilter errors
+                errors.error = err.message;
+                return res.status(500).json(errors);
+            }
+            // console.log('req.user', req.user);
+            User.findById(req.user.id)
+                .then((user) => {
+                    // console.log(user);
+                    user.avatar = `img/uploads/avatars/${req.file.filename}`;
+                    user.save()
+                        .then((user) => res.json(user))
+                        .catch(err => console.log(err));
+                })
+                .catch((err) => {
+                    res.status(500).json(err);      
+                });
+            })
+    }
+);
 
 //  @route GET api/users/current
 //  @description Returns current users

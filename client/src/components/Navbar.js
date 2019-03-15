@@ -66,8 +66,9 @@ class Navbar extends Component {
                 </li>
                 <li className="avatar">
                     <a ref={this.userRef} data-target="dropdown1" className="dropdown-trigger">
-                        <img src={user.avatar} /> 
-                        {user.name}
+                        <div className="avatar" style={{ backgroundImage: `url(${user.avatar})`}}>
+                        </div>
+                        {user.username}
                     </a>
                     <ul id="dropdown1" className="dropdown-content">
                         <li><Link to="/dashboard">Dashboard</Link></li>
