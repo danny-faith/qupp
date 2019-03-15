@@ -359,6 +359,8 @@ router.post(
                 .then((user) => {
                     // console.log(user);
                     user.avatar = `img/uploads/avatars/${req.file.filename}`;
+                    console.log('saving: ', user.avatar);
+                    
                     user.save()
                         .then((user) => res.json(user))
                         .catch(err => console.log(err));

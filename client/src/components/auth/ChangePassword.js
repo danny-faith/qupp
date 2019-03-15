@@ -75,7 +75,7 @@ class ChangePassword extends Component {
 				</Row>
 				<Row>
 					<Col s={12}>
-						<Button className="btn-small right" waves="light">Login</Button>
+						<Button className="btn-small right" waves="light">Update password</Button>
 					</Col>
 				</Row>
 			</form>

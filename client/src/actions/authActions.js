@@ -20,6 +20,8 @@ export const loginUser = (userData) => (dispatch) => {
     axios.post('/api/users/login', userData)
         .then(res => {
             const { token } = res.data;
+            console.log('res.data: ', res.data);
+            
             // Set token to localstorage
             localStorage.setItem('jwtToken', token);
             // Set auth token to header
@@ -43,6 +45,21 @@ export const setCurrentUser = (decoded) => {
         type: SET_CURRENT_USER,
         payload: decoded
     }
+}
+
+// Upload avatar image
+export const uploadAvatarImage = (formData) => (dispatch) => {  
+
+    axios.post('/api/users/avatar', formData)
+        .then(res => {
+            console.log('res: ', res);
+            
+            dispatch({
+                type: SET_CURRENT_USER,
+                payload: res.data
+            })
+        })
+        .catch(err => console.log(err));
 }
 
 //  Log user out

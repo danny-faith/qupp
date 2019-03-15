@@ -1,0 +1,14 @@
+.avatar-preview-image {
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  background-position: center;
+}
+.dropzone {
+  border: 5px dashed #cccccc;
+  padding: 10%;
+  border-radius: 20px;
+  &.dropzone--isActive {
+    border-color: white;
+  }
+}
