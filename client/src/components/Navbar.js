@@ -17,8 +17,8 @@ class Navbar extends Component {
 
     onLogoutClick = (e) => {
 		e.preventDefault();
-		this.props.logoutUser(this.props.history);
 		this.props.clearPlaylists();
+		this.props.logoutUser(this.props.history);
     }
     componentDidMount = () => {
         // if (this.state.isAuthenticated2) {

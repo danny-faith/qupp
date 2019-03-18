@@ -23,13 +23,15 @@ class MyAccountPage extends Component {
     render() {
         return (
             <div>
-                <h1>My account</h1>
                 <Row>
-                    <Col s={6}>
+                    <Col s={12}>
+                        <h1>My account</h1>
+                    </Col>
+                    <Col s={12} m={6}>
                         <h2>Update password</h2>
                         <ChangePassword endpoint="" />
                     </Col>
-                    <Col s={6}>
+                    <Col s={12} m={6}>
                         <h2>Upload avatar</h2>
                         <UploadAvatar endpoint="" />
                     </Col>

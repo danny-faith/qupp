@@ -19,28 +19,26 @@ class UploadAvatar extends Component {
 
     onDrop = (acceptedFiles, rejectedFiles) => {
         const errors = {};
+        const acceptedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
         const formData = new FormData();
-        formData.append('avatar', acceptedFiles[0]);
-        // console.log(acceptedFiles);
-        // Create avatar preview
-        this.avatarPreview = URL.createObjectURL(acceptedFiles[0]);
-        // console.log(this.avatarPreview);
-        
-        this.setState({ preview: this.avatarPreview});
+        formData.append('avatar', acceptedFiles[0]);                
         
         if (rejectedFiles.length > 0) {
             if (rejectedFiles[0].size > this.maxFileSize) {
                 errors.fileSize = 'File size too large';
             }
-            if (
-                rejectedFiles[0].type !== 'image/jpeg' ||
-                rejectedFiles[0].type !== 'image/png' ||
-                rejectedFiles[0].type !== 'image/gif') {
-                errors.mimeType = 'File rejected - .jpg, .png, .gif only';
+            if (!acceptedFileTypes.includes(rejectedFiles[0].type)) {
+                    errors.mimeType = 'File rejected - .jpg, .png, .gif only';
+                }
+                return Object.keys(errors).map(key => window.M.toast({html: errors[key], classes: 'red lighten-1'}))  
             }
-            return Object.keys(errors).map(key => window.M.toast({html: errors[key], classes: 'red lighten-1'}))  
-        }
-        this.setState({ formData });
+        // Create avatar preview
+        this.avatarPreview = URL.createObjectURL(acceptedFiles[0]);
+        
+        this.setState({ 
+            preview: this.avatarPreview,
+            formData
+        });
     };
     submitAvatar = () => {
         this.props.uploadAvatarImage(this.state.formData);

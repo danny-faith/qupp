@@ -189,10 +189,21 @@ router.post('/login', (req, res) => {
         });// .catch
 });
 
-//  @route POST api/users/reset-jwt
+//  @route POST api/users/update-token
 //  @description Return new JWT
 //  @access Private
-// TODO
+router.post('/update-token', passport.authenticate('jwt', { session: false }), (req, res) => {
+    
+    const payload = { id: req.body._id, username: req.body.username, avatar: req.body.avatar } // create payload
+    // Sign token
+    jwt.sign(payload, SECRET, { expiresIn: 3600}, (err, token) => {
+        res.json({
+            success: true, 
+            token: 'Bearer ' + token,
+            user: req.body
+        });
+    });
+});
 
 //  @route POST api/users/forgot-password
 //  @description Find user's email address and send forgot password email
@@ -345,6 +356,8 @@ router.post(
     '/avatar', 
     passport.authenticate('jwt', { session: false }), 
     (req, res) => {
+        console.log('uploading avatar');
+        
         const errors = {};
         
         avatarUpload(req, res, (err) => {
@@ -364,7 +377,7 @@ router.post(
                 .then((user) => {
                     // console.log(user);
                     user.avatar = `img/uploads/avatars/${req.file.filename}`;
-                    console.log('saving: ', user.avatar);
+                    console.log('saving Avatar to user');
                     
                     user.save()
                         .then((user) => res.json(user))

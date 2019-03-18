@@ -19,3 +19,15 @@ nav {
     }
   }
 }
+.sidenav {
+  .user-view {
+    a .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 100%;
+      margin-right: 10px;
+      background-size: cover;
+      background-position: center;
+    }
+  }
+}
