@@ -21,6 +21,8 @@ class Navbar extends Component {
 		this.props.logoutUser(this.props.history);
     }
     componentDidMount = () => {
+        // console.log('Navbar componentDidMount');
+        
         // if (this.state.isAuthenticated2) {
         //     window.M.Dropdown.init(this.userRef.current);
         // }
@@ -30,21 +32,21 @@ class Navbar extends Component {
         //   });
         window.M.Dropdown.init(this.userRef.current);
     }
-    // componentWillReceiveProps = (nextProps) => {
-    //     // console.log(nextProps);
+    componentWillReceiveProps = (nextProps) => {
+        // console.log(nextProps);
         
-    //     if (nextProps.auth.isAuthenticated) {
-    //         // console.log('there are authenticated');
-    //         this.setState({
-    //             isAuthenticated2: true
-    //         });
-    //         window.M.Dropdown.init(this.userRef.current);
+        if (nextProps.auth.isAuthenticated) {
+            console.log('there are authenticated');
+            // this.setState({
+            //     isAuthenticated2: true
+            // });
+            window.M.Dropdown.init(this.userRef.current);
             
-    //     } else {
-    //         // console.log('there are not authenticated');
-    //         window.M.Dropdown.init(this.userRef.current);
-    //     }
-    // }
+        } else {
+            console.log('there are not authenticated');
+            // window.M.Dropdown.init(this.userRef.current);
+        }
+    }
     // componentWillUpdate = () => {
     //     // console.log('componentWillUpdate');
     //     if (this.state.isAuthenticated2) {

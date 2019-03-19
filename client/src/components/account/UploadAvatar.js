@@ -21,17 +21,20 @@ class UploadAvatar extends Component {
         const errors = {};
         const acceptedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
         const formData = new FormData();
-        formData.append('avatar', acceptedFiles[0]);                
-        
+        formData.append('avatar', acceptedFiles[0]);
+
         if (rejectedFiles.length > 0) {
+            if (rejectedFiles.length > 1) {
+                errors.multiple = 'Please upload one file';
+            }
             if (rejectedFiles[0].size > this.maxFileSize) {
                 errors.fileSize = 'File size too large';
             }
             if (!acceptedFileTypes.includes(rejectedFiles[0].type)) {
-                    errors.mimeType = 'File rejected - .jpg, .png, .gif only';
-                }
-                return Object.keys(errors).map(key => window.M.toast({html: errors[key], classes: 'red lighten-1'}))  
+                errors.mimeType = 'File rejected - .jpg, .png, .gif only';
             }
+            return Object.keys(errors).map(key => window.M.toast({html: errors[key], classes: 'red lighten-1'}))  
+        }
         // Create avatar preview
         this.avatarPreview = URL.createObjectURL(acceptedFiles[0]);
         
