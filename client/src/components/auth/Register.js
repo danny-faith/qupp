@@ -1,15 +1,21 @@
 import React, { Component } from 'react'
-import {Row, Col, Button, Input } from 'react-materialize';
-import axios from 'axios';
+import { Row, Col, Button, Input } from 'react-materialize';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { registerUser } from '../../actions/authActions';
 import classnames from 'classnames';
 
-export default class Register extends Component {
+class Register extends Component {
 	state = {
-		username: 'Daniel',
-		email: 'daniel.e.blythe@gmail.com',
-		password: 'daniel',
-		password2: 'daniel',
+		username: '',
+		email: '',
+		password: '',
+		password2: '',
 		errors: {}
+	}
+	onChange = e => {
+		this.setState({[e.target.name]: e.target.value});
 	}
 	onSubmit = e => {
 		e.preventDefault();
@@ -19,13 +25,17 @@ export default class Register extends Component {
 			password: this.state.password,
 			password2: this.state.password2
 		}
-		console.log(newUser);
-		axios.post('/api/users/register', newUser)
-			.then(user => console.log(user))
-			.catch(err => this.setState({ errors: err.response.data}));
+		this.props.registerUser(newUser, this.props.history);
 	}
-	onChange = e => {
-		this.setState({[e.target.name]: e.target.value});
+	componentDidMount = () => {
+        if (this.props.auth.isAuthenticated) {
+            this.props.history.push('/dashboard');
+        }
+    }
+	componentWillReceiveProps = (nextProps) => {
+		if (nextProps.errors) {
+			this.setState({errors: nextProps.errors});
+		}
 	}
 	render() {
 		const { errors } = this.state;
@@ -47,7 +57,7 @@ export default class Register extends Component {
 									s={12}
 									label="Username"
 									onChange={this.onChange}
-									defaultValue={this.state.username}
+									value={this.state.username}
 									/>
 									{errors.username && (<p className="red-text col no-margin">{errors.username}</p>)}
 							</Col>
@@ -65,7 +75,7 @@ export default class Register extends Component {
 									s={12}
 									label="Email"
 									onChange={this.onChange}
-									defaultValue={this.state.email}
+									value={this.state.email}
 									/>
 									{errors.email && (<p className="red-text col no-margin">{errors.email}</p>)}
 							</Col>
@@ -83,7 +93,7 @@ export default class Register extends Component {
 									s={12}
 									label="Password"
 									onChange={this.onChange}
-									defaultValue={this.state.password}
+									value={this.state.password}
 									/>
 									{errors.password && (<p className="red-text col no-margin">{errors.password}</p>)}
 							</Col>
@@ -101,7 +111,7 @@ export default class Register extends Component {
 									s={12}
 									label="Confirm password"
 									onChange={this.onChange}
-									defaultValue={this.state.password2}
+									value={this.state.password2}
 									/>
 									{errors.password2 && (<p className="red-text col no-margin">{errors.password2}</p>)}
 							</Col>
@@ -117,3 +127,16 @@ export default class Register extends Component {
 			)
 		}
 }
+
+Register.propTypes = {
+	registerUser: PropTypes.func.isRequired,
+	auth: PropTypes.object.isRequired,
+	errors: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+	auth: state.auth,
+	errors: state.errors
+});
+
+export default connect(mapStateToProps, {registerUser })(withRouter(Register));

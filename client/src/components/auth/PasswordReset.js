@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { Row, Col, Button, Input } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
-import { loginUser } from '../../actions/authActions';
+import { updatePassword } from '../../actions/authActions';
 
-class Login extends Component {
+class PasswordReset extends Component {
   state = {
-    email: '',
     password: '',
+		password2: '',
     errors: {}
   }
   onChange = e => {
@@ -18,13 +17,14 @@ class Login extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    const userData = {
-      email: this.state.email,
-      password: this.state.password
-    }
-    this.props.loginUser(userData);
+		const payload = {
+			token: this.props.location.search.replace('?', '').split('=')[1],
+			password: this.state.password,
+			password2: this.state.password2
+		}
+    this.props.updatePassword(payload);
 	}
-	componentDidMount = () => {
+	componentDidMount = () => {		
 		if (this.props.auth.isAuthenticated) {
 				this.props.history.push('/dashboard');
 		}
@@ -43,26 +43,8 @@ class Login extends Component {
     return (
       <Row>
 				<Col s={6} className="offset-s3">
-					<h2 className="center">Login</h2>
+					<h2 className="center">Reset password</h2>
 					<form noValidate onSubmit={this.onSubmit}>
-            <Row>
-							<Col s={12}>
-								<Input
-									id={"email"}
-									className={classnames({
-										'invalid': errors.email
-									})} 
-									type="text"
-									name="email"
-									placeholder="Email"
-									s={12}
-									label="Email"
-									onChange={this.onChange}
-									value={this.state.email}
-									/>
-									{errors.email && (<p className="red-text col no-margin">{errors.email}</p>)}
-							</Col>
-						</Row>
             <Row>
 							<Col s={12}>
 								<Input
@@ -72,14 +54,29 @@ class Login extends Component {
 									})} 
 									type="password"
 									name="password"
-									placeholder="Password"
 									s={12}
-									label="Password"
+									label="New password"
 									onChange={this.onChange}
                   value={this.state.password}
 									/>
 									{errors.password && (<p className="red-text col no-margin">{errors.password}</p>)}
-									<Link to="/forgotten-password">Forgotten password?</Link>
+							</Col>
+						</Row>
+            <Row>
+							<Col s={12}>
+								<Input
+									id={"password2"}
+									className={classnames({
+										'invalid': errors.password2
+									})} 
+									type="password"
+									name="password2"
+									s={12}
+									label="Confirm new password"
+									onChange={this.onChange}
+                  value={this.state.password2}
+									/>
+									{errors.password2 && (<p className="red-text col no-margin">{errors.password2}</p>)}
 							</Col>
 						</Row>
             <Row>
@@ -94,8 +91,8 @@ class Login extends Component {
   }
 }
 
-Login.propTypes = {
-  loginUser: PropTypes.func.isRequired,
+PasswordReset.propTypes = {
+	updatePassword: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -105,4 +102,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { loginUser })(Login);
+export default connect(mapStateToProps,  { updatePassword })(PasswordReset);

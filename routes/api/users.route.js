@@ -1,18 +1,28 @@
-var express = require('express');
-var User = require('../../models/User');
-var router = express.Router();
+const express = require('express');
+const User = require('../../models/User');
+const router = express.Router();
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
+const crypto = require('crypto');
 const isEmpty = require('../../validation/is-empty');
+const nodemailer = require("nodemailer");
 
 // Load validation
 const validateRegisterInput = require('../../validation/register.js');
 const validateLoginInput = require('../../validation/login.js');
+const validateForgotPasswordInput = require('../../validation/forgotPassword.js');
+const validateSetPassword = require('../../validation/setPassword.js');
 
 require('dotenv').config();
-const { SECRET } = process.env;
+const { 
+    SECRET,
+    SMTP_HOST, 
+    SMTP_PORT, 
+    SMTP_AUTH_USER, 
+    SMTP_AUTH_PASS,
+    ENV
+} = process.env;
 
 /**
  * Endpoint: Create and add new user. `password` method creates an encrypted/hashed
@@ -174,6 +184,100 @@ router.post('/login', (req, res) => {
                     }
                 });
         });// .catch
+});
+
+//  @route POST api/users/forgot-password
+//  @description Find user's email address and send forgot password email
+//  @access Public
+router.post('/forgot-password', (req, res) => {
+    const { errors, isValid } = validateForgotPasswordInput(req.body);
+
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    User.findOne({ email: req.body.email })
+        .then(user => {
+            if (!user) {
+                errors.email = "No account found";
+                return res.status(404).json(errors);
+            }
+            // User found, carry on
+            
+            const token = crypto.randomBytes(20).toString('hex');
+            
+            user.resetPasswordToken = token;
+            user.resetPasswordTokenExpires = Date.now() + 3600000; // expires in 1 hour
+            
+            // Setup email
+            // The below shouldn't be here. Should be in a config file somewhere
+            const transporter = nodemailer.createTransport({
+                host: SMTP_HOST,
+                port: SMTP_PORT,
+                auth: {
+                    user: SMTP_AUTH_USER,
+                    pass: SMTP_AUTH_PASS
+                }
+            });
+            
+            // Setup email options
+            const mailOptions = {
+                from: '"qupp" <resetpassword@qupp.co.uk>',
+                to: req.body.email,
+                subject: "qupp: password reset",
+                text: "This is an email test using Mailtrap.io",
+                html: `<a href='${ENV}/reset-password?token=${token}'>Password reset link</a>`
+            };
+            
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    errors.mailFailed = "There was an error sending the email";
+                    return res.status(500).json(errors);
+                }
+                // if sending email successful store against user along with whether or not token has been used
+                user.save()
+                    .then(user => res.json(user))
+                    .catch(err => res.status(500).json(err));
+
+            });
+        })
+        .catch(err => res.json(err));
+});
+
+router.post('/forgot-password-reset', (req, res) => {
+    const { errors, isValid } = validateSetPassword(req.body);
+    const { token, password } = req.body;
+
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    User.findOne({ resetPasswordToken: token, resetPasswordTokenExpires: { $gt: Date.now() } })
+        .then(user => {
+
+            // If no user is returned then token doesnt exist or 
+            if (!user) {
+                errors.verifyPasswordRest = 'Password reset token is invalid or has expired.';
+                return res.status(400).json(errors);
+            }
+
+            // Clear password reset token and reset expiry time
+            user.resetPasswordToken = '';
+            user.resetPasswordTokenExpires = '';
+
+            // Generate hash of new password
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(password, salt, (err, hash) => {
+                    if (err) throw err;
+                    user.password = hash;
+                    user
+                        .save()
+                        .then(user => res.json(user))
+                        .catch(err => console.log(err));
+                });
+            });
+        })
+        .catch(err => res.status(404).json(err));
 });
 
 module.exports = router;
