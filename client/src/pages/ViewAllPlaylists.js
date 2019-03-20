@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import isEmpty from '../utils/isEmpty';
 import Spinner from '../components/common/Spinner';
-import PlaylistListItem from '../components/PlaylistListItem';
+import PlaylistListItem from '../components/playlist/PlaylistListItem';
 import { getAllPlaylists } from '../actions/playlistActions';
 
 class ViewAllPlaylists extends Component {

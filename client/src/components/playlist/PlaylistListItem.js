@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Row, Col, Button, Icon } from 'react-materialize';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
-import { deletePlaylist } from '../actions/playlistActions';
+import { deletePlaylist } from '../../actions/playlistActions';
 import PropTypes from 'prop-types';
-import copyToClipboard from '../utils/copyToClipboard';
+import copyToClipboard from '../../utils/copyToClipboard';
 
 class PlaylistListItem extends Component {
     handleDeleteClick = () => { 
@@ -17,8 +17,8 @@ class PlaylistListItem extends Component {
         const share_link = `https://qupp.co.uk/playlist/${this.props.slug}`;
         copyToClipboard(share_link);
         navigator.clipboard.readText()
-            .then(text => window.M.toast({html: `Copied to clipboard`, classes: 'green lighten-2'}))
-            .catch(err => window.M.toast({html: `error`, classes: 'red lighten-2'}));
+            .then(() => window.M.toast({html: `Copied to clipboard`, classes: 'green lighten-2'}))
+            .catch(() => window.M.toast({html: `Error copy link, please try again`, classes: 'red lighten-2'}));
     }
     handleViewPlaylistClick = () => {
         console.log(this.props);

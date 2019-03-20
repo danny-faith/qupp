@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // import { Link, withRouter } from 'react-router-dom';
-import PlaylistListItem from '../components/PlaylistListItem';
+import PlaylistListItem from '../components/playlist/PlaylistListItem';
 import isEmpty from '../utils/isEmpty';
 import CreatePlaylist from '../components/CreatePlaylist';
 import { getPlaylists, clearPlaylist } from '../actions/playlistActions';
