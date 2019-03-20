@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/authActions';
-import classnames from 'classnames';
+import TextFieldGroup from '../common/TextFieldGroup';
 
 class Register extends Component {
 	state = {
@@ -45,76 +45,37 @@ class Register extends Component {
 					<h1 className="center">Register</h1>
 					<form noValidate onSubmit={this.onSubmit}>
 						<Row>
-							<Col s={12}>
-								<Input
-									id={"username"}
-									className={classnames({
-										'invalid': errors.username
-									})} 
-									type="text"
-									name="username"
-									placeholder="Username"
-									s={12}
-									label="Username"
-									onChange={this.onChange}
-									value={this.state.username}
-									/>
-									{errors.username && (<p className="red-text col no-margin">{errors.username}</p>)}
-							</Col>
-						</Row>
-						<Row>
-							<Col s={12}>
-								<Input
-									id={"email"}
-									className={classnames({
-										'invalid': errors.email
-									})} 
-									type="email"
-									name="email"
-									placeholder="Email"
-									s={12}
-									label="Email"
-									onChange={this.onChange}
-									value={this.state.email}
-									/>
-									{errors.email && (<p className="red-text col no-margin">{errors.email}</p>)}
-							</Col>
-						</Row>
-						<Row>
-							<Col s={12}>
-								<Input
-									id={"password"}
-									className={classnames({
-										'invalid': errors.password
-									})} 
-									type="password"
-									name="password"
-									placeholder="Password"
-									s={12}
-									label="Password"
-									onChange={this.onChange}
-									value={this.state.password}
-									/>
-									{errors.password && (<p className="red-text col no-margin">{errors.password}</p>)}
-							</Col>
-						</Row>
-						<Row>
-							<Col s={12}>
-								<Input
-									id={"password2"}
-									className={classnames({
-										'invalid': errors.password2
-									})} 
-									type="password"
-									name="password2"
-									placeholder="Confirm password"
-									s={12}
-									label="Confirm password"
-									onChange={this.onChange}
-									value={this.state.password2}
-									/>
-									{errors.password2 && (<p className="red-text col no-margin">{errors.password2}</p>)}
-							</Col>
+							<TextFieldGroup
+								name="email"
+								type="email"
+								label="Email"
+								value={this.state.email}
+								onChange={this.onChange}
+								error={errors.email}
+              				/>
+							<TextFieldGroup
+								name="username"
+								label="Username"
+								value={this.state.username}
+								onChange={this.onChange}
+								error={errors.username}
+              				/>
+							<TextFieldGroup
+								name="password"
+								type="password"
+								label="Password"
+								value={this.state.password}
+								onChange={this.onChange}
+								error={errors.password}
+              				/>
+							<TextFieldGroup
+								name="password2"
+								type="password"
+								label="Confirm password"
+								value={this.state.password2}
+								onChange={this.onChange}
+								error={errors.password2}
+              				/>
 						</Row>
 						<Row>
 							<Col s={12}>

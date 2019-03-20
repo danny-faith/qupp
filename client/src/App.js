@@ -1,22 +1,30 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken';
 import { setCurrentUser, logoutUser } from './actions/authActions';
 import store from './store';
 
+import PrivateRoute from './components/common/PrivateRoute';
+
 import Navbar from './components/Navbar';
+import Sidenav from './components/layout/Sidenav';
 // import Footer from './components/layout/Footer';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
-import Dashboard from './components/Dashboard';
+import Dashboard from './pages/Dashboard';
 import Landing from './components/Landing';
-import AppOld from './AppOld';
+import MyAccountPage from './pages/MyAccountPage';
+import ViewAllPlaylists from './pages/ViewAllPlaylists';
+import Error404 from './pages/Error404';
 
 import './App.scss';
-import PasswordReset from './components/auth/PasswordReset';
-import ForgotPassword from './components/auth/ForgotPassword';
+
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import UpdatePasswordPage from './pages/UpdatePasswordPage';
+import QuppListPage from './pages/QuppListPage';
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -31,8 +39,10 @@ if (localStorage.jwtToken) {
   const currentTime = Date.now() / 1000;
 
   if (decoded.exp < currentTime) {
+    console.log('log the user out');
+    
     // Logout the user
-    store.dispatch(logoutUser);
+    store.dispatch(logoutUser());
     // TODO: Clear current profile
     // Redirect to login
     window.location.href = '/login';
@@ -46,15 +56,25 @@ class App extends Component {
         <Router>
           <div className="App">
             <Navbar />
-            <Route exact path="/" component={Landing} />
-            <div className="container">
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/dashboard" component={Dashboard} />
-              <Route exact path="/forgotten-password" component={ForgotPassword} />
-              <Route exact path="/reset-password" component={PasswordReset} />
-              {/* <Route exact path="/dashboard" component={AppOld} /> */}
-            </div>
+            <Sidenav />
+              <Route exact path="/" component={Landing} />
+              <Route exact path="/playlist/:playlist_id" component={QuppListPage} />
+              <div className="container">
+                <Route exact path="/register" component={Register} />
+                <Route exact path="/login" component={Login} />
+                <Switch>
+                  <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                </Switch>
+                <Switch>
+                  <PrivateRoute exact path="/my-account" component={MyAccountPage} />
+                </Switch>
+                <Route exact path="/playlists" component={ViewAllPlaylists} />
+                <Route exact path="/forgotten-password" component={ForgotPasswordPage} />
+                <Route exact path="/reset-password" component={ResetPasswordPage} />
+                <Switch>
+                  {/* <Route component={Error404} /> */}
+                </Switch>
+              </div>
             {/* <Footer /> */}
           </div>
         </Router>

@@ -1,0 +1,33 @@
+nav {
+  // background-color: pink;
+  position: relative;
+  .avatar {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    a {
+      display: flex;
+      align-items: center;
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        margin-right: 10px;
+        background-size: cover;
+        background-position: center;
+      }
+    }
+  }
+}
+.sidenav {
+  .user-view {
+    a .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 100%;
+      margin-right: 10px;
+      background-size: cover;
+      background-position: center;
+    }
+  }
+}

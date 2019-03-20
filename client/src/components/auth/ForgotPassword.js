@@ -25,25 +25,12 @@ class ForgotPassword extends Component {
         // TODO if emailSent state == true then clear errors and clear email input 
         // TODO update success message to be in form of form validation
     }
-    componentDidMount = () => {
-        if (this.props.auth.isAuthenticated) {
-                this.props.history.push('/dashboard');
-        }
-    }
-    componentWillReceiveProps = (nextProps) => {
-        if (nextProps.auth.isAuthenticated) {
-            this.props.history.push('/dashboard');
-        }
-        if (nextProps.errors) {
-            this.setState({errors: nextProps.errors});
-        }
-    }
+
   render() {
 	const { errors } = this.state;
     return (
 		<Row>
 			<Col s={6} className="offset-s3">
-				<h2 className="center">Forgot password?</h2>
 				<form noValidate onSubmit={this.onSubmit}>
 					<Row>
 						<Col s={12}>

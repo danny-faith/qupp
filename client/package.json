@@ -6,8 +6,10 @@
     "node": "11.0.0"
   },
   "scripts": {
-    "start": "PORT=3002 react-scripts start",
-    "build": "react-scripts build",
+    "build:css": "postcss src/App.scss -o src/index.css",
+    "watch:css": "postcss src/App.scss -o src/index.css -w",
+    "start": "npm run watch:css & PORT=3002 react-scripts start",
+    "build": "npm run build:css && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -26,8 +28,9 @@
     "node-sass": "^4.9.4",
     "prop-types": "^15.6.2",
     "re-base": "^4.0.0",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-dropzone": "^10.0.0",
     "react-materialize": "^2.4.6",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",
@@ -38,7 +41,11 @@
     "redux-thunk": "^2.3.0",
     "source-map-support": "^0.5.9"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "autoprefixer": "^9.4.9",
+    "postcss-cli": "^6.1.2",
+    "tailwindcss": "^0.7.4"
+  },
   "eslintConfig": {
     "extends": "react-app"
   },

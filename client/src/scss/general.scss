@@ -1,0 +1,29 @@
+html,
+body {
+  background-color: #181818;
+  color: white;
+}
+.container {
+  max-width: 95%;
+  width: 100%;
+}
+.no-margin {
+  margin: 0;
+}
+.brand-logo {
+  margin-top: 8px;
+}
+.logo img {
+  max-width: 200px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+hr {
+  border: none;
+  height: 1px;
+  background-color: grey;
+  margin: 20px 0;
+}
+.flex-col-reverse {
+  flex-direction: column-reverse;
+}

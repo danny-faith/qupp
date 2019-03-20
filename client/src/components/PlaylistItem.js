@@ -17,7 +17,7 @@ class PlaylistItem extends Component {
     playSongHandler = () => {
         this.props.playSong(this.props.data.uri);
     }
-    handleAddSongToPlayQueue = () => {
+    handleaddSongToQueue = () => {
         const data = this.props.data;
         const songToQueue = {
             name: data.name,
@@ -26,7 +26,7 @@ class PlaylistItem extends Component {
             spotId: data.spotId,
             uri: data.uri
         }
-        this.props.addSongToPlayQueue(songToQueue);
+        this.props.addSongToQueue(songToQueue);
     }
     render() {
         /**
@@ -54,7 +54,7 @@ class PlaylistItem extends Component {
                     </p>
                 </Col>
                 <Col s={4}>
-                    <Button className="btn-small green lighten-2 right" waves="light" icon="playlist_add" onClick={this.handleAddSongToPlayQueue}></Button>
+                    <Button className="btn-small green lighten-2 right" waves="light" icon="playlist_add" onClick={this.handleaddSongToQueue}></Button>
                     {button}
                 </Col>
             </Row>

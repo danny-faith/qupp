@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Row, Col, Button, Input } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
+import TextFieldGroup from '../common/TextFieldGroup';
 import { loginUser } from '../../actions/authActions';
 
 class Login extends Component {
@@ -45,45 +45,25 @@ class Login extends Component {
 				<Col s={6} className="offset-s3">
 					<h2 className="center">Login</h2>
 					<form noValidate onSubmit={this.onSubmit}>
-            <Row>
+						<Row>
+							<TextFieldGroup
+								placeholder="Email address"
+								name="email"
+								type="email"
+								value={this.state.email}
+								onChange={this.onChange}
+								error={errors.email}
+              />
+							<TextFieldGroup
+								placeholder="Password"
+								name="password"
+								type="password"
+								value={this.state.password}
+								onChange={this.onChange}
+								error={errors.password}
+							/>
 							<Col s={12}>
-								<Input
-									id={"email"}
-									className={classnames({
-										'invalid': errors.email
-									})} 
-									type="text"
-									name="email"
-									placeholder="Email"
-									s={12}
-									label="Email"
-									onChange={this.onChange}
-									value={this.state.email}
-									/>
-									{errors.email && (<p className="red-text col no-margin">{errors.email}</p>)}
-							</Col>
-						</Row>
-            <Row>
-							<Col s={12}>
-								<Input
-									id={"password"}
-									className={classnames({
-										'invalid': errors.password
-									})} 
-									type="password"
-									name="password"
-									placeholder="Password"
-									s={12}
-									label="Password"
-									onChange={this.onChange}
-                  value={this.state.password}
-									/>
-									{errors.password && (<p className="red-text col no-margin">{errors.password}</p>)}
-									<Link to="/forgotten-password">Forgotten password?</Link>
-							</Col>
-						</Row>
-            <Row>
-							<Col s={12}>
+								<Link className='col s12' to="/forgotten-password">Forgotten password?</Link>
 								<Button className="btn-small right" waves="light">Login</Button>
 							</Col>
 						</Row>

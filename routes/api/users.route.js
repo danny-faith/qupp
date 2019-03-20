@@ -7,6 +7,9 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const isEmpty = require('../../validation/is-empty');
 const nodemailer = require("nodemailer");
+const passport = require('passport');
+const multer  = require('multer');
+
 
 // Load validation
 const validateRegisterInput = require('../../validation/register.js');
@@ -29,45 +32,45 @@ const {
  * password using the password supplied by the user and sent in the body
  */
 
-router.post('/', (req, res) => {
-    const newUser = req.body;
-    const user = new User(newUser);
-    user.setPassword(req.body.password); // method that creates the users password
+// router.post('/', (req, res) => {
+//     const newUser = req.body;
+//     const user = new User(newUser);
+//     user.setPassword(req.body.password); // method that creates the users password
     
-    user.save(function(err, userModel) {
-        if (err) {
-            return res.status(500).send(err);
-        }
-        res.status(201).send(userModel);
-    })
-});
+//     user.save(function(err, userModel) {
+//         if (err) {
+//             return res.status(500).send(err);
+//         }
+//         res.status(201).send(userModel);
+//     })
+// });
 
 /**
  * Endpoint: Not currently used. But simply returns an object containing the users details
  * given the search term of the users username.
  */
 
-router.get('/:username', (req, res, next) => {
-    console.log('get user');
+// router.get('/:username', (req, res, next) => {
+//     console.log('get user');
     
-    var { username } = req.params;
-    User.find({ username: username }).exec(function(err, user) {
-        if (err) {
-            next();
-        } else {
-            res.status(200).json(user);
-        }
-    });
-});
+//     var { username } = req.params;
+//     User.find({ username: username }).exec(function(err, user) {
+//         if (err) {
+//             next();
+//         } else {
+//             res.status(200).json(user);
+//         }
+//     });
+// });
 
 /**
  * Endpoint: Not currently used. Simply returns all users.
  */
 
-router.get('/', (req, res) => {
-    console.log('/login route requested');    
-    res.sendFile(`${__dirname}/client/build.index.html`);
-});
+// router.get('/', (req, res) => {
+//     console.log('/login route requested');    
+//     res.sendFile(`${__dirname}/client/build.index.html`);
+// });
 
 //  @route GET api/users/register
 //  @description Register user
@@ -148,7 +151,7 @@ router.post('/register', (req, res) => {
     doesUsernameExist();    
 });
 
-//  @route GET api/users/login
+//  @route POST api/users/login
 //  @description Login User / Returning JWT Token
 //  @access Public
 router.post('/login', (req, res) => {
@@ -172,7 +175,7 @@ router.post('/login', (req, res) => {
                 .then(isMatch => {
                     if (isMatch) {
                         // User matched
-                        const payload = { id: user.id, name: user.username, avatar:user.avatar } // create payload
+                        const payload = { id: user.id, username: user.username, avatar:user.avatar } // create payload
                         // Sign token
                         jwt.sign(payload, SECRET, { expiresIn: 3600}, (err, token) => {
                             res.json({success: true, token: 'Bearer ' + token});
@@ -184,6 +187,22 @@ router.post('/login', (req, res) => {
                     }
                 });
         });// .catch
+});
+
+//  @route POST api/users/update-token
+//  @description Return new JWT
+//  @access Private
+router.post('/update-token', passport.authenticate('jwt', { session: false }), (req, res) => {
+    
+    const payload = { id: req.body._id, username: req.body.username, avatar: req.body.avatar } // create payload
+    // Sign token
+    jwt.sign(payload, SECRET, { expiresIn: 3600}, (err, token) => {
+        res.json({
+            success: true, 
+            token: 'Bearer ' + token,
+            user: req.body
+        });
+    });
 });
 
 //  @route POST api/users/forgot-password
@@ -244,40 +263,140 @@ router.post('/forgot-password', (req, res) => {
         .catch(err => res.json(err));
 });
 
+//  @route POST api/users/forgot-password-reset
+//  @description Reset password
+//  @access Private (can be accessed publicly if user has token)
+// TODO USe code below and make this route still works
+// passport.authenticate('jwt', { session: false })
+//  Maybe not as users without toke will instantly get turned away.
+// route needs to be Public but only with token. And if no token then user must be able to send isAuthenticated true.
+// Now I think about it, someone could pass isAuthenticated === true via React dev tools and bypass the token stage, I think anyway. Must test
 router.post('/forgot-password-reset', (req, res) => {
     const { errors, isValid } = validateSetPassword(req.body);
-    const { token, password } = req.body;
-
+    const { token, password, isAuthenticated, userId } = req.body;
+    
     if (!isValid) {
         return res.status(400).json(errors);
     }
-
-    User.findOne({ resetPasswordToken: token, resetPasswordTokenExpires: { $gt: Date.now() } })
-        .then(user => {
-
-            // If no user is returned then token doesnt exist or 
-            if (!user) {
-                errors.verifyPasswordRest = 'Password reset token is invalid or has expired.';
-                return res.status(400).json(errors);
-            }
-
-            // Clear password reset token and reset expiry time
-            user.resetPasswordToken = '';
-            user.resetPasswordTokenExpires = '';
-
-            // Generate hash of new password
-            bcrypt.genSalt(10, (err, salt) => {
-                bcrypt.hash(password, salt, (err, hash) => {
-                    if (err) throw err;
-                    user.password = hash;
-                    user
-                        .save()
-                        .then(user => res.json(user))
-                        .catch(err => console.log(err));
+    if (!isAuthenticated) {
+        User.findOne({ resetPasswordToken: token, resetPasswordTokenExpires: { $gt: Date.now() } })
+            .then(user => {            
+    
+                // If no user is returned then token doesnt exist or 
+                if (!user) {
+                    errors.verifyPasswordRest = 'Password reset token is invalid or has expired.';
+                    return res.status(400).json(errors);
+                }
+    
+                // Clear password reset token and reset expiry time
+                user.resetPasswordToken = '';
+                user.resetPasswordTokenExpires = '';
+    
+                // Generate hash of new password
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(password, salt, (err, hash) => {
+                        if (err) throw err;
+                        user.password = hash;
+                        user
+                            .save()
+                            .then(user => res.json(user))
+                            .catch(err => console.log(err));
+                    });
                 });
-            });
-        })
-        .catch(err => res.status(404).json(err));
+            })
+            .catch(err => res.status(404).json(err));
+    } else {
+        User.findOne({ _id: userId })
+            .then(user => {
+                // Generate hash of new password
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(password, salt, (err, hash) => {
+                        if (err) throw err;
+                        user.password = hash;
+                        user
+                            .save()
+                            .then(user => res.json(user))
+                            .catch(err => console.log(err));
+                    });
+                });
+            })
+            .catch(err => res.status(404).json(err));
+    }
+});
+
+//  @route POST api/users/avatar
+//  @description Upload an avatar for the current user
+//  @access Private
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'client/public/img/uploads/avatars/')
+    },
+    filename: function (req, file, cb) {
+      cb(null, `${new Date().toISOString()}-${file.originalname}`)
+    }
+});
+const fileFilter = (req, file, cb) => {
+    const acceptedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+    if (acceptedMimeTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('File type not accepted'), false);
+    }
+}
+const avatarUpload = multer({ 
+    storage,
+    fileFilter,
+    limits: {
+        fileSize: 1024 * 1024 * 4
+    } 
+}).single('avatar');
+
+router.post(
+    '/avatar', 
+    passport.authenticate('jwt', { session: false }), 
+    (req, res) => {
+        console.log('uploading avatar');
+        
+        const errors = {};
+        
+        avatarUpload(req, res, (err) => {
+            if (err instanceof multer.MulterError) {
+                // console.log('error', err);
+                
+                errors.filesize = err.message;
+                return res.status(413).json(errors);
+                
+            } else if (err) {
+                // catch all other errors including unknown and fileFilter errors
+                errors.error = err.message;
+                return res.status(500).json(errors);
+            }
+            // console.log('req.user', req.user);
+            User.findById(req.user.id)
+                .then((user) => {
+                    // console.log(user);
+                    user.avatar = `img/uploads/avatars/${req.file.filename}`;
+                    console.log('saving Avatar to user');
+                    
+                    user.save()
+                        .then((user) => res.json(user))
+                        .catch(err => console.log(err));
+                })
+                .catch((err) => {
+                    res.status(500).json(err);      
+                });
+            })
+    }
+);
+
+//  @route GET api/users/current
+//  @description Returns current users
+//  @access Private
+router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+    console.log('/current route');
+    
+    res.json(req.user);
 });
 
 module.exports = router;

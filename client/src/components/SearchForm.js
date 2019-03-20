@@ -101,7 +101,7 @@ class SearchForm extends Component {
             <Row>
                 <form onSubmit={this.handleFormSubmit}>
                     <Row>
-                        <Col s={8} offset={"s1"}>
+                        <Col s={9}>
                             <Input id={"searchInput"} value={this.state.searchValue} onChange={this.handleInputOnChange} ref={this.searchQuery} placeholder="Prince I would die for you" s={12} label="Track search" />
                         </Col>
                         <Col s={2}>
