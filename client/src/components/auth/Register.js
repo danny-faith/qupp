@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Row, Col, Button, Input } from 'react-materialize';
+import { Row, Col, Button } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';

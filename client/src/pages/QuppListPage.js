@@ -11,12 +11,37 @@ import SearchForm from '../components/SearchForm';
 import Header from '../components/common/Header';
 import Song from '../components/playlist/Song';
 
+import { MyProvider } from '../context';
+
 class QuppListPage extends Component {
   state = { 
     playlist: {
       songs: [],
       queue: [],
     },
+    nowPlaying: {
+      name: 'Gabriel',
+      artists: ['Joe Goddard', 'Valentina'],
+      album: 'Gabriel',
+      duration_ms: 3000 ,
+      spotId: '1VpQNXHEd6fKIC3wrz2LoF'
+    },
+    upNext: {},
+    searchResults: []
+  }
+  state = { 
+    playlist: {
+      songs: [],
+      queue: [],
+    },
+    nowPlaying: {
+      name: 'Gabriel',
+      artists: ['Joe Goddard', 'Valentina'],
+      album: 'Gabriel',
+      duration_ms: 3000 ,
+      spotId: '1VpQNXHEd6fKIC3wrz2LoF'
+    },
+    upNext: {},
     searchResults: []
   }
   componentDidMount = () => {
@@ -101,42 +126,50 @@ class QuppListPage extends Component {
     }
 
     if (!isEmpty(this.props.playlists.playlist)) {
-      
       playlistName = this.props.playlists.playlist[0].name;;
     }
 
     return (
-      <Fragment>
-        <Header songs={(this.state.playlist.songs === undefined) ? 0 : this.state.playlist.songs.length} username={this.props.auth.user.name} playlistname={playlistName} />
-        <div className="container">
-          <Row className="flex flex-wrap md:block flex-col-reverse">
-            <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
-              <h1 className="text-blue darken-1">qupplist</h1>
-              {playlistContent}
-            </Col>
-            <Col className="" s={12} m={10} l={6} xl={4} offset="m1">
-              <h1>search</h1>
-              <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
-              <Button className="yellow darken-1 text-black font-bold" onClick={() => {this.setState({searchResults: []})}}>Clear</Button>
-              {Object
-                .keys(this.state.searchResults)
-                .map(key => 
-                  <Song 
-                    addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
-                    addSongToQueue={this.addSongToQueue} 
-                    addSongToPlaylist={this.addSongToPlaylist} 
-                    type="search"
-                    data={this.state.searchResults[key]} 
-                    key={key}
-                  />
-                )
-              }
-              <h1 className="text-yellow darken-1">queue</h1>
-              {queueContent}
-            </Col>
-          </Row>
-        </div>
-      </Fragment>
+        
+        <Fragment>
+          <MyProvider value={this.state.nowPlaying}>
+            <Header 
+              songs={(this.state.playlist.songs === undefined) ? 0 : this.state.playlist.songs.length} 
+              username={this.props.auth.user.name} 
+              playlistname={playlistName} 
+              upNext="Walking home through the park - Aim"
+            />
+          </MyProvider>
+
+          <div className="container">
+            <Row className="flex flex-wrap md:block flex-col-reverse">
+              <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
+                <h1 className="text-blue darken-1">qupplist</h1>
+                {playlistContent}
+              </Col>
+              <Col className="" s={12} m={10} l={6} xl={4} offset="m1">
+                <h1>search</h1>
+                <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
+                <Button className="yellow darken-1 text-black font-bold" onClick={() => {this.setState({searchResults: []})}}>Clear</Button>
+                {Object
+                  .keys(this.state.searchResults)
+                  .map(key => 
+                    <Song 
+                      addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
+                      addSongToQueue={this.addSongToQueue} 
+                      addSongToPlaylist={this.addSongToPlaylist} 
+                      type="search"
+                      data={this.state.searchResults[key]} 
+                      key={key}
+                    />
+                  )
+                }
+                <h1 className="text-yellow darken-1">queue</h1>
+                {queueContent}
+              </Col>
+            </Row>
+          </div>
+        </Fragment>
     )
   }
 }

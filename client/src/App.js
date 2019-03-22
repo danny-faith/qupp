@@ -17,13 +17,12 @@ import Dashboard from './pages/Dashboard';
 import Landing from './components/Landing';
 import MyAccountPage from './pages/MyAccountPage';
 import ViewAllPlaylists from './pages/ViewAllPlaylists';
-import Error404 from './pages/Error404';
+// import Error404 from './pages/Error404';
 
 import './App.scss';
 
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
-import UpdatePasswordPage from './pages/UpdatePasswordPage';
 import QuppListPage from './pages/QuppListPage';
 
 // Check for token

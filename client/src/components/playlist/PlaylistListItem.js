@@ -26,7 +26,7 @@ class PlaylistListItem extends Component {
         // `/playlist/${this.props.id}/${this.props.name}`
     }
     render() {
-        const share_link = (this.props.share_link) ? this.props.share_link : 'GENERATE SHARE LINK' ;
+
         return (
             <Row>
                 <Col s={8}>
