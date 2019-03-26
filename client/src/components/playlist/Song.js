@@ -16,6 +16,7 @@ export default class Song extends Component {
         image: data.image,
         artists: data.artists,
         spotId: data.spotId,
+        duration_ms: data.duration_ms,
         uri: data.uri
     }
     this.props.addSongToQueueOrPlaylist(songToAdd, e.currentTarget.dataset.type);

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'react-materialize';
 import NowPlaying from './NowPlaying';
+import UpNext from './UpNext';
 
 class Header extends Component {
   render() {
@@ -11,8 +12,9 @@ class Header extends Component {
         <p className="text-1xl mt-0">{this.props.songs} songs in qupplist</p>
         <Row>
           <Col s={6} offset="s3">
+            <p className="m-0">Play ►</p>
             <NowPlaying />
-            <h6 className="mb-0">Up next: {this.props.upNext}</h6>
+            <UpNext />
           </Col>
         </Row>
       </div>

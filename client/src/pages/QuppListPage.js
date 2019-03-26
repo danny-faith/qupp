@@ -20,37 +20,78 @@ class QuppListPage extends Component {
       queue: [],
     },
     nowPlaying: {
-      name: 'Gabriel',
-      artists: ['Joe Goddard', 'Valentina'],
-      album: 'Gabriel',
-      duration_ms: 3000 ,
-      spotId: '1VpQNXHEd6fKIC3wrz2LoF'
+      name: '',
+      artists: [],
+      album: '',
+      duration_ms: '' ,
+      spotId: ''
     },
-    upNext: {},
-    searchResults: []
-  }
-  state = { 
-    playlist: {
-      songs: [],
-      queue: [],
+    upNext: {
+      name: '',
+      artists: [],
+      album: '',
+      duration_ms: '' ,
+      spotId: ''
     },
-    nowPlaying: {
-      name: 'Gabriel',
-      artists: ['Joe Goddard', 'Valentina'],
-      album: 'Gabriel',
-      duration_ms: 3000 ,
-      spotId: '1VpQNXHEd6fKIC3wrz2LoF'
-    },
-    upNext: {},
     searchResults: []
   }
   componentDidMount = () => {
+    console.log('componentDidMount');
+    
+    // sync to user speicific playlist
     base.syncState(`playlists/${this.props.match.params.playlist_id}`, {
       context: this,
-      state: 'playlist'
+      state: 'playlist',
+      then() {
+        // render play button - then()
+      }
     });
+
     this.props.clearPlaylists();
     this.props.getPlaylist(this.props.match.params.playlist_id);    
+  }
+  playClickHandler = () => {
+    this.populateNowPlaying(true);  
+    this.populateUpNext();
+  }
+  playSong = () => {
+    const { duration_ms } = this.state.nowPlaying;
+    console.log('duration_ms: ', duration_ms);
+    setTimeout(() => {
+      console.log('song complete');
+      this.playNextSong();
+    }, duration_ms / 50);
+    // play song
+    // colour first item in queue
+    // colour second item in queue
+    // once song ends copy state and remove first item from queue
+    // re-colour two top songs
+    // update nowPlaying and upNext
+    // play song
+  }
+  playNextSong = () => {
+    // Remove first song from queue
+    const copyOfPlaylist = {...this.state.playlist};
+    copyOfPlaylist.queue.shift();
+    this.setState({playlist: copyOfPlaylist}, () => {
+      this.populateUpNext();
+      this.populateNowPlaying(true);
+    });
+  }
+  componentWillUpdate = (stuff) => {
+    // FOR TESTING. CHECK HOW MANY TIMES `componentWillUpdate` runs
+  }
+  populateNowPlaying = (play) => {
+    let nowPlaying = {...this.state.nowPlaying};
+    nowPlaying = this.state.playlist.queue[0];
+    const playBool = (play) ? this.playSong : null;
+    // this.playSong should not be in callback. Makes function less versatile
+    this.setState({nowPlaying}, playBool);
+  }
+  populateUpNext = () => {
+    let upNext = {...this.state.upNext};
+    upNext = this.state.playlist.queue[1];
+    this.setState({upNext});
   }
   addSearchResultsToState = (results) => {
     this.setState(() => ({
@@ -58,9 +99,19 @@ class QuppListPage extends Component {
     }));
   }
   addSongToQueueOrPlaylist = (songToAdd, type) => {
-
+    const errors = {};
     const playlist = {...this.state.playlist};
 
+    Object.keys(playlist.songs).map(key => {
+      if (playlist.songs[key].spotId === songToAdd.spotId) {
+        errors.addSong = `"${songToAdd.name}" is a duplicate, cannot add`;
+      }
+    });
+
+    if(!isEmpty(errors)) {
+      return window.M.toast({html: errors.addSong, classes: 'red lighten-2'})
+    }
+    
     if (this.state.playlist.hasOwnProperty(type)) {
       playlist[type].unshift(songToAdd);
     } else {
@@ -128,11 +179,12 @@ class QuppListPage extends Component {
     if (!isEmpty(this.props.playlists.playlist)) {
       playlistName = this.props.playlists.playlist[0].name;;
     }
-
+    const nowPlaying = this.state.nowPlaying;
+    const upNext = this.state.upNext;
     return (
         
         <Fragment>
-          <MyProvider value={this.state.nowPlaying}>
+          <MyProvider value={{nowPlaying, upNext}}>
             <Header 
               songs={(this.state.playlist.songs === undefined) ? 0 : this.state.playlist.songs.length} 
               username={this.props.auth.user.name} 
@@ -142,6 +194,7 @@ class QuppListPage extends Component {
           </MyProvider>
 
           <div className="container">
+            <Button onClick={this.playClickHandler} className="m-2">Play ►</Button>
             <Row className="flex flex-wrap md:block flex-col-reverse">
               <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
                 <h1 className="text-blue darken-1">qupplist</h1>
