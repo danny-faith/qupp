@@ -192,6 +192,7 @@ class QuppListPage extends Component {
     }
     const nowPlaying = this.state.nowPlaying;
     const upNext = this.state.upNext;
+    const playDisabled = (isEmpty(this.state.playlist.queue)) ? true : false;
     return (
         
         <Fragment>
@@ -205,7 +206,7 @@ class QuppListPage extends Component {
           </MyProvider>
 
           <div className="container">
-            <Button onClick={this.playClickHandler} className="m-2">Play ►</Button>
+            <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2">Play ►</Button>
             <Row className="flex flex-wrap md:block flex-col-reverse">
               <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
                 <h1 className="text-blue darken-1">qupplist</h1>
