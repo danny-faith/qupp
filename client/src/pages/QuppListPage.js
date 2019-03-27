@@ -57,10 +57,10 @@ class QuppListPage extends Component {
   playSong = () => {
     const { duration_ms } = this.state.nowPlaying;
     console.log('duration_ms: ', duration_ms);
-    setTimeout(() => {
+    this.timer = setTimeout(() => {
       console.log('song complete');
       this.playNextSong();
-    }, duration_ms / 50);
+    }, duration_ms / 100);
     // play song
     // colour first item in queue
     // colour second item in queue
@@ -74,8 +74,19 @@ class QuppListPage extends Component {
     const copyOfPlaylist = {...this.state.playlist};
     copyOfPlaylist.queue.shift();
     this.setState({playlist: copyOfPlaylist}, () => {
-      this.populateUpNext();
-      this.populateNowPlaying(true);
+      if (this.state.playlist.queue.length === 0) {
+        this.setState({
+          nowPlaying: {},
+          upNext: {}
+        });
+        return window.M.toast({html: 'No more songs to play, please queue some more', classes: 'red lighten-2'})
+      }
+      if (this.state.playlist.queue.length > 1) {
+        this.populateUpNext();
+      }
+      if (this.state.playlist.queue.length > 0) {
+        this.populateNowPlaying(true);
+      }
     });
   }
   componentWillUpdate = (stuff) => {
