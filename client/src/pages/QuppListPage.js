@@ -40,13 +40,10 @@ class QuppListPage extends Component {
   componentDidMount = () => {
     console.log('componentDidMount');
     
-    // sync to user speicific playlist
+    // sync to users speicific playlist
     base.syncState(`playlists/${this.props.match.params.playlist_id}`, {
       context: this,
-      state: 'playlist',
-      then() {
-        // render play button - then()
-      }
+      state: 'playlist'
     });
 
     this.props.clearPlaylists();
@@ -57,11 +54,9 @@ class QuppListPage extends Component {
       playing: !prevState.playing
     }), () => {
       if (this.state.playing === false) {
-        console.log('Stopped');
         
         clearTimeout(this.timer);
       } else {
-        console.log('Playing');
         this.populateNowPlaying(true);
     
         if (this.state.playlist.queue.length > 1) {
@@ -78,10 +73,6 @@ class QuppListPage extends Component {
       this.playNextSong();
     }, duration_ms / 100);
     
-    // play song
-    // colour first item in queue
-    // colour second item in queue
-    // re-colour two top songs
   }
   playNextSong = () => {
     // Remove first song from queue
@@ -128,13 +119,15 @@ class QuppListPage extends Component {
   addSongToQueueOrPlaylist = (songToAdd, type) => {
     const errors = {};
     const playlist = {...this.state.playlist};
-
+    
     // TODO: sort this out, won't let user add song to queue from qupplist or search result if it appears in qupplist
-    Object.keys(playlist.songs).map(key => {
-      if (playlist.songs[key].spotId === songToAdd.spotId) {
-        errors.addSong = `"${songToAdd.name}" is a duplicate, cannot add`;
-      }
-    });
+    if (type === 'songs') {
+      Object.keys(playlist.songs).map(key => {
+        if (playlist.songs[key].spotId === songToAdd.spotId) {
+          errors.addSong = `"${songToAdd.name}" is a duplicate, cannot add`;
+        }
+      });
+    }
 
     if(!isEmpty(errors)) {
       return window.M.toast({html: errors.addSong, classes: 'red lighten-2'})
@@ -230,13 +223,15 @@ class QuppListPage extends Component {
             {playButton}
             <Row className="flex flex-wrap md:block flex-col-reverse">
               <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
-                <h1 className="text-blue darken-1">qupplist</h1>
+                <h1 className="text-blue darken-1">qupplist
+                  <Button className="yellow text-black font-bold ml-4">Add all to queue</Button>
+                </h1>
                 {playlistContent}
               </Col>
               <Col className="" s={12} m={10} l={6} xl={4} offset="m1">
                 <h1>search</h1>
                 <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
-                <Button className="yellow darken-1 text-black font-bold" onClick={() => {this.setState({searchResults: []})}}>Clear</Button>
+                <Button className="white darken-1 text-black font-bold" onClick={() => {this.setState({searchResults: []})}}>Clear search results</Button>
                 {Object
                   .keys(this.state.searchResults)
                   .map(key => 
