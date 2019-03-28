@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import base from '../base';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { getPlaylist, clearPlaylists } from '../actions/playlistActions';
 import isEmpty from '../utils/isEmpty';
 
@@ -19,6 +20,7 @@ class QuppListPage extends Component {
       songs: [],
       queue: [],
     },
+    playing: false,
     nowPlaying: {
       name: '',
       artists: [],
@@ -51,27 +53,41 @@ class QuppListPage extends Component {
     this.props.getPlaylist(this.props.match.params.playlist_id);    
   }
   playClickHandler = () => {
-    this.populateNowPlaying(true);  
-    this.populateUpNext();
+    this.setState((prevState) => ({
+      playing: !prevState.playing
+    }), () => {
+      if (this.state.playing === false) {
+        console.log('Stopped');
+        
+        clearTimeout(this.timer);
+      } else {
+        console.log('Playing');
+        this.populateNowPlaying(true);
+    
+        if (this.state.playlist.queue.length > 1) {
+          this.populateUpNext();
+        }
+      }
+    });    
   }
   playSong = () => {
     const { duration_ms } = this.state.nowPlaying;
-    console.log('duration_ms: ', duration_ms);
+
     this.timer = setTimeout(() => {
       console.log('song complete');
       this.playNextSong();
     }, duration_ms / 100);
+    
     // play song
     // colour first item in queue
     // colour second item in queue
-    // once song ends copy state and remove first item from queue
     // re-colour two top songs
-    // update nowPlaying and upNext
-    // play song
   }
   playNextSong = () => {
     // Remove first song from queue
     const copyOfPlaylist = {...this.state.playlist};
+    // console.log(copyOfPlaylist);
+    // debugger;
     copyOfPlaylist.queue.shift();
     this.setState({playlist: copyOfPlaylist}, () => {
       if (this.state.playlist.queue.length === 0) {
@@ -113,6 +129,7 @@ class QuppListPage extends Component {
     const errors = {};
     const playlist = {...this.state.playlist};
 
+    // TODO: sort this out, won't let user add song to queue from qupplist or search result if it appears in qupplist
     Object.keys(playlist.songs).map(key => {
       if (playlist.songs[key].spotId === songToAdd.spotId) {
         errors.addSong = `"${songToAdd.name}" is a duplicate, cannot add`;
@@ -132,7 +149,7 @@ class QuppListPage extends Component {
 
     this.setState({
       playlist
-    });
+    }, () => window.M.toast({html: `${songToAdd.name}, ${songToAdd.album} added`, classes: 'green lighten-2'}));
   }
   removeSongFromQueueOrPlaylist = (songIdToRemove, type) => {
     
@@ -184,7 +201,7 @@ class QuppListPage extends Component {
         />
       );
     } else {
-       queueContent = "No songs in queue, search to add some!";
+      queueContent = "No songs in queue, search to add some!";
     }
 
     if (!isEmpty(this.props.playlists.playlist)) {
@@ -193,6 +210,10 @@ class QuppListPage extends Component {
     const nowPlaying = this.state.nowPlaying;
     const upNext = this.state.upNext;
     const playDisabled = (isEmpty(this.state.playlist.queue)) ? true : false;
+    const playButton = (this.state.playing) 
+      ? <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2 red">Stop ■</Button>
+      : <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2">Play ►</Button>;
+
     return (
         
         <Fragment>
@@ -206,7 +227,7 @@ class QuppListPage extends Component {
           </MyProvider>
 
           <div className="container">
-            <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2">Play ►</Button>
+            {playButton}
             <Row className="flex flex-wrap md:block flex-col-reverse">
               <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
                 <h1 className="text-blue darken-1">qupplist</h1>
@@ -230,7 +251,11 @@ class QuppListPage extends Component {
                   )
                 }
                 <h1 className="text-yellow darken-1">queue</h1>
-                {queueContent}
+                <div className={classnames('queue-list', {
+                    'playing': this.state.playing
+                })}>
+                  {queueContent}
+                </div>
               </Col>
             </Row>
           </div>
