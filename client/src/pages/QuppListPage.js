@@ -13,6 +13,7 @@ import Header from '../components/common/Header';
 import Song from '../components/playlist/Song';
 
 import { MyProvider } from '../context';
+import { isArray } from 'util';
 
 class QuppListPage extends Component {
   state = { 
@@ -116,33 +117,48 @@ class QuppListPage extends Component {
       searchResults: results
     }));
   }
+  addAllToQueueHandler = () => {
+    this.addSongToQueueOrPlaylist(this.state.playlist.songs, 'queue');
+  }
   addSongToQueueOrPlaylist = (songToAdd, type) => {
     const errors = {};
-    const playlist = {...this.state.playlist};
+    let playlist = {...this.state.playlist};
     
-    // TODO: sort this out, won't let user add song to queue from qupplist or search result if it appears in qupplist
-    if (type === 'songs') {
+    if (type === 'songs' && !isEmpty(playlist.songs)) {
       Object.keys(playlist.songs).map(key => {
         if (playlist.songs[key].spotId === songToAdd.spotId) {
           errors.addSong = `"${songToAdd.name}" is a duplicate, cannot add`;
         }
       });
     }
-
+    
     if(!isEmpty(errors)) {
       return window.M.toast({html: errors.addSong, classes: 'red lighten-2'})
     }
     
-    if (this.state.playlist.hasOwnProperty(type)) {
-      playlist[type].unshift(songToAdd);
+    // Firebase removes empty arrays
+    // so if playlist.queue || playlist.songs exists, add to it
+    // else(because Firebase removed it) create an empty array of either `song` or `queue` (type) then add to it
+    // if statement here to see if we want to add one or multiple to the array
+    if (songToAdd.length > 1) {
+      const newQueue = [...songToAdd, ...playlist[type]];
+      playlist.queue = newQueue;
+      console.log('its more than one song to be added');
+      
     } else {
-      playlist[type] = [];
-      playlist[type].unshift(songToAdd);
+      console.log('its only one song to be added');
+      if (this.state.playlist.hasOwnProperty(type)) {
+        playlist[type].unshift(songToAdd);
+      } else {
+        playlist[type] = [];
+        playlist[type].unshift(songToAdd);
+      }
     }
-
+    
     this.setState({
       playlist
     }, () => window.M.toast({html: `${songToAdd.name}, ${songToAdd.album} added`, classes: 'green lighten-2'}));
+
   }
   removeSongFromQueueOrPlaylist = (songIdToRemove, type) => {
     
@@ -224,7 +240,7 @@ class QuppListPage extends Component {
             <Row className="flex flex-wrap md:block flex-col-reverse">
               <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
                 <h1 className="text-blue darken-1">qupplist
-                  <Button className="yellow text-black font-bold ml-4">Add all to queue</Button>
+                  <Button onClick={this.addAllToQueueHandler} className="yellow text-black font-bold ml-4">Add all to queue</Button>
                 </h1>
                 {playlistContent}
               </Col>
