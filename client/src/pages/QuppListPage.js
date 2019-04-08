@@ -9,11 +9,10 @@ import isEmpty from '../utils/isEmpty';
 import { Row, Col, Button } from 'react-materialize';
 
 import SearchForm from '../components/SearchForm';
-import Header from '../components/common/Header';
+import Header from '../components/layout/Header';
 import Song from '../components/playlist/Song';
 
 import { MyProvider } from '../context';
-import { isArray } from 'util';
 
 class QuppListPage extends Component {
   state = { 
@@ -23,24 +22,23 @@ class QuppListPage extends Component {
     },
     playing: false,
     nowPlaying: {
-      name: '',
-      artists: [],
-      album: '',
-      duration_ms: '' ,
-      spotId: ''
+      // TODO: solve issue where if the below is missing then upNext and nowPlaying break (.map)
+      // name: '',
+      // artists: [],
+      // album: '',
+      // duration_ms: '' ,
+      // spotId: ''
     },
     upNext: {
-      name: '',
-      artists: [],
-      album: '',
-      duration_ms: '' ,
-      spotId: ''
+      // name: '',
+      // artists: [],
+      // album: '',
+      // duration_ms: '' ,
+      // spotId: ''
     },
     searchResults: []
   }
   componentDidMount = () => {
-    console.log('componentDidMount');
-    
     // sync to users speicific playlist
     base.syncState(`playlists/${this.props.match.params.playlist_id}`, {
       context: this,
@@ -51,13 +49,18 @@ class QuppListPage extends Component {
     this.props.getPlaylist(this.props.match.params.playlist_id);    
   }
   playClickHandler = () => {
+    // debugger;
+    console.log('playClickHandler');
+    
     this.setState((prevState) => ({
       playing: !prevState.playing
     }), () => {
       if (this.state.playing === false) {
+        // debugger;
         
         clearTimeout(this.timer);
       } else {
+        // debugger;
         this.populateNowPlaying(true);
     
         if (this.state.playlist.queue.length > 1) {
@@ -99,8 +102,16 @@ class QuppListPage extends Component {
   }
   componentWillUpdate = (stuff) => {
     // FOR TESTING. CHECK HOW MANY TIMES `componentWillUpdate` runs
+    // console.log('componentWillUpdate: ', stuff);
+    // console.log(this.state);
+    if (this.state.playing && this.state.playlist.queue.length === 0) {
+      // console.log('were playing but theres nothing in the queue?');
+      
+      this.setState({playing: false});
+    }
   }
   populateNowPlaying = (play) => {
+    // debugger;
     let nowPlaying = {...this.state.nowPlaying};
     nowPlaying = this.state.playlist.queue[0];
     const playBool = (play) ? this.playSong : null;
@@ -120,14 +131,14 @@ class QuppListPage extends Component {
   addAllToQueueHandler = () => {
     this.addSongToQueueOrPlaylist(this.state.playlist.songs, 'queue');
   }
-  addSongToQueueOrPlaylist = (songToAdd, type) => {
+  addSongToQueueOrPlaylist = (songPayload, type) => {
     const errors = {};
     let playlist = {...this.state.playlist};
     
     if (type === 'songs' && !isEmpty(playlist.songs)) {
       Object.keys(playlist.songs).map(key => {
-        if (playlist.songs[key].spotId === songToAdd.spotId) {
-          errors.addSong = `"${songToAdd.name}" is a duplicate, cannot add`;
+        if (playlist.songs[key].spotId === songPayload.spotId) {
+          errors.addSong = `"${songPayload.name}" is a duplicate, cannot add`;
         }
       });
     }
@@ -139,25 +150,29 @@ class QuppListPage extends Component {
     // Firebase removes empty arrays
     // so if playlist.queue || playlist.songs exists, add to it
     // else(because Firebase removed it) create an empty array of either `song` or `queue` (type) then add to it
-    // if statement here to see if we want to add one or multiple to the array
-    if (songToAdd.length > 1) {
-      const newQueue = [...songToAdd, ...playlist[type]];
+    if (songPayload.length > 1) {
+      // debugger;
+      // console.log('playlist[type]: ', playlist[type]);
+      if (isEmpty(playlist[type])) {
+        playlist[type] = [];
+      }
+      const newQueue = [...songPayload, ...playlist[type]];
       playlist.queue = newQueue;
-      console.log('its more than one song to be added');
-      
     } else {
-      console.log('its only one song to be added');
       if (this.state.playlist.hasOwnProperty(type)) {
-        playlist[type].unshift(songToAdd);
+        playlist[type].unshift(songPayload);
       } else {
         playlist[type] = [];
-        playlist[type].unshift(songToAdd);
+        playlist[type].unshift(songPayload);
       }
     }
     
     this.setState({
       playlist
-    }, () => window.M.toast({html: `${songToAdd.name}, ${songToAdd.album} added`, classes: 'green lighten-2'}));
+    }, () => {
+      // TODO: if more than one song added loop through added songs. Else only Toast one song
+      window.M.toast({html: `${songPayload.name}, ${songPayload.album} added`, classes: 'green lighten-2'});
+    });
 
   }
   removeSongFromQueueOrPlaylist = (songIdToRemove, type) => {
@@ -174,7 +189,7 @@ class QuppListPage extends Component {
     let playlistContent = '';
     let playlistName = '';
     let queueContent = '';
-    // wonder if isEmpty would work below?
+    // wonder if isEmpty would work in if() below?
     if (this.state.playlist.hasOwnProperty('songs') && Object.keys(this.state.playlist.songs).length > 0){
       playlistContent = 
       Object
@@ -226,12 +241,14 @@ class QuppListPage extends Component {
     return (
         
         <Fragment>
+          {/* <MyProvider value={{nowPlaying, upNext}}> */}
           <MyProvider value={{nowPlaying, upNext}}>
             <Header 
               songs={(this.state.playlist.songs === undefined) ? 0 : this.state.playlist.songs.length} 
+              queue={this.state.playlist.queue} 
               username={this.props.auth.user.name} 
               playlistname={playlistName} 
-              upNext="Walking home through the park - Aim"
+              playing={this.state.playing}
             />
           </MyProvider>
 
@@ -264,6 +281,7 @@ class QuppListPage extends Component {
                 <h1 className="text-yellow darken-1">queue</h1>
                 <div className={classnames('queue-list', {
                     'playing': this.state.playing
+                    // 'last-in-queue': (this.state.playlist.queue.length === 1)
                 })}>
                   {queueContent}
                 </div>
