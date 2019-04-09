@@ -20,9 +20,7 @@ class NowPlaying extends Component {
     render() {
         
         return (
-            <MyConsumer>
-                {context => <p className="m-0">Now playing: <span className="text-pink">{context.nowPlaying.name} - {context.nowPlaying.album} - {context.nowPlaying.artists.map(artist => <span key={artist.id}>{artist.name} </span>)}</span></p>}
-            </MyConsumer>
+            <p>{this.props.nowPlaying.name}</p>
         )
     }
 }

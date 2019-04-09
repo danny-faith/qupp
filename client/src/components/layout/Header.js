@@ -23,9 +23,8 @@ class Header extends Component {
         <Row>
           <Col s={6} offset="s3">
             <p className="m-0">Play ►</p>
-            {(!isEmpty(this.props.queue) && this.props.playing) && <NowPlaying />}
-            {/* {(this.props.queue.length > 1) && <UpNext />} */}
-            {upNext}
+            <NowPlaying nowPlaying={this.props.nowPlaying}/>
+            <UpNext upNext={this.props.upNext} />
           </Col>
         </Row>
       </div>

@@ -15,9 +15,7 @@ class UpNext extends Component {
     render() {
         // console.log('this.context: ', this.context);
         return (
-            <MyConsumer>
-                {context => <p className="m-0">Up next: <span className="text-green">{context.upNext.name} - {context.upNext.album} - {context.upNext.artists.map(artist => <span key={artist.id}>{artist.name} </span>)}</span></p>}
-            </MyConsumer>
+            <p>{this.props.upNext.name}</p>
         )
     }
   }

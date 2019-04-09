@@ -242,15 +242,16 @@ class QuppListPage extends Component {
         
         <Fragment>
           {/* <MyProvider value={{nowPlaying, upNext}}> */}
-          <MyProvider value={{nowPlaying, upNext}}>
-            <Header 
-              songs={(this.state.playlist.songs === undefined) ? 0 : this.state.playlist.songs.length} 
-              queue={this.state.playlist.queue} 
-              username={this.props.auth.user.name} 
-              playlistname={playlistName} 
-              playing={this.state.playing}
-            />
-          </MyProvider>
+          {/* Remove context and just use prop drilling */}
+          <Header 
+            songs={(this.state.playlist.songs === undefined) ? 0 : this.state.playlist.songs.length} 
+            queue={this.state.playlist.queue} 
+            username={this.props.auth.user.name} 
+            playlistname={playlistName} 
+            playing={this.state.playing}
+            nowPlaying={this.state.nowPlaying}
+            upNext={this.state.upNext}
+          />
 
           <div className="container">
             {playButton}
