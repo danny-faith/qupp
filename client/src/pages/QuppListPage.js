@@ -298,10 +298,7 @@ class QuppListPage extends Component {
                   )
                 }
                 <h1 className="text-yellow darken-1">queue</h1>
-                <div className={classnames('queue-list', {
-                    'playing': this.state.playing
-                    // 'last-in-queue': (this.state.playlist.queue.length === 1)
-                })}>
+                <div className="queue-list">
                   {queueContent}
                 </div>
               </Col>
