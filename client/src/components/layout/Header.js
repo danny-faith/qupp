@@ -23,8 +23,10 @@ class Header extends Component {
         <Row>
           <Col s={6} offset="s3">
             <p className="m-0">Play ►</p>
-            <NowPlaying nowPlaying={this.props.nowPlaying}/>
-            <UpNext upNext={this.props.upNext} />
+            {/* <NowPlaying nowPlaying={this.props.nowPlaying}/> */}
+            <NowPlaying nowPlayingName={this.props.nowPlayingName} nowPlayingAlbum={this.props.nowPlayingAlbum} nowPlayingArtists={this.props.nowPlayingArtists}/>
+            <UpNext upNextName={this.props.upNextName} upNextAlbum={this.props.upNextAlbum} upNextArtists={this.props.upNextArtists}/>
+            {/* <UpNext upNext={this.props.upNext} /> */}
           </Col>
         </Row>
       </div>

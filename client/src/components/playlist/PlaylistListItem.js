@@ -29,20 +29,17 @@ class PlaylistListItem extends Component {
 
         return (
             <Row>
-                <Col s={8}>
+                <Col s={7}>
                     <h5>{this.props.name}</h5>
                 </Col>
-                <Col s={4}>
+                <Col s={5}>
                     <Button onClick={this.handleDeleteClick} className="right red lighten-1" waves='light'><Icon>delete</Icon></Button>
                     <Button onClick={this.handleViewPlaylistClick} className="right" waves='light'><Icon>visibility</Icon></Button>
                     <Button className="right yellow darken-3" waves='light'><Icon>edit</Icon></Button>
+                    <Button onClick={this.handleCopyToClipboardClick} className="right blue" waves='light'><Icon>file_copy</Icon></Button>
                 </Col>
                 <Col s={8}>
                     <p>https://qupp.co.uk/playlist/{this.props.slug}</p>
-                </Col>
-                <Col s={4}>
-                    <Button onClick={this.handleCopyToClipboardClick} className="right blue" waves='light'><Icon>file_copy</Icon></Button>
-                    <Button className="right pink lighten-2" waves='light'><Icon>share</Icon></Button>
                 </Col>
             </Row>
         )

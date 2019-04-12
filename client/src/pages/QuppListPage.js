@@ -21,28 +21,23 @@ class QuppListPage extends Component {
       queue: [],
     },
     playing: false,
-    nowPlaying: {
-      // TODO: solve issue where if the below is missing then upNext and nowPlaying break (.map)
-      // name: '',
-      // artists: [],
-      // album: '',
-      // duration_ms: '' ,
-      // spotId: ''
-    },
-    upNext: {
-      // name: '',
-      // artists: [],
-      // album: '',
-      // duration_ms: '' ,
-      // spotId: ''
-    },
+    nowPlaying: {},
+    upNext: {},
     searchResults: []
   }
   componentDidMount = () => {
     // sync to users speicific playlist
     base.syncState(`playlists/${this.props.match.params.playlist_id}`, {
       context: this,
-      state: 'playlist'
+      state: 'playlist',
+      then() {
+        if (!isEmpty(this.state.playlist.queue)) {
+          this.populateNowPlaying(false);
+        }
+        if (this.state.playlist.queue.length > 1) {
+          this.populateUpNext();
+        }
+      }
     });
 
     this.props.clearPlaylists();
@@ -61,9 +56,14 @@ class QuppListPage extends Component {
         clearTimeout(this.timer);
       } else {
         // debugger;
-        this.populateNowPlaying(true);
+        // this.populateNowPlaying(true);
+        console.log('playSong');
+        
+        this.playSong();
     
         if (this.state.playlist.queue.length > 1) {
+          console.log('populateUpNext()');
+          debugger;
           this.populateUpNext();
         }
       }
@@ -71,11 +71,13 @@ class QuppListPage extends Component {
   }
   playSong = () => {
     const { duration_ms } = this.state.nowPlaying;
-
+    console.log('duration_ms: ', duration_ms);
+    
     this.timer = setTimeout(() => {
       console.log('song complete');
       this.playNextSong();
-    }, duration_ms / 100);
+    }, duration_ms / 10);
+    console.log(this.timer);
     
   }
   playNextSong = () => {
@@ -90,10 +92,16 @@ class QuppListPage extends Component {
           nowPlaying: {},
           upNext: {}
         });
-        return window.M.toast({html: 'No more songs to play, please queue some more', classes: 'red lighten-2'})
+        return window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'})
       }
       if (this.state.playlist.queue.length > 1) {
         this.populateUpNext();
+      } else {
+        console.log('upNext is empty');
+        
+        this.setState({
+          upNext: {}
+        });
       }
       if (this.state.playlist.queue.length > 0) {
         this.populateNowPlaying(true);
@@ -117,11 +125,16 @@ class QuppListPage extends Component {
     const playBool = (play) ? this.playSong : null;
     // this.playSong should not be in callback. Makes function less versatile
     this.setState({nowPlaying}, playBool);
+    // this.setState({nowPlaying});
   }
   populateUpNext = () => {
+    // debugger;
+    console.log('populateUpNext running');
+    
     let upNext = {...this.state.upNext};
     upNext = this.state.playlist.queue[1];
-    this.setState({upNext});
+    
+    this.setState({upNext},console.log('setState of upNext'));
   }
   addSearchResultsToState = (results) => {
     this.setState(() => ({
@@ -231,8 +244,9 @@ class QuppListPage extends Component {
     if (!isEmpty(this.props.playlists.playlist)) {
       playlistName = this.props.playlists.playlist[0].name;;
     }
-    const nowPlaying = this.state.nowPlaying;
-    const upNext = this.state.upNext;
+    // const nowPlaying = this.state.nowPlaying;
+    // const upNext = this.state.upNext;
+    // why not add checks to make sure nowPlaying and upNext both had sufficient values before passing them to context
     const playDisabled = (isEmpty(this.state.playlist.queue)) ? true : false;
     const playButton = (this.state.playing) 
       ? <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2 red">Stop ■</Button>
@@ -249,8 +263,12 @@ class QuppListPage extends Component {
             username={this.props.auth.user.name} 
             playlistname={playlistName} 
             playing={this.state.playing}
-            nowPlaying={this.state.nowPlaying}
-            upNext={this.state.upNext}
+            nowPlayingName={this.state.nowPlaying.name} 
+            nowPlayingAlbum={this.state.nowPlaying.album} 
+            nowPlayingArtists={this.state.nowPlaying.artists}
+            upNextName={this.state.upNext.name} 
+            upNextAlbum={this.state.upNext.album} 
+            upNextArtists={this.state.upNext.artists}
           />
 
           <div className="container">

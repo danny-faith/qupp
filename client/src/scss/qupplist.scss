@@ -4,14 +4,12 @@
   background-position: center;
 }
 .queue-list {
-  &.playing {
-    .row {
-      &:first-child {
-        background: #f66d9b !important;
-      }
-      &:nth-child(2) {
-        background-color: #38c172 !important;
-      }
+  .row {
+    &:first-child {
+      background: #f66d9b !important;
+    }
+    &:nth-child(2) {
+      background-color: #38c172 !important;
     }
   }
 }

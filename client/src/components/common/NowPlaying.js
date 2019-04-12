@@ -1,33 +1,15 @@
-import React, { Component } from 'react'
-import { MyConsumer } from '../../context';
-import PropTypes from 'prop-types';
+import React from 'react';
 
-// {this.props.nowPlaying.name}
-// export default function NowPlaying() {
-//   return (
-//       <MyConsumer>
-        // {context => <h5>{context.name} - {context.album} - {context.artists.map(artist => <span key={artist}>{artist} </span>)}</h5>}
-//       </MyConsumer>
-//   )
-// }
-// {context => <p>{context.name} - {context.album} - {context.artists.map(artist => <span key={artist.id}>{artist.name} </span>)}</p>}
-
-class NowPlaying extends Component {
-    componentWillUpdate = (stuff) => {
-        // console.log(stuff);
-        
-    }
-    render() {
-        
-        return (
-            <p>{this.props.nowPlaying.name}</p>
-        )
-    }
+function NowPlaying(props) {    
+    return (
+        <p className="m-0">Now playing: <span className="text-pink">{props.nowPlayingName} - {props.nowPlayingAlbum} - {props.nowPlayingArtists.map(artist => <span key={artist.id}>{artist.name} </span>)}</span></p>
+    )
 }
 
-// NowPlaying.propTypes = {
-//     message: PropTypes.string,
-//     onClick: PropTypes.func
-//   };
+NowPlaying.defaultProps = {
+    nowPlayingName: '',
+    nowPlayingAlbum: '',
+    nowPlayingArtists: []
+}
 
 export default NowPlaying;
