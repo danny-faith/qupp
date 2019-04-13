@@ -44,41 +44,30 @@ class QuppListPage extends Component {
     this.props.getPlaylist(this.props.match.params.playlist_id);    
   }
   playClickHandler = () => {
-    // debugger;
-    console.log('playClickHandler');
     
     this.setState((prevState) => ({
       playing: !prevState.playing
     }), () => {
       if (this.state.playing === false) {
         // debugger;
-        
+        // If player has just be
         clearTimeout(this.timer);
       } else {
-        // debugger;
-        // this.populateNowPlaying(true);
-        console.log('playSong');
         
         this.playSong();
     
         if (this.state.playlist.queue.length > 1) {
-          console.log('populateUpNext()');
-          debugger;
           this.populateUpNext();
         }
       }
     });    
   }
   playSong = () => {
-    const { duration_ms } = this.state.nowPlaying;
-    console.log('duration_ms: ', duration_ms);
-    
+    const { duration_ms } = this.state.nowPlaying;    
     this.timer = setTimeout(() => {
       console.log('song complete');
       this.playNextSong();
-    }, duration_ms / 10);
-    console.log(this.timer);
-    
+    }, duration_ms / 10);  
   }
   playNextSong = () => {
     // Remove first song from queue
@@ -96,9 +85,7 @@ class QuppListPage extends Component {
       }
       if (this.state.playlist.queue.length > 1) {
         this.populateUpNext();
-      } else {
-        console.log('upNext is empty');
-        
+      } else {        
         this.setState({
           upNext: {}
         });
@@ -119,22 +106,16 @@ class QuppListPage extends Component {
     }
   }
   populateNowPlaying = (play) => {
-    // debugger;
     let nowPlaying = {...this.state.nowPlaying};
     nowPlaying = this.state.playlist.queue[0];
     const playBool = (play) ? this.playSong : null;
     // this.playSong should not be in callback. Makes function less versatile
     this.setState({nowPlaying}, playBool);
-    // this.setState({nowPlaying});
   }
-  populateUpNext = () => {
-    // debugger;
-    console.log('populateUpNext running');
-    
+  populateUpNext = () => {    
     let upNext = {...this.state.upNext};
     upNext = this.state.playlist.queue[1];
-    
-    this.setState({upNext},console.log('setState of upNext'));
+    this.setState({upNext});
   }
   addSearchResultsToState = (results) => {
     this.setState(() => ({
@@ -148,6 +129,7 @@ class QuppListPage extends Component {
     const errors = {};
     let playlist = {...this.state.playlist};
     
+    // Check to see if song being added to qupplist is already there
     if (type === 'songs' && !isEmpty(playlist.songs)) {
       Object.keys(playlist.songs).map(key => {
         if (playlist.songs[key].spotId === songPayload.spotId) {
@@ -163,18 +145,26 @@ class QuppListPage extends Component {
     // Firebase removes empty arrays
     // so if playlist.queue || playlist.songs exists, add to it
     // else(because Firebase removed it) create an empty array of either `song` or `queue` (type) then add to it
+
+    // if songPayload > 1 then we're adding all in qupplist to the queue
     if (songPayload.length > 1) {
-      // debugger;
-      // console.log('playlist[type]: ', playlist[type]);
-      if (isEmpty(playlist[type])) {
-        playlist[type] = [];
+      // if playlist.songs is empty due to Firebase then create empty array
+      if (isEmpty(playlist.songs)) {
+        playlist.songs = [];
       }
       const newQueue = [...songPayload, ...playlist[type]];
       playlist.queue = newQueue;
     } else {
+      // check where we're adding song to exists, if it doesn't then ...
       if (this.state.playlist.hasOwnProperty(type)) {
-        playlist[type].unshift(songPayload);
+        // if queue has more than one entry, add songPayload to second([1]) place in 
+        if (type === 'queue' & this.state.playlist.queue.length > 0) {
+          playlist.queue.splice(1, 0, songPayload);
+        } else {
+          playlist[type].unshift(songPayload);
+        }
       } else {
+        //  ... create empty array there then add song to it
         playlist[type] = [];
         playlist[type].unshift(songPayload);
       }
@@ -183,8 +173,12 @@ class QuppListPage extends Component {
     this.setState({
       playlist
     }, () => {
-      // TODO: if more than one song added loop through added songs. Else only Toast one song
-      window.M.toast({html: `${songPayload.name}, ${songPayload.album} added`, classes: 'green lighten-2'});
+      // if array then multple songs have been added to queue
+      if (Array.isArray(songPayload)) {
+        songPayload.map(item => window.M.toast({html: `${item.name}, ${item.album} added`, classes: 'green lighten-2'}));
+      } else {
+        window.M.toast({html: `${songPayload.name}, ${songPayload.album} added`, classes: 'green lighten-2'});
+      }
     });
 
   }
