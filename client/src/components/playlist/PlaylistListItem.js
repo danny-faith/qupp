@@ -8,7 +8,7 @@ import copyToClipboard from '../../utils/copyToClipboard';
 
 class PlaylistListItem extends Component {
     handleDeleteClick = () => { 
-        console.log(this.props);
+        // console.log(this.props);
         // console.log(this.state);
         
         this.props.deletePlaylist(this.props.id);
@@ -21,7 +21,7 @@ class PlaylistListItem extends Component {
             .catch(() => window.M.toast({html: `Error copy link, please try again`, classes: 'red lighten-2'}));
     }
     handleViewPlaylistClick = () => {
-        console.log(this.props);
+        // console.log(this.props);
         this.props.history.push(`/playlist/${this.props.id}`);
         // `/playlist/${this.props.id}/${this.props.name}`
     }

@@ -21,6 +21,7 @@ class QuppListPage extends Component {
       queue: [],
     },
     playing: false,
+    progress: 0,
     nowPlaying: {},
     upNext: {},
     searchResults: []
@@ -34,8 +35,10 @@ class QuppListPage extends Component {
         if (!isEmpty(this.state.playlist.queue)) {
           this.populateNowPlaying(false);
         }
-        if (this.state.playlist.queue.length > 1) {
-          this.populateUpNext();
+        if (this.state.playlist.hasOwnProperty('queue')) {
+          if (this.state.playlist.queue.length > 1) {
+            this.populateUpNext();
+          }
         }
       }
     });
@@ -50,8 +53,8 @@ class QuppListPage extends Component {
     }), () => {
       if (this.state.playing === false) {
         // debugger;
-        // If player has just be
-        clearTimeout(this.timer);
+        // If player has just been stopped, stop / clear timeout
+        clearInterval(this.progress);
       } else {
         
         this.playSong();
@@ -63,17 +66,26 @@ class QuppListPage extends Component {
     });    
   }
   playSong = () => {
-    const { duration_ms } = this.state.nowPlaying;    
-    this.timer = setTimeout(() => {
-      console.log('song complete');
-      this.playNextSong();
-    }, duration_ms / 10);  
+    const { duration_ms } = this.state.nowPlaying;
+    const duration_secs = duration_ms / 1000;
+
+    let secondsPassed = Math.round((duration_secs / 100)  * this.state.progress);
+    // to stop, just set secondsPassed back to 0
+    //  NOTE: not a great way of calucationg when a song is finished and percentage of song passed due to setInterval not being accurate (event loop)
+    this.progress = setInterval(() => {
+      const percent = Math.round((secondsPassed / duration_secs) * 100);
+      this.setState({progress: percent});
+      if (percent >= 100) {
+        clearInterval(this.progress);
+        this.playNextSong();
+      }
+      secondsPassed ++;
+    }, 1000);
+
   }
   playNextSong = () => {
     // Remove first song from queue
     const copyOfPlaylist = {...this.state.playlist};
-    // console.log(copyOfPlaylist);
-    // debugger;
     copyOfPlaylist.queue.shift();
     this.setState({playlist: copyOfPlaylist}, () => {
       if (this.state.playlist.queue.length === 0) {
@@ -152,7 +164,10 @@ class QuppListPage extends Component {
       if (isEmpty(playlist.songs)) {
         playlist.songs = [];
       }
-      const newQueue = [...songPayload, ...playlist[type]];
+      if (isEmpty(playlist.queue)) {
+        playlist.queue = [];
+      }
+      const newQueue = [...songPayload, ...playlist.queue];
       playlist.queue = newQueue;
     } else {
       // check where we're adding song to exists, if it doesn't then ...
@@ -250,19 +265,18 @@ class QuppListPage extends Component {
         
         <Fragment>
           {/* <MyProvider value={{nowPlaying, upNext}}> */}
-          {/* Remove context and just use prop drilling */}
+          {/* Remove context and just prop drill :( */}
           <Header 
             songs={(this.state.playlist.songs === undefined) ? 0 : this.state.playlist.songs.length} 
-            queue={this.state.playlist.queue} 
             username={this.props.auth.user.name} 
             playlistname={playlistName} 
-            playing={this.state.playing}
             nowPlayingName={this.state.nowPlaying.name} 
             nowPlayingAlbum={this.state.nowPlaying.album} 
             nowPlayingArtists={this.state.nowPlaying.artists}
             upNextName={this.state.upNext.name} 
             upNextAlbum={this.state.upNext.album} 
             upNextArtists={this.state.upNext.artists}
+            progress={this.state.progress}
           />
 
           <div className="container">
