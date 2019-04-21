@@ -92,11 +92,15 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
 
     // Check to see if slug already exists
     (async function doesSlugExist() {
-        
+        // BUG:
+        // When updating playlist name along with slug, slug already exists so is causing error
+        // Check to see if slug exists but if its with the same doc as the req.id then its ok
+        // Somewhere in findOne maybe, like search 
         let promise = new Promise((resolve, reject) => {
             Playlist.findOne({ slug: req.body.slug})
                 .then((playlist) => {                    
                     if (playlist) {
+                        // if you found slug but req.body.id === playlist.id then no error.slug
                         errors.slug = 'Slug already exists';
                         resolve(errors);
                     } else {
@@ -104,7 +108,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
                     }
                 }); 
         }).catch(err => console.log(err));
-
+        
         // Wait for promise to resvole or reject
         await promise;
 
@@ -112,19 +116,37 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
         if (!isEmpty(errors)) {
             return res.status(400).json(errors);
         } else {
-            // Check to see if we're editing the playlist
-            var newPlaylist = {
+            const playlistFields = {
                 user: req.user.id,
                 name: req.body.name,
                 slug: req.body.slug,
                 desc: (req.body.description) ? req.body.description : ''
             }
-            var playlist = new Playlist(newPlaylist);
-            playlist.save(function(err, playlistModel) {
-                if (err) {
-                    return res.status(500).send(err);
+
+            // Check to see if we're editing the playlist
+            Playlist.findOne({ _id: req.body.id })
+            .then(playlist => {
+                if (playlist) {
+                    // were updating a profile
+                    Playlist.findOneAndUpdate(
+                        { _id: req.body.id },
+                        { $set: playlistFields },
+                        { new: true }
+                    ).then(playlist => res.json(playlist))
+                    .catch(error => console.log('error: ', error));
+                } else {
+                    // were making a new profile
+                    const playlist = new Playlist(playlistFields);
+                    playlist.save(function(err, playlistModel) {
+                        if (err) {
+                            return res.status(500).send(err);
+                        }
+                        res.status(201).send(playlistModel);
+                    });
                 }
-                res.status(201).send(playlistModel);
+            })
+            .catch(err => {
+                res.status(500).json(err);
             });
         }
     })(); // IIFE    

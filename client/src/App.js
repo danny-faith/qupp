@@ -24,6 +24,7 @@ import './App.scss';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import QuppListPage from './pages/QuppListPage';
+import EditPlaylistPage from './pages/EditPlaylistPage';
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -70,6 +71,7 @@ class App extends Component {
                 <Route exact path="/playlists" component={ViewAllPlaylists} />
                 <Route exact path="/forgotten-password" component={ForgotPasswordPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
+                <Route exact path="/edit-playlist" component={EditPlaylistPage} />
                 <Switch>
                   {/* <Route component={Error404} /> */}
                 </Switch>

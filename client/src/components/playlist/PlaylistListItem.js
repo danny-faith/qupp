@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Button, Icon } from 'react-materialize';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { deletePlaylist } from '../../actions/playlistActions';
 import PropTypes from 'prop-types';
 import copyToClipboard from '../../utils/copyToClipboard';
@@ -21,7 +21,6 @@ class PlaylistListItem extends Component {
             .catch(() => window.M.toast({html: `Error copy link, please try again`, classes: 'red lighten-2'}));
     }
     handleViewPlaylistClick = () => {
-        // console.log(this.props);
         this.props.history.push(`/playlist/${this.props.id}`);
         // `/playlist/${this.props.id}/${this.props.name}`
     }
@@ -35,7 +34,7 @@ class PlaylistListItem extends Component {
                 <Col s={5}>
                     <Button onClick={this.handleDeleteClick} className="right red lighten-1" waves='light'><Icon>delete</Icon></Button>
                     <Button onClick={this.handleViewPlaylistClick} className="right" waves='light'><Icon>visibility</Icon></Button>
-                    <Button className="right yellow darken-3" waves='light'><Icon>edit</Icon></Button>
+                    <Link className="yellow darken-3 btn waves-effect waves-light right blue" to="/edit-playlist"><Icon>edit</Icon></Link>
                     <Button onClick={this.handleCopyToClipboardClick} className="right blue" waves='light'><Icon>file_copy</Icon></Button>
                 </Col>
                 <Col s={8}>
