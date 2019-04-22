@@ -92,19 +92,20 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
 
     // Check to see if slug already exists
     (async function doesSlugExist() {
-        // BUG:
-        // When updating playlist name along with slug, slug already exists so is causing error
-        // Check to see if slug exists but if its with the same doc as the req.id then its ok
-        // Somewhere in findOne maybe, like search 
+        // NOTE/TODO Why have I wrapped this in promise???
+        // Shouldn't I just perform all the below in the .then()
         let promise = new Promise((resolve, reject) => {
             Playlist.findOne({ slug: req.body.slug})
                 .then((playlist) => {                    
                     if (playlist) {
-                        // if you found slug but req.body.id === playlist.id then no error.slug
-                        errors.slug = 'Slug already exists';
-                        resolve(errors);
+                        if (playlist.id !== req.body.id) {
+                            errors.slug = 'Slug already exists';
+                            reject();
+                        } else {
+                            resolve();
+                        }
                     } else {
-                        reject('no playlist found with that slug');
+                        resolve('no playlist found with that slug');
                     }
                 }); 
         }).catch(err => console.log(err));
