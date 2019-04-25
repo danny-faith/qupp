@@ -8,9 +8,6 @@ import copyToClipboard from '../../utils/copyToClipboard';
 
 class PlaylistListItem extends Component {
     handleDeleteClick = () => { 
-        // console.log(this.props);
-        // console.log(this.state);
-        
         this.props.deletePlaylist(this.props.id);
     }
     handleCopyToClipboardClick = () => {
@@ -19,10 +16,6 @@ class PlaylistListItem extends Component {
         navigator.clipboard.readText()
             .then(() => window.M.toast({html: `Copied to clipboard`, classes: 'green lighten-2'}))
             .catch(() => window.M.toast({html: `Error copy link, please try again`, classes: 'red lighten-2'}));
-    }
-    handleViewPlaylistClick = () => {
-        this.props.history.push(`/playlist/${this.props.id}`);
-        // `/playlist/${this.props.id}/${this.props.name}`
     }
     render() {
 
@@ -33,8 +26,8 @@ class PlaylistListItem extends Component {
                 </Col>
                 <Col s={5}>
                     <Button onClick={this.handleDeleteClick} className="right red lighten-1" waves='light'><Icon>delete</Icon></Button>
-                    <Button onClick={this.handleViewPlaylistClick} className="right" waves='light'><Icon>visibility</Icon></Button>
-                    <Link className="yellow darken-3 btn waves-effect waves-light right blue" to="/edit-playlist"><Icon>edit</Icon></Link>
+                    <Link className="btn waves-effect waves-light right" to={`/playlist/${this.props.id}`}><Icon>visibility</Icon></Link>
+                    <Link className="yellow darken-3 btn waves-effect waves-light right" to={`/edit-playlist/${this.props.id}`}><Icon>edit</Icon></Link>
                     <Button onClick={this.handleCopyToClipboardClick} className="right blue" waves='light'><Icon>file_copy</Icon></Button>
                 </Col>
                 <Col s={8}>

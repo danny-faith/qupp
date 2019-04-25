@@ -1,22 +1,25 @@
 import React, { Component } from 'react';
 import { Row, Col, Button } from 'react-materialize';
-import { createPlaylist } from '../actions/playlistActions';
+import { createPlaylist } from '../../actions/playlistActions';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import TextFieldGroup from './common/TextFieldGroup';
+import TextFieldGroup from '../common/TextFieldGroup';
 
 class CreatePlaylist extends Component {
     state = {
-        name: '',
-        slug: '',
+        name: this.props.name,
+        slug: this.props.slug,
         errors: {}
     }
     onSubmit = (e) => {
         e.preventDefault();
         const newPlaylist = {
             name: this.state.name,
-            slug: this.state.slug
+            slug: this.state.slug,
+            id: this.props.id || ''
         }
+        console.log('newPlaylist: ', newPlaylist);
+        
         this.props.createPlaylist(newPlaylist);
     }
     onChange = (e) => {
@@ -38,28 +41,32 @@ class CreatePlaylist extends Component {
                     <h5>{this.props.title}</h5>
                     <form onSubmit={this.onSubmit}>
                         <TextFieldGroup
-								name="name"
-								type="text"
-								label="Name"
-								value={this.state.name}
-								onChange={this.onChange}
-								error={errors.name}
-              				/>
+                            name="name"
+                            type="text"
+                            label="Name"
+                            value={this.state.name}
+                            onChange={this.onChange}
+                            error={errors.name}
+              			/>
                         <TextFieldGroup
-								name="slug"
-								type="text"
-								label="Slug"
-								value={this.state.slug}
-								onChange={this.onChange}
-								error={errors.slug}
-                                info="Please supply an easy to read URL for your playlist. No spaces, special characters or uppercase. Use underscores for spaces. E.g. daniels_party_jan"
-              				/>
-                        <Button className="right">Create playlist</Button>
+                            name="slug"
+                            type="text"
+                            label="Slug"
+                            value={this.state.slug}
+                            onChange={this.onChange}
+                            error={errors.slug}
+                            info="Please supply an easy to read URL for your playlist. No spaces, special characters or uppercase. Use underscores for spaces. E.g. daniels_party_jan"
+              			/>
+                        <Button className="right">{this.props.buttonText}</Button>
                     </form>
                 </Col>
             </Row>
         )
     }
+}
+
+CreatePlaylist.defaultProps = {
+    buttonText: 'Create playlist'
 }
 
 CreatePlaylist.propTypes = {
@@ -73,4 +80,4 @@ const mapStateToProps = (state) => ({
 	errors: state.errors
 });
 
-export default connect(mapStateToProps, {createPlaylist })(CreatePlaylist);
+export default connect(mapStateToProps, { createPlaylist })(CreatePlaylist);

@@ -76,10 +76,10 @@ app.use('/api/playlists', playlistRouter);
 app.use('/authspotify', spotifyRouter);
 
 app.get('*', (req, res) => {
-    console.log('Catch all route');
+    // console.log('Catch all route');
     // res.json({stuff: 'HELLO WORLD'}); // comment
-    // res.sendFile(`${__dirname}/client/build.index.html`);
-    res.redirect('https://google.com');
+    res.sendFile(`${__dirname}/client/build/index.html`);
+    // res.redirect('https://google.com');
 });
 
 /* Routes END

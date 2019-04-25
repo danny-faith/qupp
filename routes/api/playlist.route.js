@@ -128,7 +128,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
             Playlist.findOne({ _id: req.body.id })
             .then(playlist => {
                 if (playlist) {
-                    // were updating a profile
+                    // updating a profile
                     Playlist.findOneAndUpdate(
                         { _id: req.body.id },
                         { $set: playlistFields },
@@ -136,7 +136,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
                     ).then(playlist => res.json(playlist))
                     .catch(error => console.log('error: ', error));
                 } else {
-                    // were making a new profile
+                    // making a new profile
                     const playlist = new Playlist(playlistFields);
                     playlist.save(function(err, playlistModel) {
                         if (err) {

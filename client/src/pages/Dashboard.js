@@ -4,11 +4,13 @@ import PropTypes from 'prop-types';
 // import { Link, withRouter } from 'react-router-dom';
 import PlaylistListItem from '../components/playlist/PlaylistListItem';
 import isEmpty from '../utils/isEmpty';
-import CreatePlaylist from '../components/CreatePlaylist';
+import CreatePlaylist from '../components/playlist/CreatePlaylist';
 import { getPlaylists, clearPlaylist } from '../actions/playlistActions';
 import Spinner from '../components/common/Spinner';
 
 class Dashboard extends Component {
+  // looks like I don't actually need state.data
+  // update componentWillReceiveProps setState to setState(nextProps.playlists)
   state = {
     data: []
   }

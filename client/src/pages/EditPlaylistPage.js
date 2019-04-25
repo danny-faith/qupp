@@ -1,59 +1,71 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-materialize';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import TextFieldGroup from '../components/common/TextFieldGroup';
+import CreatePlaylist from '../components/playlist/CreatePlaylist';
+import { getPlaylist } from '../actions/playlistActions';
+
 
 class EditPlaylist extends Component {
   componentDidMount = () => {
-    if (!this.props.auth.isAuthenticated) {
-        this.props.history.push('/login');
-    }
+    this.props.getPlaylist(this.props.match.params.playlist_id);    
+    
+    // this.props.clearPlaylist();
+    // this.props.getPlaylists(this.props.auth.user);
+  }
+  componentWillMount = () => {
+    
   }
   componentWillReceiveProps = (nextProps) => {
-      if (!nextProps.auth.isAuthenticated) {
-          this.props.history.push('/login');
-      }
-      if (nextProps.errors) {
-          this.setState({errors: nextProps.errors});
-      }
+    console.log('nextProps: ', nextProps);
+    // this.CreatePlaylistComp = (
+    //   <CreatePlaylist name={nextProps.playlist.playlist[0].name} slug="aslugdkvbsku" id="5c7a77d6e53a7f772b428faa" title="Edit playlist" buttonText="Edit playlist"/>
+    // );
+    // if (nextProps.playlist) {
+    //   this.setState(nextProps.playlist)
+    // }
   }
   render() {
+    // const loading = this.props.playlists.loading;
+    // const playlists = this.props.playlists.playlists;
+    
+    // let playlistContent;
+
+    // if (isEmpty(playlists) || loading) {
+    //   playlistContent = <Spinner />;
+    // } else {
+    //   playlistContent = playlists
+    //     .map(item => 
+    //       <PlaylistListItem 
+    //         key={item._id}
+    //         id={item._id}
+    //         name={item.name} 
+    //         slug={item.slug} 
+    //         shareLink={item.share_link}
+    //       />
+    //     );
+    // }
+    console.log(this.state || '');
     return (
       <div>
         <h1>Edit playlist</h1>
-        <Row>
-          <Col s={6} className="offset-s3">
-            <form noValidate onSubmit={this.onSubmit}>
-              <Row>
-                <Col s={12}>
-                  <TextFieldGroup
-                    placeholder="Email address"
-                    name="email"
-                    type="email"
-                    value={this.state.email}
-                    onChange={this.onChange}
-                    error={errors.email}
-                  />
-                  {errors.email && (<p className="red-text col no-margin">{errors.email}</p>)}
-                </Col>
-              </Row>
-            </form>
-          </Col>
-        </Row>
+        <CreatePlaylist name="stuff" slug="aslugdkvbsku" id="5c7a77d6e53a7f772b428faa" title="Edit playlist" buttonText="Edit playlist"/>
+        {/* {playlistContent} */}
       </div>
     )
   }
 }
+
+// Bring in the playlists state
+
 EditPlaylist.propTypes = {
-	auth: PropTypes.object.isRequired,
-	errors: PropTypes.object.isRequired,
+  getPlaylist: PropTypes.func.isRequired,
+	playlist: PropTypes.object,
+	auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
 	auth: state.auth,
-	errors: state.errors
+	playlist: state.playlist
 });
 
-export default connect(mapStateToProps)(withRouter(EditPlaylist));
+export default connect(mapStateToProps, { getPlaylist })(EditPlaylist);

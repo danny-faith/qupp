@@ -7,7 +7,8 @@ import {
     GET_PLAYLISTS,
     GET_ALL_PLAYLISTS,
     CLEAR_PLAYLISTS,
-    CLEAR_PLAYLIST
+    CLEAR_PLAYLIST,
+    EDIT_PLAYLIST
 } from './types';
 
 // Get all playlists by current user
