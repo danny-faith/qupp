@@ -10,7 +10,7 @@ import Spinner from '../components/common/Spinner';
 
 class Dashboard extends Component {
   // looks like I don't actually need state.data
-  // update componentWillReceiveProps setState to setState(nextProps.playlists)
+  // update componentWillReceiveProps setState
   state = {
     data: []
   }

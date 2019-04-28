@@ -89,7 +89,8 @@ router.get('/:_id', (req, res) => {
 //  @access Private
 router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     const { errors } = validatePlaylistInput(req.body);
-
+    console.log('req.body: ' ,req.body);
+    
     // Check to see if slug already exists
     (async function doesSlugExist() {
         // NOTE/TODO Why have I wrapped this in promise???
@@ -98,17 +99,22 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
             Playlist.findOne({ slug: req.body.slug})
                 .then((playlist) => {                    
                     if (playlist) {
+                        console.log('req.body.id: ', req.body.id);
+                        console.log('playlist.id: ', playlist.id);
                         if (playlist.id !== req.body.id) {
                             errors.slug = 'Slug already exists';
                             reject();
                         } else {
-                            resolve();
+                            console.log('Slug is owned by this playlist, so update playlist');
+                            resolve('Slug is owned by this playlist, so update playlist');
                         }
                     } else {
-                        resolve('no playlist found with that slug');
+                        console.log('no playlist found with that slug so create new playlist');
+                        resolve('no playlist found with that slug so create new playlist');
                     }
                 }); 
-        }).catch(err => console.log(err));
+                // throw Error('uh oh');
+        }).catch(err => console.log('err: ', err));
         
         // Wait for promise to resvole or reject
         await promise;
@@ -127,6 +133,8 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
             // Check to see if we're editing the playlist
             Playlist.findOne({ _id: req.body.id })
             .then(playlist => {
+                console.log('here?');
+                
                 if (playlist) {
                     // updating a profile
                     Playlist.findOneAndUpdate(
@@ -147,6 +155,8 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
                 }
             })
             .catch(err => {
+                console.log('here? 2');
+                
                 res.status(500).json(err);
             });
         }

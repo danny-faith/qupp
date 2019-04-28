@@ -15,10 +15,9 @@ class CreatePlaylist extends Component {
         e.preventDefault();
         const newPlaylist = {
             name: this.state.name,
-            slug: this.state.slug,
-            id: this.props.id || ''
+            slug: this.state.slug
         }
-        console.log('newPlaylist: ', newPlaylist);
+        newPlaylist.id = (this.props.id) ? this.props.id : null;
         
         this.props.createPlaylist(newPlaylist);
     }
