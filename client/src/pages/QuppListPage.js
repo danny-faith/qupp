@@ -93,7 +93,7 @@ class QuppListPage extends Component {
           nowPlaying: {},
           upNext: {}
         });
-        return window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'})
+        return window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'});
       }
       if (this.state.playlist.queue.length > 1) {
         this.populateUpNext();

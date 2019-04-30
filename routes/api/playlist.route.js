@@ -89,7 +89,6 @@ router.get('/:_id', (req, res) => {
 //  @access Private
 router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     const { errors } = validatePlaylistInput(req.body);
-    console.log('req.body: ' ,req.body);
     
     // Check to see if slug already exists
     (async function doesSlugExist() {
@@ -99,17 +98,13 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
             Playlist.findOne({ slug: req.body.slug})
                 .then((playlist) => {                    
                     if (playlist) {
-                        console.log('req.body.id: ', req.body.id);
-                        console.log('playlist.id: ', playlist.id);
                         if (playlist.id !== req.body.id) {
                             errors.slug = 'Slug already exists';
                             reject();
                         } else {
-                            console.log('Slug is owned by this playlist, so update playlist');
                             resolve('Slug is owned by this playlist, so update playlist');
                         }
                     } else {
-                        console.log('no playlist found with that slug so create new playlist');
                         resolve('no playlist found with that slug so create new playlist');
                     }
                 }); 
@@ -133,7 +128,6 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
             // Check to see if we're editing the playlist
             Playlist.findOne({ _id: req.body.id })
             .then(playlist => {
-                console.log('here?');
                 
                 if (playlist) {
                     // updating a profile
@@ -155,8 +149,6 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
                 }
             })
             .catch(err => {
-                console.log('here? 2');
-                
                 res.status(500).json(err);
             });
         }

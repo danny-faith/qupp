@@ -18,15 +18,12 @@ class CreatePlaylist extends Component {
             slug: this.state.slug
         }
         newPlaylist.id = (this.props.id) ? this.props.id : null;
-        
         this.props.createPlaylist(newPlaylist);
     }
     onChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
     }
     componentWillReceiveProps = (nextProps) => {
-        console.log('nextProps: ', nextProps);
-        
 		if (nextProps.errors) {
 			this.setState({errors: nextProps.errors});
 		}

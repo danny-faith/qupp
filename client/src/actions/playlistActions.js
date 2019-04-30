@@ -56,7 +56,8 @@ export const getPlaylist = (playlist_id) => (dispatch) => {
 export const createPlaylist = (payload) => (dispatch) => {
     axios.post('/api/playlists', payload)
         .then(res => {
-            dispatch(getPlaylists());            
+            dispatch(getPlaylists());
+            window.M.toast({html: (payload.id === null) ? 'Playlist created' : 'Playlist edited', classes: 'green lighten-2'})          
         })
         .catch(err => {
             dispatch({
