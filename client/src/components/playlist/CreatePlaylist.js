@@ -20,8 +20,13 @@ class CreatePlaylist extends Component {
         newPlaylist.id = (this.props.id) ? this.props.id : null;
         this.props.createPlaylist(newPlaylist);
     }
-    onChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value });
+    onChange = (e) => {        
+        const errors = this.state.errors;
+		errors[e.target.name] = '';
+		this.setState({
+			[e.target.name]: e.target.value,
+			errors
+		});
     }
     componentWillReceiveProps = (nextProps) => {
 		if (nextProps.errors) {

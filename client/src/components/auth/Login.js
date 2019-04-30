@@ -13,7 +13,12 @@ class Login extends Component {
     errors: {}
   }
   onChange = e => {
-    this.setState({[e.target.name]: e.target.value});
+		const errors = this.state.errors;
+		errors[e.target.name] = '';
+		this.setState({
+			[e.target.name]: e.target.value,
+			errors
+		});
   }
   onSubmit = e => {
     e.preventDefault();
