@@ -44,13 +44,13 @@ require('./config/passport')(passport);
 
 // need if statement around this to switch to look for the react build folder once in production
 if (NODE_ENV === "development") {
-    console.log('were in dev mode');
+    // console.log('were in dev mode');
     app.use( express.static( `${__dirname}/client/public` ) );
 } else if (NODE_ENV === "production") {
-    console.log('were in prod mode');
+    // console.log('were in prod mode');
     app.use( express.static( `${__dirname}/client/build` ) );
 }
-console.log('express static: ', `${__dirname}/client/build`);
+// console.log('express static: ', `${__dirname}/client/build`);
 
 
 // parse application/x-www-form-urlencoded

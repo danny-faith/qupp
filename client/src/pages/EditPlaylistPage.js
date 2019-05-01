@@ -8,32 +8,25 @@ import isEmpty from '../utils/isEmpty';
 class EditPlaylist extends Component {
 
   componentDidMount = () => {
-    // console.log(this.state);
-    // console.log(this.props.match.params.playlist_id);
-    
-    // this.props.clearPlaylist();
-    // this.props.getPlaylists(this.props.auth.user);
+    if (!this.props.auth.isAuthenticated) {
+        this.props.history.push('/login');
+    }
   }
   componentWillMount = () => {
-    this.props.getPlaylist(this.props.match.params.playlist_id);   
-    // console.log(this.state);
-
-    // debugger;
+    this.props.getPlaylist(this.props.match.params.playlist_id);
   }
   componentWillReceiveProps = (nextProps) => {
-      if (nextProps.playlist) {
-        this.setState(nextProps.playlist, () => {
-          // console.log(this.state);
-      })
+    if (!nextProps.auth.isAuthenticated) {
+        this.props.history.push('/login');
     }
-    // this.something = 'helloo';
+    if (nextProps.errors) {
+        this.setState({errors: nextProps.errors});
+    }
+    if (nextProps.playlist) {
+      this.setState(nextProps.playlist);
+    }
   }
   render() {
-    // const loading = this.props.playlists.loading;
-    // const playlists = this.props.playlists.playlists;
-    // this.something = <CreatePlaylist name="something" slug="aslugdkvbsku" />;
-    // let playlistContent;
-    // console.log(this.state);
     if(!isEmpty(this.state)) {
       this.PostPlaylistComp = <CreatePlaylist name={this.state.playlist[0].name} slug={this.state.playlist[0].slug} id={this.props.match.params.playlist_id} title="Edit playlist" buttonText="Edit playlist"/>
     }
