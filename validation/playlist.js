@@ -17,7 +17,7 @@ module.exports = function validateRegisterInput(data) {
         errors.name = 'Playlist name field is required';
     }
 
-    if (regex.test(data.slug) === true) {
+    if (regex.test(data.slug)) {
         errors.slug = 'Lowercase letters, numbers, _ and - only';
     }
 

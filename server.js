@@ -19,7 +19,12 @@ const {
   NODE_ENV
 } = process.env;
 
+// TODO
+// below looks the same as 
+// 'app.listen(process.env.PORT || 8080)'
 const PORT = pt || 8080;
+// so could remove all the extra rubbish way down(app.listen) and just have the (directly) above
+// 'app.listen(PORT)'
 
 const usersRouter = require('./routes/api/users.route');
 const songsRouter = require('./routes/api/songs.route');
@@ -30,6 +35,10 @@ const app = express();
 
 app.use(cors());
 app.use(require('cookie-parser')());
+
+// TODO
+// Dont think I need express-session as I never use sessions
+// when cleaning up try removing it
 app.use(require('express-session')({
     secret: 'keyboard cat',
     resave: true,
