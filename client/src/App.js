@@ -17,14 +17,14 @@ import Dashboard from './pages/Dashboard';
 import Landing from './components/Landing';
 import MyAccountPage from './pages/MyAccountPage';
 import ViewAllPlaylists from './pages/ViewAllPlaylists';
-import Error404 from './pages/Error404';
+// import Error404 from './pages/Error404';
 
 import './App.scss';
 
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
-import UpdatePasswordPage from './pages/UpdatePasswordPage';
 import QuppListPage from './pages/QuppListPage';
+import EditPlaylistPage from './pages/EditPlaylistPage';
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -71,6 +71,7 @@ class App extends Component {
                 <Route exact path="/playlists" component={ViewAllPlaylists} />
                 <Route exact path="/forgotten-password" component={ForgotPasswordPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
+                <Route exact path="/edit-playlist/:playlist_id" component={EditPlaylistPage} />
                 <Switch>
                   {/* <Route component={Error404} /> */}
                 </Switch>

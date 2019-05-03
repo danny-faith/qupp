@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import propTypes from 'prop-types';
-import { Row, Col, Input } from 'react-materialize';
+import { Input } from 'react-materialize';
 
 
 const TextFieldGroup = ({

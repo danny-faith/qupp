@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useEffect } from 'react';
+import React, { Component, Fragment } from 'react';
 import Dropzone from 'react-dropzone';
 import classNames from "classnames";
 import { Button } from 'react-materialize';

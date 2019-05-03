@@ -3,7 +3,9 @@ const isEmpty = require('./is-empty');
 
 module.exports = function validateRegisterInput(data) {
     let errors = {};
-
+    
+    // only allow lowercase alpha, underscore and hypen/dash
+    const regex = new RegExp('[^a-z0-9_-]');
     data.name = !isEmpty(data.name) ? data.name : '';
     data.slug = !isEmpty(data.slug) ? data.slug : '';
 
@@ -15,22 +17,14 @@ module.exports = function validateRegisterInput(data) {
         errors.name = 'Playlist name field is required';
     }
 
-    if (!Validator.isAlpha(data.slug)) {
-        errors.slug = 'Please do not use special characters';
-    }
-
-    if (!Validator.isLowercase(data.slug)) {
-        errors.slug = 'Please make sure slug is all lowercase';
-    }
-
-    if (!Validator.isLength(data.slug, { min: 2, max: 40 })) {
-        errors.slug = 'Playlist slug must be between 2 and 40 characters';
+    if (regex.test(data.slug)) {
+        errors.slug = 'Lowercase letters, numbers, _ and - only';
     }
 
     if (Validator.isEmpty(data.slug)) {
         errors.slug = 'Playlist slug field is required';
     }
-       
+  
     return {
         errors,
         isValid: isEmpty(errors)

@@ -13,6 +13,7 @@ export const GET_PLAYLISTS = 'GET_PLAYLISTS';
 export const GET_ALL_PLAYLISTS = 'GET_ALL_PLAYLISTS';
 export const CLEAR_PLAYLISTS = 'CLEAR_PLAYLISTS';
 export const CLEAR_PLAYLIST = 'CLEAR_PLAYLIST';
+export const EDIT_PLAYLIST = 'EDIT_PLAYLIST';
 
 // Type: Account
 export const SET_AVATAR_IMAGE = 'SET_AVATAR_IMAGE';

@@ -89,22 +89,28 @@ router.get('/:_id', (req, res) => {
 //  @access Private
 router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     const { errors } = validatePlaylistInput(req.body);
-
+    
     // Check to see if slug already exists
     (async function doesSlugExist() {
-        
+        // NOTE/TODO Why have I wrapped this in promise???
+        // Shouldn't I just perform all the below in the .then()
         let promise = new Promise((resolve, reject) => {
             Playlist.findOne({ slug: req.body.slug})
                 .then((playlist) => {                    
                     if (playlist) {
-                        errors.slug = 'Slug already exists';
-                        resolve(errors);
+                        if (playlist.id !== req.body.id) {
+                            errors.slug = 'Slug already exists';
+                            reject();
+                        } else {
+                            resolve('Slug is owned by this playlist, so update playlist');
+                        }
                     } else {
-                        reject('no playlist found with that slug');
+                        resolve('no playlist found with that slug so create new playlist');
                     }
                 }); 
-        }).catch(err => console.log(err));
-
+                // throw Error('uh oh');
+        }).catch(err => console.log('err: ', err));
+        
         // Wait for promise to resvole or reject
         await promise;
 
@@ -112,19 +118,38 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
         if (!isEmpty(errors)) {
             return res.status(400).json(errors);
         } else {
-            // Check to see if we're editing the playlist
-            var newPlaylist = {
+            const playlistFields = {
                 user: req.user.id,
                 name: req.body.name,
                 slug: req.body.slug,
                 desc: (req.body.description) ? req.body.description : ''
             }
-            var playlist = new Playlist(newPlaylist);
-            playlist.save(function(err, playlistModel) {
-                if (err) {
-                    return res.status(500).send(err);
+
+            // Check to see if we're editing the playlist
+            Playlist.findOne({ _id: req.body.id })
+            .then(playlist => {
+                
+                if (playlist) {
+                    // updating a profile
+                    Playlist.findOneAndUpdate(
+                        { _id: req.body.id },
+                        { $set: playlistFields },
+                        { new: true }
+                    ).then(playlist => res.json(playlist))
+                    .catch(error => console.log('error: ', error));
+                } else {
+                    // making a new profile
+                    const playlist = new Playlist(playlistFields);
+                    playlist.save(function(err, playlistModel) {
+                        if (err) {
+                            return res.status(500).send(err);
+                        }
+                        res.status(201).send(playlistModel);
+                    });
                 }
-                res.status(201).send(playlistModel);
+            })
+            .catch(err => {
+                res.status(500).json(err);
             });
         }
     })(); // IIFE    

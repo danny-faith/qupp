@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Button, Input } from 'react-materialize';
+import { Row, Col, Button } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextFieldGroup from '../common/TextFieldGroup';
@@ -13,7 +13,12 @@ class Login extends Component {
     errors: {}
   }
   onChange = e => {
-    this.setState({[e.target.name]: e.target.value});
+		const errors = this.state.errors;
+		errors[e.target.name] = '';
+		this.setState({
+			[e.target.name]: e.target.value,
+			errors
+		});
   }
   onSubmit = e => {
     e.preventDefault();
@@ -42,7 +47,7 @@ class Login extends Component {
 
     return (
       <Row>
-				<Col s={6} className="offset-s3">
+				<Col s={12} m={6} className="offset-m3">
 					<h2 className="center">Login</h2>
 					<form noValidate onSubmit={this.onSubmit}>
 						<Row>

@@ -7,7 +7,8 @@ import {
     GET_PLAYLISTS,
     GET_ALL_PLAYLISTS,
     CLEAR_PLAYLISTS,
-    CLEAR_PLAYLIST
+    CLEAR_PLAYLIST,
+    EDIT_PLAYLIST
 } from './types';
 
 // Get all playlists by current user
@@ -55,7 +56,8 @@ export const getPlaylist = (playlist_id) => (dispatch) => {
 export const createPlaylist = (payload) => (dispatch) => {
     axios.post('/api/playlists', payload)
         .then(res => {
-            dispatch(getPlaylists());            
+            dispatch(getPlaylists());
+            window.M.toast({html: (payload.id === null) ? 'Playlist created' : 'Playlist edited', classes: 'green lighten-2'})          
         })
         .catch(err => {
             dispatch({
