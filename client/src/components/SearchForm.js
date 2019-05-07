@@ -37,7 +37,7 @@ class SearchForm extends Component {
          * This is a terrible way to manage the access token and 
          * will not be in the final version of this project
          */
-        axios.get('/authspotify')
+        axios.get('/api/authspotify')
         .then((res) => {
             localStorage.setItem('SPOTIFY_ACCESS_TOKEN', res.data.access_token);
         }); 

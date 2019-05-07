@@ -82,7 +82,7 @@ app.use(function(req, res, next) {
 app.use('/api/users', usersRouter);
 app.use('/songs', songsRouter);
 app.use('/api/playlists', playlistRouter);
-app.use('/authspotify', spotifyRouter);
+app.use('/api/authspotify', spotifyRouter);
 
 app.get('*', (req, res) => {
     // console.log('Catch all route');
