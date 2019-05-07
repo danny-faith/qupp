@@ -39,6 +39,8 @@ class SearchForm extends Component {
          */
         axios.get('/api/authspotify')
         .then((res) => {
+            console.log('Do we get anything here" res: ', res);
+            
             localStorage.setItem('SPOTIFY_ACCESS_TOKEN', res.data.access_token);
         })
         .catch(err => console.log(err)); 
