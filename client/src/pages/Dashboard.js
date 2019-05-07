@@ -15,6 +15,7 @@ class Dashboard extends Component {
     data: []
   }
   componentDidMount = () => {
+    console.log('Branch: develop');
     
     this.props.clearPlaylist();
     this.props.getPlaylists(this.props.auth.user);
