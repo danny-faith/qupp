@@ -33,15 +33,15 @@ const spotifyAxios = axios.create({
  * and return the token in the res object methods
  */
 
-router.get('/', (req, res) => {
-    spotifyAxios.post()
-        .then((response) => {
-            res.status(200).json({'response.data': response.data, 'CLIENT_ID_SECRET_64' : CLIENT_ID_SECRET_64});
-        })
-        .catch((error) => {
-            res.status(500).json({'error data': error, 'CLIENT_ID_SECRET_64' : CLIENT_ID_SECRET_64});
-        }
-    );
-});
+// router.get('/', (req, res) => {
+//     spotifyAxios.post()
+//         .then((response) => {
+//             res.status(200).json({'response.data': response.data, 'CLIENT_ID_SECRET_64' : CLIENT_ID_SECRET_64});
+//         })
+//         .catch((error) => {
+//             res.status(500).json({'error data': error, 'CLIENT_ID_SECRET_64' : CLIENT_ID_SECRET_64});
+//         }
+//     );
+// });
 
 module.exports = router;
