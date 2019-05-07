@@ -42,7 +42,14 @@ export const getAllPlaylists = () => (dispatch) => {
 // Get specific playlist by playlist ID
 export const getPlaylist = (playlist_id) => (dispatch) => {  
     // dispatch(setPlaylistLoading());
-     
+    
+    axios.get('/api/authspotify')
+    .then(res => {
+        console.log('res:', res);
+        
+    })
+    .catch(err => console.log(err));
+
     axios.get(`/api/playlists/${playlist_id}`)
         .then(res =>
             dispatch({
