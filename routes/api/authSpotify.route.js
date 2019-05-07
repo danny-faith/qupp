@@ -39,7 +39,7 @@ router.get('/', (req, res) => {
             res.status(200).json({'response.data': response.data, 'CLIENT_ID_SECRET_64' : CLIENT_ID_SECRET_64});
         })
         .catch((error) => {
-            res.status(500).json(error);
+            res.status(500).json({'error data': error, 'CLIENT_ID_SECRET_64' : CLIENT_ID_SECRET_64});
         }
     );
 });
