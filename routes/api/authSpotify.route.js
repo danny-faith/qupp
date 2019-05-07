@@ -36,7 +36,7 @@ const spotifyAxios = axios.create({
 router.get('/', (req, res) => {
     spotifyAxios.post()
         .then((response) => {
-            res.status(200).json(response.data);
+            res.status(200).json({'response.data': response.data, 'CLIENT_ID_SECRET_64' : CLIENT_ID_SECRET_64});
         })
         .catch((error) => {
             res.status(500).json(error);
