@@ -32,15 +32,15 @@ const spotifyAxios = axios.create({
  */
 
 router.get('/', (req, res) => {
-    spotifyAxios.post()
-        .then((response) => {
-            res.status(200).json(response.data);
-            // res.status(200).json({'response.data': response.data, 'CLIENT_ID_SECRET_64' : CLIENT_ID_SECRET_64});
-        })
-        .catch((error) => {
-            res.status(500).json({'error data': error, 'CLIENT_ID_SECRET_64' : CLIENT_ID_SECRET_64});
-        }
-    );
+    res.send('Hello!!!');
+    // spotifyAxios.post()
+    //     .then((response) => {
+    //         res.status(200).json(response.data);
+    //     })
+    //     .catch((error) => {
+    //         res.status(500).json(error);
+    //     }
+    // );
 });
 
 module.exports = router;
