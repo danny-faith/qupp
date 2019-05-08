@@ -37,6 +37,10 @@ class SearchForm extends Component {
          * This is a terrible way to manage the access token and 
          * will not be in the final version of this project
          */
+        axios.get('/api/playlists/all')
+        .then(res => console.log('/api/playlists/all: ', res))
+        .catch(err => console.log(err));
+
         axios.get('/api/authspotify')
         .then((res) => {
             console.log('Do we get anything here" res: ', res);
