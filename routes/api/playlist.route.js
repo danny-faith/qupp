@@ -2,6 +2,39 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const isEmpty = require('../../validation/is-empty');
+const Base64 = require('js-base64').Base64;
+const axios = require('axios');
+
+const {
+    CLIENT_ID,
+    CLIENT_SECRET
+} = process.env;
+
+const CLIENT_ID_SECRET_64 = Base64.encode(CLIENT_ID + ':' + CLIENT_SECRET);
+
+const spotifyAxios = axios.create({
+    baseURL: 'https://accounts.spotify.com/api/token',
+    timeout: 1000,
+    headers: {
+        'Authorization': 'Basic ' + CLIENT_ID_SECRET_64,
+        'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: {
+        grant_type: 'client_credentials'
+    }
+});
+
+router.get('/spotify', (req, res) => {
+    res.send('Hello!!!');
+    // spotifyAxios.post()
+    //     .then((response) => {
+    //         res.status(200).json(response.data);
+    //     })
+    //     .catch((error) => {
+    //         res.status(500).json(error);
+    //     }
+    // );
+});
 
 // Load playlist validation
 const validatePlaylistInput = require('../../validation/playlist');

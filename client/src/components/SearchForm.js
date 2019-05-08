@@ -1,28 +1,8 @@
 import React, { Component } from 'react';
 import { Row, Col, Input, Button } from 'react-materialize';
 import axios from 'axios';
-const Base64 = require('js-base64').Base64;
 // import PropTypes from 'prop-types';
 const regex = /[`']/g;
-
-const {
-    CLIENT_ID,
-    CLIENT_SECRET
-} = process.env;
-
-const CLIENT_ID_SECRET_64 = Base64.encode(CLIENT_ID + ':' + CLIENT_SECRET);
-
-const spotifyAxios = axios.create({
-    baseURL: 'https://accounts.spotify.com/api/token',
-    timeout: 1000,
-    headers: {
-        'Authorization': 'Basic ' + CLIENT_ID_SECRET_64,
-        'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    params: {
-        grant_type: 'client_credentials'
-    }
-});
 
 class SearchForm extends Component {
     /**
@@ -57,22 +37,11 @@ class SearchForm extends Component {
          * This is a terrible way to manage the access token and 
          * will not be in the final version of this project
          */
-
-         spotifyAxios.post()
-            .then((response) => {
-                console.log(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            }
-        );
-        console.log(CLIENT_ID_SECRET_64);
-        
         axios.get('/api/playlists/all')
         .then(res => console.log('/api/playlists/all: ', res))
         .catch(err => console.log(err));
 
-        axios.get('/api/authspotify')
+        axios.get('/api/playlists/spotify')
         .then((res) => {
             console.log('Do we get anything here" res: ', res);
             

@@ -14,7 +14,18 @@ const CLIENT_ID_SECRET_64 = Base64.encode(CLIENT_ID + ':' + CLIENT_SECRET);
  * Create spotify axios instance
  */
 
+ // ********
+ // ********
+ // ********
+ // ********
+ // ********
 //  TODO move this to the front end for testing
+// ********
+// ********
+// ********
+// ********
+// ********
+
 const spotifyAxios = axios.create({
     baseURL: 'https://accounts.spotify.com/api/token',
     timeout: 1000,
