@@ -27,7 +27,6 @@ const PORT = pt || 8080;
 // 'app.listen(PORT)'
 
 const usersRouter = require('./routes/api/users.route');
-const songsRouter = require('./routes/api/songs.route');
 const playlistRouter = require('./routes/api/playlist.route');
 const spotifyRouter = require('./routes/api/authSpotify.route');
 
@@ -80,7 +79,6 @@ app.use(function(req, res, next) {
  *****************************************/
 
 app.use('/api/users', usersRouter);
-app.use('/songs', songsRouter);
 app.use('/api/playlists', playlistRouter);
 app.use('/api/authspotify', spotifyRouter);
 
