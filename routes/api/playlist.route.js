@@ -2,39 +2,6 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const isEmpty = require('../../validation/is-empty');
-const Base64 = require('js-base64').Base64;
-const axios = require('axios');
-
-const {
-    CLIENT_ID,
-    CLIENT_SECRET
-} = process.env;
-
-const CLIENT_ID_SECRET_64 = Base64.encode(CLIENT_ID + ':' + CLIENT_SECRET);
-
-const spotifyAxios = axios.create({
-    baseURL: 'https://accounts.spotify.com/api/token',
-    timeout: 1000,
-    headers: {
-        'Authorization': 'Basic ' + CLIENT_ID_SECRET_64,
-        'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    params: {
-        grant_type: 'client_credentials'
-    }
-});
-
-router.get('/spotify', (req, res) => {
-    res.send('Hello!!!');
-    // spotifyAxios.post()
-    //     .then((response) => {
-    //         res.status(200).json(response.data);
-    //     })
-    //     .catch((error) => {
-    //         res.status(500).json(error);
-    //     }
-    // );
-});
 
 // Load playlist validation
 const validatePlaylistInput = require('../../validation/playlist');
@@ -52,7 +19,7 @@ router.get('/all', (req, res) => {
         .sort({ createdAt: 'desc' })
         .then(playlists => res.json(playlists))
         .catch(() => {
-            errors.playlists = 'No playlists found /all';
+            errors.playlists = 'No playlists found';
             return res.status(404).json(errors);
         });
 });
@@ -69,7 +36,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         .sort({ createdAt: 'desc' })
         .then(playlists => res.json(playlists))
         .catch(() => {
-            errors.playlists = 'No playlists found /';
+            errors.playlists = 'No playlists found';
             return res.status(404).json(errors);
         });
 });
@@ -83,7 +50,7 @@ router.get('/user/:user_id', (req, res) => {
     Playlist.find({ user: req.params.user_id })
         .then(playlists => res.json(playlists))
         .catch(() => {
-            errors.playlists = 'No playlists found /user/:user_id';
+            errors.playlists = 'No playlists found';
             return res.status(404).json(errors);
         });
 });
@@ -112,7 +79,7 @@ router.get('/:_id', (req, res) => {
     Playlist.find({ _id: req.params._id })
         .then(playlist => res.json(playlist))
         .catch(() => {
-            errors.playlist = 'No playlists found /:_id';
+            errors.playlist = 'No playlists found';
             return res.status(404).json(errors);
         });
 });
