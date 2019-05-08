@@ -29,9 +29,7 @@ const spotifyAxios = axios.create({
  * Request token from Spotify API using above axios instance
  * and return the token in the res object methods
  */
-
 router.get('/', (req, res) => {
-    // res.send('Hello!!! from /api/authspotify');
     spotifyAxios.post()
         .then((response) => {
             res.status(200).json(response.data);
