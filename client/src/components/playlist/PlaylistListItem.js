@@ -31,7 +31,7 @@ class PlaylistListItem extends Component {
                     <Button onClick={this.handleCopyToClipboardClick} className="right blue" waves='light'><Icon>file_copy</Icon></Button>
                 </Col>
                 <Col s={8}>
-                    <p>https://qupp.co.uk/playlist/{this.props.slug}</p>
+                    <p>https://qupp.2112staging.com/playlist/{this.props.slug}</p>
                 </Col>
             </Row>
         )
