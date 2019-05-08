@@ -11,7 +11,7 @@ class PlaylistListItem extends Component {
         this.props.deletePlaylist(this.props.id);
     }
     handleCopyToClipboardClick = () => {
-        const share_link = `https://qupp.co.uk/playlist/${this.props.slug}`;
+        const share_link = `https://qupp.2112staging.com/playlist/${this.props.slug}`;
         copyToClipboard(share_link);
         navigator.clipboard.readText()
             .then(() => window.M.toast({html: `Copied to clipboard`, classes: 'green lighten-2'}))
