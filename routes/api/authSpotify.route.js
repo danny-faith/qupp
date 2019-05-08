@@ -31,15 +31,15 @@ const spotifyAxios = axios.create({
  */
 
 router.get('/', (req, res) => {
-    res.send('Hello!!! from /api/authspotify');
-    // spotifyAxios.post()
-    //     .then((response) => {
-    //         res.status(200).json(response.data);
-    //     })
-    //     .catch((error) => {
-    //         res.status(500).json(error);
-    //     }
-    // );
+    // res.send('Hello!!! from /api/authspotify');
+    spotifyAxios.post()
+        .then((response) => {
+            res.status(200).json(response.data);
+        })
+        .catch((error) => {
+            res.status(500).json(error);
+        }
+    );
 });
 
 module.exports = router;
