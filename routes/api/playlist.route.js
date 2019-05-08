@@ -52,7 +52,7 @@ router.get('/all', (req, res) => {
         .sort({ createdAt: 'desc' })
         .then(playlists => res.json(playlists))
         .catch(() => {
-            errors.playlists = 'No playlists found';
+            errors.playlists = 'No playlists found /all';
             return res.status(404).json(errors);
         });
 });
@@ -69,7 +69,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         .sort({ createdAt: 'desc' })
         .then(playlists => res.json(playlists))
         .catch(() => {
-            errors.playlists = 'No playlists found';
+            errors.playlists = 'No playlists found /';
             return res.status(404).json(errors);
         });
 });
@@ -83,7 +83,7 @@ router.get('/user/:user_id', (req, res) => {
     Playlist.find({ user: req.params.user_id })
         .then(playlists => res.json(playlists))
         .catch(() => {
-            errors.playlists = 'No playlists found';
+            errors.playlists = 'No playlists found /user/:user_id';
             return res.status(404).json(errors);
         });
 });
@@ -112,7 +112,7 @@ router.get('/:_id', (req, res) => {
     Playlist.find({ _id: req.params._id })
         .then(playlist => res.json(playlist))
         .catch(() => {
-            errors.playlist = 'No playlists found';
+            errors.playlist = 'No playlists found /:_id';
             return res.status(404).json(errors);
         });
 });
