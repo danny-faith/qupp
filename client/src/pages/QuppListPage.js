@@ -46,6 +46,10 @@ class QuppListPage extends Component {
     this.props.clearPlaylists();
     this.props.getPlaylist(this.props.match.params.playlist_id);    
   }
+  componentWillUnmount = () => {
+    // prevent memeory leak from setInterval()
+    clearInterval(this.progress);
+  }
   playClickHandler = () => {
     
     this.setState((prevState) => ({
