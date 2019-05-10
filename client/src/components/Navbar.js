@@ -64,10 +64,10 @@ class Navbar extends Component {
         const authLinks = (
             <ul id="nav-mobile" className="right hide-on-med-and-down">
                 <li>
-                    <a href="#" onClick={this.onLogoutClick}>Logout</a>
+                    <a href="!#" onClick={this.onLogoutClick}>Logout</a>
                 </li>
                 <li className="avatar">
-                    <a ref={this.userRef} data-target="dropdown1" className="dropdown-trigger">
+                    <a href="!#" ref={this.userRef} data-target="dropdown1" className="dropdown-trigger">
                         <div className="avatar" style={{ backgroundImage: `url(${user.avatar})`}}>
                         </div>
                         {user.username}
@@ -76,7 +76,7 @@ class Navbar extends Component {
                         <li><Link to="/dashboard">Dashboard</Link></li>
                         <li><Link to="/my-account">Account</Link></li>
                         <li className="divider"></li>
-                        <li><a href="#" onClick={this.onLogoutClick}>Logout</a></li>
+                        <li><a href="!#" onClick={this.onLogoutClick}>Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -95,7 +95,7 @@ class Navbar extends Component {
                 <Link to="/" className="brand-logo">
                     <img width="90" alt="qupp logo" src={logo} />
                 </Link>
-                <a href="#" data-target="sidenav" className="sidenav-trigger">
+                <a href="!#" data-target="sidenav" className="sidenav-trigger">
                     <i className="material-icons">menu</i>
                 </a>
                 {isAuthenticated ? authLinks : guestLinks}

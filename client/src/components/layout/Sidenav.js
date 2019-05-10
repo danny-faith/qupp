@@ -40,7 +40,7 @@ class Sidenav extends Component {
           <li><Link to="/dashboard">Dashboard</Link></li>
           <li><Link to="/my-account">Account</Link></li>
           <li className="divider"></li>
-          <li><a href="#" onClick={this.onLogoutClick}>Logout</a></li>
+          <li><button onClick={this.onLogoutClick}>Logout</button></li>
         </ul>
     );
 

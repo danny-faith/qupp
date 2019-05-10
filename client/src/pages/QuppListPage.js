@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import base from '../base';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import { getPlaylist, clearPlaylists } from '../actions/playlistActions';
 import isEmpty from '../utils/isEmpty';
 
@@ -11,8 +10,6 @@ import { Row, Col, Button } from 'react-materialize';
 import SearchForm from '../components/SearchForm';
 import Header from '../components/layout/Header';
 import Song from '../components/playlist/Song';
-
-import { MyProvider } from '../context';
 
 class QuppListPage extends Component {
   state = { 
@@ -147,7 +144,7 @@ class QuppListPage extends Component {
     
     // Check to see if song being added to qupplist is already there
     if (type === 'songs' && !isEmpty(playlist.songs)) {
-      Object.keys(playlist.songs).map(key => {
+      Object.keys(playlist.songs).forEach(key => {
         if (playlist.songs[key].spotId === songPayload.spotId) {
           errors.addSong = `"${songPayload.name}" is a duplicate, cannot add`;
         }
@@ -192,6 +189,12 @@ class QuppListPage extends Component {
     this.setState({
       playlist
     }, () => {
+      if (type === 'queue') {
+        this.populateNowPlaying(false);
+        if (this.state.playlist.queue.length > 1) {
+          this.populateUpNext();
+        }
+      }
       // if array then multple songs have been added to queue
       if (Array.isArray(songPayload)) {
         songPayload.map(item => window.M.toast({html: `${item.name}, ${item.album} added`, classes: 'green lighten-2'}));
@@ -209,13 +212,22 @@ class QuppListPage extends Component {
     
     this.setState({
       playlist: copyOfPlaylist
+    }, () => {
+      const copyOfState = {...this.state};
+      if (this.state.playlist.queue.length < 2) {
+        copyOfState.upNext = {};
+        if (isEmpty(this.state.playlist.queue)) {
+          copyOfState.nowPlaying = {};
+        }
+        this.setState(copyOfState);
+      }
     });
   }
   render() {
     let playlistContent = '';
     let playlistName = '';
     let queueContent = '';
-    // wonder if isEmpty would work in if() below?
+    // TODO wonder if isEmpty would work in if() below?
     if (this.state.playlist.hasOwnProperty('songs') && Object.keys(this.state.playlist.songs).length > 0){
       playlistContent = 
       Object

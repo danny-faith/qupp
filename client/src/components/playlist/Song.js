@@ -4,9 +4,9 @@ import { Row, Col, Button } from 'react-materialize';
 export default class Song extends Component {
   componentDidMount = () => {
       const elems = document.querySelectorAll('.fixed-action-btn');
-      const instances = window.M.FloatingActionButton.init(elems, {
+      window.M.FloatingActionButton.init(elems, {
         direction: 'left'
-      });      
+      });
   }
   handleAddSong = (e) => {    
     const { data } = this.props;
@@ -64,7 +64,7 @@ export default class Song extends Component {
     return (
       <Row className={classes}>
           <Col s={2} className="">
-            <img src={data.image} className="w-full block" />
+            <img alt="Song cover" src={data.image} className="w-full block" />
           </Col>
           <Col s={8} className="pl-0">
             <p className="my-0">{data.name}, {data.album}, Artists: 

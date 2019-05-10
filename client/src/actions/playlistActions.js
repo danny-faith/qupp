@@ -2,13 +2,11 @@ import axios from 'axios';
 import { 
     GET_ERRORS, 
     PLAYLISTS_LOADING, 
-    PLAYLIST_LOADING, 
     GET_PLAYLIST, 
     GET_PLAYLISTS,
     GET_ALL_PLAYLISTS,
     CLEAR_PLAYLISTS,
-    CLEAR_PLAYLIST,
-    EDIT_PLAYLIST
+    CLEAR_PLAYLIST
 } from './types';
 
 // Get all playlists by current user
