@@ -22,18 +22,7 @@ export default class Song extends Component {
     this.props.addSongToQueueOrPlaylist(songToAdd, e.currentTarget.dataset.type);
   }
   handleRemoveSong = (e) => {
-    // const copyOfPlaylist = {...this.state};
-    // console.log(copyOfPlaylist);
     this.props.removeSongFromQueueOrPlaylist(this.props.data.spotId, e.currentTarget.dataset.type);
-    
-    // const index = copyOfPlaylist.qupplist.find(x => x.spotId === this.props.data.spotId);
-    // console.log('index: ', index);
-    
-    // copyOfPlaylist.qupplist[this.props.data.spotId] = null;
-
-    // this.setState({
-    //   playlist: copyOfPlaylist
-    // });
   }
   render () {
     let songButtons = '';

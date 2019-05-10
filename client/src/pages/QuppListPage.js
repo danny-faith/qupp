@@ -122,12 +122,10 @@ class QuppListPage extends Component {
     });
   }
   componentWillUpdate = (stuff) => {
-    // FOR TESTING. CHECK HOW MANY TIMES `componentWillUpdate` runs
+    // TODO - FOR TESTING. CHECK HOW MANY TIMES `componentWillUpdate` runs
     // console.log('componentWillUpdate: ', stuff);
     // console.log(this.state);
     if (this.state.playing && this.state.playlist.queue.length === 0) {
-      // console.log('were playing but theres nothing in the queue?');
-      
       this.setState({playing: false});
     }
   }
