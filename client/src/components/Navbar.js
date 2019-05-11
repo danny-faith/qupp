@@ -60,7 +60,8 @@ class Navbar extends Component {
     // }
     render() {
         const { isAuthenticated, user } = this.props.auth;
-
+            console.log('user: ', user.avatar);
+            
         const authLinks = (
             <ul id="nav-mobile" className="right hide-on-med-and-down">
                 <li>

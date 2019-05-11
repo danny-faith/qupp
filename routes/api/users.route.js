@@ -329,7 +329,7 @@ router.post('/forgot-password-reset', (req, res) => {
 //  @access Private
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'client/public/img/uploads/avatars/')
+      cb(null, `client/${(process.env === 'production' ? 'build' : 'public')}/uploads/avatars/`)
     },
     filename: function (req, file, cb) {
       cb(null, `${new Date().toISOString()}-${file.originalname}`)
@@ -376,7 +376,7 @@ router.post(
             User.findById(req.user.id)
                 .then((user) => {
                     console.log('daniel req', req.file);
-                    user.avatar = `img/uploads/avatars/${req.file.filename}`;
+                    user.avatar = `uploads/avatars/${req.file.filename}`;
                     console.log('saving Avatar to user');
                     
                     user.save()
