@@ -37,9 +37,10 @@ export const getAllPlaylists = () => (dispatch) => {
         .catch(err => console.log(err));
 }
 
-// Get specific playlist by playlist ID
-export const getPlaylist = (playlist_id) => (dispatch) => {  
-    axios.get(`/api/playlists/${playlist_id}`)
+// Get specific playlist by playlist slug
+export const getPlaylist = (slug) => (dispatch) => {
+    
+    axios.get(`/api/playlists/${slug}`)
         .then(res =>
             dispatch({
                 type: GET_PLAYLIST,
