@@ -17,7 +17,7 @@ import Dashboard from './pages/Dashboard';
 import Landing from './components/Landing';
 import MyAccountPage from './pages/MyAccountPage';
 import ViewAllPlaylists from './pages/ViewAllPlaylists';
-// import Error404 from './pages/Error404';
+import Error404 from './pages/Error404';
 
 import './App.scss';
 
@@ -37,10 +37,8 @@ if (localStorage.jwtToken) {
 
   // Check for expired token
   const currentTime = Date.now() / 1000;
-
-  if (decoded.exp < currentTime) {
-    console.log('log the user out');
-    
+  
+  if (decoded.exp < currentTime) {    
     // Logout the user
     store.dispatch(logoutUser());
     // TODO: Clear current profile
@@ -58,7 +56,6 @@ class App extends Component {
             <Navbar />
             <Sidenav />
               <Route exact path="/" component={Landing} />
-              {/* <Route exact path="/playlist/:playlist_id" component={QuppListPage} /> */}
               <Route exact path="/playlist/:slug" component={QuppListPage} />
               <div className="container">
                 <Route exact path="/register" component={Register} />
@@ -73,9 +70,7 @@ class App extends Component {
                 <Route exact path="/forgotten-password" component={ForgotPasswordPage} />
                 <Route exact path="/reset-password" component={ResetPasswordPage} />
                 <Route exact path="/edit-playlist/:playlist_id" component={EditPlaylistPage} />
-                <Switch>
-                  {/* <Route component={Error404} /> */}
-                </Switch>
+                <Route exact path="not-found" component={Error404} />
               </div>
             {/* <Footer /> */}
           </div>

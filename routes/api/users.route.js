@@ -362,7 +362,7 @@ router.post(
         
         avatarUpload(req, res, (err) => {
             if (err instanceof multer.MulterError) {
-                // console.log('error', err);
+                console.log('error', err);
                 
                 errors.filesize = err.message;
                 return res.status(413).json(errors);
@@ -375,7 +375,7 @@ router.post(
             // console.log('req.user', req.user);
             User.findById(req.user.id)
                 .then((user) => {
-                    // console.log(user);
+                    console.log('daniel req', req.file);
                     user.avatar = `img/uploads/avatars/${req.file.filename}`;
                     console.log('saving Avatar to user');
                     

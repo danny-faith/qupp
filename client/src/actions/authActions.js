@@ -48,11 +48,12 @@ export const setCurrentUser = (decoded) => {
 
 // Upload avatar image
 export const uploadAvatarImage = (formData) => (dispatch) => {  
-    // console.log('uploadAvatarImage');
+    console.log('uploadAvatarImage');
+    console.log('formData', formData);
     
     axios.post('/api/users/avatar', formData)
         .then(res => {
-            // console.log('uploadAvatarImage: ', res.data);
+            console.log('uploadAvatarImage: ', res.data);
             window.M.toast({html: `Avatar successfully uploaded`, classes: 'green lighten-2'});
             
             dispatch(resetJWT(res.data));
