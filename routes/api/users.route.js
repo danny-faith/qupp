@@ -329,7 +329,7 @@ router.post('/forgot-password-reset', (req, res) => {
 //  @access Private
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, `client/${(process.env === 'production' ? 'build' : 'public')}/uploads/avatars/`)
+      cb(null, `client/${(process.env.ENV === 'http://localhost:3002' ? 'public' : 'build')}/uploads/avatars/`)
     },
     filename: function (req, file, cb) {
       cb(null, `${new Date().toISOString()}-${file.originalname}`)
