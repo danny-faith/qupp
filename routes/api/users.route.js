@@ -329,10 +329,11 @@ router.post('/forgot-password-reset', (req, res) => {
 //  @access Private
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, `client/${(process.env.ENV === 'http://localhost:3002' ? 'public' : 'build')}/uploads/avatars/`)
+        cb(null, `client/${(process.env.ENV === 'http://localhost:3002' ? 'public' : 'build')}/uploads/avatars/`)
     },
     filename: function (req, file, cb) {
-      cb(null, `${new Date().toISOString()}-${file.originalname}`)
+        const regex = / /gi;
+        cb(null, `${new Date().toISOString()}-${file.originalname.replace(regex, '-')}`)
     }
 });
 const fileFilter = (req, file, cb) => {
@@ -356,13 +357,12 @@ router.post(
     '/avatar', 
     passport.authenticate('jwt', { session: false }), 
     (req, res) => {
-        console.log('uploading avatar');
+        // console.log('uploading avatar');
         
         const errors = {};
         
         avatarUpload(req, res, (err) => {
             if (err instanceof multer.MulterError) {
-                console.log('error', err);
                 
                 errors.filesize = err.message;
                 return res.status(413).json(errors);
@@ -375,9 +375,7 @@ router.post(
             // console.log('req.user', req.user);
             User.findById(req.user.id)
                 .then((user) => {
-                    console.log('daniel req', req.file);
                     user.avatar = `uploads/avatars/${req.file.filename}`;
-                    console.log('saving Avatar to user');
                     
                     user.save()
                         .then((user) => res.json(user))
