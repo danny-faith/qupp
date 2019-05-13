@@ -13,7 +13,7 @@ class EditPlaylist extends Component {
     }
   }
   componentWillMount = () => {
-    this.props.getPlaylist(this.props.match.params.playlist_id);
+    this.props.getPlaylist(this.props.match.params.slug);
   }
   componentWillReceiveProps = (nextProps) => {
     if (!nextProps.auth.isAuthenticated) {
@@ -27,8 +27,8 @@ class EditPlaylist extends Component {
     }
   }
   render() {
-    if(!isEmpty(this.state)) {
-      this.PostPlaylistComp = <CreatePlaylist name={this.state.playlist[0].name} slug={this.state.playlist[0].slug} id={this.props.match.params.playlist_id} title="Edit playlist" buttonText="Edit playlist"/>
+    if(!isEmpty(this.state)) {      
+      this.PostPlaylistComp = <CreatePlaylist name={this.state.playlist[0].name} slug={this.props.match.params.slug} id={this.state.playlist[0]._id} title="Edit playlist" buttonText="Edit playlist"/>
     }
 
     return (

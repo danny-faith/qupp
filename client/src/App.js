@@ -69,7 +69,7 @@ class App extends Component {
               <Route exact path="/playlists" component={ViewAllPlaylists} />
               <Route exact path="/forgotten-password" component={ForgotPasswordPage} />
               <Route exact path="/reset-password" component={ResetPasswordPage} />
-              <Route exact path="/edit-playlist/:playlist_id" component={EditPlaylistPage} />
+              <Route exact path="/edit-playlist/:slug" component={EditPlaylistPage} />
               <Route exact path="not-found" component={Error404} />
             </div>
           </div>

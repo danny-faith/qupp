@@ -35,7 +35,7 @@ class PlaylistListItem extends Component {
                 <Col s={5}>
                     <Button onClick={this.handleDeleteClick} className="right red lighten-1" waves='light'><Icon>delete</Icon></Button>
                     <Link className="btn waves-effect waves-light right" to={`/playlist/${this.props.slug}`}><Icon>visibility</Icon></Link>
-                    <Link className="yellow darken-3 btn waves-effect waves-light right" to={`/edit-playlist/${this.props.id}`}><Icon>edit</Icon></Link>
+                    <Link className="yellow darken-3 btn waves-effect waves-light right" to={`/edit-playlist/${this.props.slug}`}><Icon>edit</Icon></Link>
                     <Button onClick={this.handleCopyToClipboardClick} className="right blue" waves='light'><Icon>file_copy</Icon></Button>
                 </Col>
                 <Col s={8}>
