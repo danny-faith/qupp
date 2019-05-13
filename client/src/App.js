@@ -19,9 +19,9 @@ import Error404 from './pages/Error404';
 import './App.scss';
 
 import Landing from './pages/Landing';
-import MyAccountPage from './pages/MyAccount';
-import ForgotPasswordPage from './pages/ForgotPassword';
-import ResetPasswordPage from './pages/ResetPassword';
+import MyAccountPage from './pages/user/MyAccount';
+import ForgotPasswordPage from './pages/user/ForgotPassword';
+import ResetPasswordPage from './pages/user/ResetPassword';
 import QuppListPage from './pages/QuppList';
 import EditPlaylistPage from './pages/EditPlaylist';
 
