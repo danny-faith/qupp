@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Row, Col, Button } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import TextFieldGroup from '../common/TextFieldGroup';
+import TextFieldGroup from '../../components/common/TextFieldGroup';
 import { loginUser } from '../../actions/authActions';
 
 class Login extends Component {

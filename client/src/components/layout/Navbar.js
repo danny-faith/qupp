@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { logoutUser } from './../actions/authActions';
-import { clearPlaylists } from './../actions/playlistActions';
+import { logoutUser } from '../../actions/authActions';
+import { clearPlaylists } from '../../actions/playlistActions';
 import { withRouter } from 'react-router-dom';
 
-import logo from '../logo-v2.svg';
+import logo from '../../logo-v2.svg';
 
 class Navbar extends Component {
     userRef = React.createRef();
@@ -36,7 +36,7 @@ class Navbar extends Component {
         // console.log(nextProps);
         
         if (nextProps.auth.isAuthenticated) {
-            console.log('there are authenticated');
+            // console.log('there are authenticated');
             // this.setState({
             //     isAuthenticated2: true
             // });
@@ -60,7 +60,6 @@ class Navbar extends Component {
     // }
     render() {
         const { isAuthenticated, user } = this.props.auth;
-            console.log('user: ', user.avatar);
             
         const authLinks = (
             <ul id="nav-mobile" className="right hide-on-med-and-down">

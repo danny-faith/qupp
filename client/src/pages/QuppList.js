@@ -8,7 +8,7 @@ import isEmpty from '../utils/isEmpty';
 
 import { Row, Col, Button } from 'react-materialize';
 
-import SearchForm from '../components/SearchForm';
+import SearchForm from '../components/playlist/SearchForm';
 import Header from '../components/layout/Header';
 import Song from '../components/playlist/Song';
 
@@ -33,8 +33,8 @@ class QuppListPage extends Component {
   componentDidMount = () => {
     firebaseApp.initializedApp.auth().signInWithEmailAndPassword(REACT_APP_FIREBASE_EMAIL, REACT_APP_FIREBASE_PASSWORD).catch(function(error) {
         // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        console.log(`${error.code} ${error.message}`);
+        window.M.toast({html: `${error.code} ${error.message}`, classes: 'red lighten-2'})
     });
 
     // sync to users speicific playlist

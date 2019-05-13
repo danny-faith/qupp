@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import ForgotPassword from '../components/auth/ForgotPassword';
+import ForgotPassword from './auth/ForgotPassword';
 
 class ForgotPasswordPage extends Component {
   componentDidMount = () => {
