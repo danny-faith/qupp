@@ -99,7 +99,7 @@ router.get('/:slug', (req, res) => {
 });
 
 //  @route POST api/playlist
-//  @description Create playlist
+//  @description Create or edit playlist
 //  @access Private
 router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     const { errors } = validatePlaylistInput(req.body);

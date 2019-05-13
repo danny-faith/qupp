@@ -23,7 +23,7 @@ import MyAccountPage from './pages/user/MyAccount';
 import ForgotPasswordPage from './pages/user/ForgotPassword';
 import ResetPasswordPage from './pages/user/ResetPassword';
 import QuppListPage from './pages/QuppList';
-import EditPlaylistPage from './pages/EditPlaylist';
+import EditQupplistPage from './pages/EditQupplist';
 
 // Check for token
 // TODO - move inside componentWillMount to see if it stops flash of comp before it logs you out
@@ -69,7 +69,7 @@ class App extends Component {
               <Route exact path="/playlists" component={ViewAllPlaylists} />
               <Route exact path="/forgotten-password" component={ForgotPasswordPage} />
               <Route exact path="/reset-password" component={ResetPasswordPage} />
-              <Route exact path="/edit-playlist/:slug" component={EditPlaylistPage} />
+              <Route exact path="/edit-playlist/:slug" component={EditQupplistPage} />
               <Route exact path="not-found" component={Error404} />
             </div>
           </div>

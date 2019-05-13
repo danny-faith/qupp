@@ -53,8 +53,8 @@ class Dashboard extends Component {
     return (
       <div>
         <h1>Dashboard</h1>
-        <h2>Playlists</h2>
-        <CreatePlaylist title="Create a playlist"/>
+        <CreatePlaylist title="Create a qupplist"/>
+        <h2>qupplists</h2>
         {playlistContent}
       </div>
     )
