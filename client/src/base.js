@@ -4,17 +4,16 @@ import 'firebase/database';
 import 'firebase/auth';
 require('dotenv').config();
 
-// const {
-//     FIREBASE_API_KEY
-// } = process.env;
-
-// console.log('FIREBASE_API_KEY: ', FIREBASE_API_KEY);
+const {
+    REACT_APP_FIREBASE_API_KEY,
+    REACT_APP_FIREBASE_AUTH_DOMAIN,
+    REACT_APP_FIREBASE_DB_URL
+} = process.env;
 
 const firebaseApp = firebase.initializeApp({
-    // apiKey: FIREBASE_API_KEY,
-    apiKey: 'AIzaSyCIdDltj10KD8Tr6buAtmcmphzFT-BRQLI',
-    authDomain: "qupp-8353d.firebaseapp.com",
-    databaseURL: "https://qupp-8353d.firebaseio.com"
+    apiKey: REACT_APP_FIREBASE_API_KEY,
+    authDomain: REACT_APP_FIREBASE_AUTH_DOMAIN,
+    databaseURL: REACT_APP_FIREBASE_DB_URL
 });
 
 // firebaseApp.auth().signInWithEmailAndPassword('daniel.e.blythe@gmail.com', 'TrebbleAFSD77').catch(function(error) {
