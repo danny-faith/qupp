@@ -10,16 +10,25 @@ import logo from '../../logo-v2.svg';
 
 class Navbar extends Component {
     dropdownTriggerRef = React.createRef();
-
+    shouldDropdownInit() {
+        console.log('shouldDropdownInit()');
+        console.log(this.props.auth.isAuthenticated);
+        console.log(this.dropdownTriggerRef.current);
+        
+        if (this.props.auth.isAuthenticated) {
+            window.M.Dropdown.init(this.dropdownTriggerRef.current);
+        }
+    }
     onLogoutClick = (e) => {
 		e.preventDefault();
 		this.props.clearPlaylists();
 		this.props.logoutUser(this.props.history);
     }
+    componentDidMount = () => {
+        this.shouldDropdownInit();
+    }
     componentDidUpdate = () => {
-        if (this.props.auth.isAuthenticated) {
-            window.M.Dropdown.init(this.dropdownTriggerRef.current);
-        }
+        this.shouldDropdownInit();
     }
     render() {        
         const { isAuthenticated, user } = this.props.auth;
