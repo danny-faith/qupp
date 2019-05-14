@@ -9,57 +9,17 @@ import { withRouter } from 'react-router-dom';
 import logo from '../../logo-v2.svg';
 
 class Navbar extends Component {
-    userRef = React.createRef();
-    state = {
-        isAuthenticated2: false
-    }
+    dropdownTriggerRef = React.createRef();
 
     onLogoutClick = (e) => {
 		e.preventDefault();
 		this.props.clearPlaylists();
 		this.props.logoutUser(this.props.history);
     }
-    componentWillMount = () => {
-        
-        // console.log('this.userRef.current: ', this.userRef.current);
-
-    }
-    componentDidMount = () => {
-        // console.log('this.userRef.current: ', this.userRef.current);
-
-        // console.log('Navbar componentDidMount');
-        window.M.Dropdown.init(this.userRef.current);
-        
-        // if (this.state.isAuthenticated2) {
-        //     window.M.Dropdown.init(this.userRef.current);
-        // }
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     var elems = document.querySelectorAll('.sidenav');
-        //     var instances = M.Sidenav.init(elems, options);
-        //   });
-        // window.M.Dropdown.init(this.userRef.current);
-    }
-    componentWillReceiveProps = (nextProps) => {
-        // console.log(nextProps);
-        
-        if (nextProps.auth.isAuthenticated) {
-
-            console.log('there are authenticated');
-            // this.setState({
-            //     isAuthenticated2: true
-            // });
-            console.log('this.userRef.current: ', this.userRef.current);
-            window.M.Dropdown.init(this.userRef.current);
-            
-        } else {
-            console.log('this.userRef.current: ', this.userRef.current);
-
-            console.log('there are not authenticated');
-            // window.M.Dropdown.init(this.userRef.current);
+    componentDidUpdate = () => {
+        if (this.props.auth.isAuthenticated) {
+            window.M.Dropdown.init(this.dropdownTriggerRef.current);
         }
-    }
-    componentWillUpdate = () => {
-        console.log('componentWillUpdate');
     }
     render() {        
         const { isAuthenticated, user } = this.props.auth;
@@ -70,7 +30,7 @@ class Navbar extends Component {
                     <a href="!#" onClick={this.onLogoutClick}>Logout</a>
                 </li>
                 <li className="avatar">
-                    <a href="#" ref={this.userRef} data-target="dropdown1" className="dropdown-trigger">
+                    <a href="#" ref={this.dropdownTriggerRef} data-target="dropdown1" className="dropdown-trigger">
                         <div className="avatar" style={{ backgroundImage: `url(${user.avatar})`}}>
                         </div>
                         {user.username}
@@ -93,7 +53,7 @@ class Navbar extends Component {
         );
 
         return (
-            <nav>
+            <nav ref={this.navRef}>
                 <div className="nav-wrapper">
                 <Link to="/" className="brand-logo">
                     <img width="90" alt="qupp logo" src={logo} />
