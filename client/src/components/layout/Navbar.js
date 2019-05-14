@@ -11,10 +11,6 @@ import logo from '../../logo-v2.svg';
 class Navbar extends Component {
     dropdownTriggerRef = React.createRef();
     shouldDropdownInit() {
-        console.log('shouldDropdownInit()');
-        console.log(this.props.auth.isAuthenticated);
-        console.log(this.dropdownTriggerRef.current);
-        
         if (this.props.auth.isAuthenticated) {
             window.M.Dropdown.init(this.dropdownTriggerRef.current);
         }
