@@ -10,7 +10,6 @@ import logo from '../../logo-v2.svg';
 
 class Navbar extends Component {
     userRef = React.createRef();
-
     state = {
         isAuthenticated2: false
     }
@@ -20,8 +19,16 @@ class Navbar extends Component {
 		this.props.clearPlaylists();
 		this.props.logoutUser(this.props.history);
     }
+    componentWillMount = () => {
+        
+        // console.log('this.userRef.current: ', this.userRef.current);
+
+    }
     componentDidMount = () => {
+        // console.log('this.userRef.current: ', this.userRef.current);
+
         // console.log('Navbar componentDidMount');
+        window.M.Dropdown.init(this.userRef.current);
         
         // if (this.state.isAuthenticated2) {
         //     window.M.Dropdown.init(this.userRef.current);
@@ -30,35 +37,31 @@ class Navbar extends Component {
         //     var elems = document.querySelectorAll('.sidenav');
         //     var instances = M.Sidenav.init(elems, options);
         //   });
-        window.M.Dropdown.init(this.userRef.current);
+        // window.M.Dropdown.init(this.userRef.current);
     }
     componentWillReceiveProps = (nextProps) => {
         // console.log(nextProps);
         
         if (nextProps.auth.isAuthenticated) {
-            // console.log('there are authenticated');
+
+            console.log('there are authenticated');
             // this.setState({
             //     isAuthenticated2: true
             // });
+            console.log('this.userRef.current: ', this.userRef.current);
             window.M.Dropdown.init(this.userRef.current);
             
         } else {
+            console.log('this.userRef.current: ', this.userRef.current);
+
             console.log('there are not authenticated');
             // window.M.Dropdown.init(this.userRef.current);
         }
     }
-    // componentWillUpdate = () => {
-    //     // console.log('componentWillUpdate');
-    //     if (this.state.isAuthenticated2) {
-    //         // console.log('hello?');
-            
-    //         window.M.Dropdown.init(this.userRef.current);
-    //     } else {
-    //         // console.log('me?');
-            
-    //     }
-    // }
-    render() {
+    componentWillUpdate = () => {
+        console.log('componentWillUpdate');
+    }
+    render() {        
         const { isAuthenticated, user } = this.props.auth;
             
         const authLinks = (
@@ -67,7 +70,7 @@ class Navbar extends Component {
                     <a href="!#" onClick={this.onLogoutClick}>Logout</a>
                 </li>
                 <li className="avatar">
-                    <a href="!#" ref={this.userRef} data-target="dropdown1" className="dropdown-trigger">
+                    <a href="#" ref={this.userRef} data-target="dropdown1" className="dropdown-trigger">
                         <div className="avatar" style={{ backgroundImage: `url(${user.avatar})`}}>
                         </div>
                         {user.username}
@@ -84,6 +87,19 @@ class Navbar extends Component {
 
         const guestLinks = (
             <ul id="nav-mobile" className="right hide-on-med-and-down">
+                <li className="avatar">
+                    <a href="#" ref={this.userRef} data-target="dropdown1" className="dropdown-trigger">
+                        <div className="avatar" style={{ backgroundImage: `url(${user.avatar})`}}>
+                        </div>
+                        {user.username}
+                    </a>
+                    <ul id="dropdown1" className="dropdown-content">
+                        <li><Link to="/dashboard">Dashboard</Link></li>
+                        <li><Link to="/my-account">Account</Link></li>
+                        <li className="divider"></li>
+                        <li><a href="!#" onClick={this.onLogoutClick}>Logout</a></li>
+                    </ul>
+                </li>
                 <li><Link to="/login">Login</Link></li>
                 <li><Link to="/register">Register</Link></li>
             </ul>

@@ -66,13 +66,10 @@ class QuppListPage extends Component {
       playing: !prevState.playing
     }), () => {
       if (this.state.playing === false) {
-        // debugger;
         // If player has just been stopped, stop / clear timeout
         clearInterval(this.progress);
       } else {
-        
         this.playSong();
-    
         if (this.state.playlist.queue.length > 1) {
           this.populateUpNext();
         }

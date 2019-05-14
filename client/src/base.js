@@ -16,12 +16,6 @@ const firebaseApp = firebase.initializeApp({
     databaseURL: REACT_APP_FIREBASE_DB_URL
 });
 
-// firebaseApp.auth().signInWithEmailAndPassword('daniel.e.blythe@gmail.com', 'TrebbleAFSD77').catch(function(error) {
-//     // Handle Errors here.
-//     var errorCode = error.code;
-//     var errorMessage = error.message;
-// });
-
 const base = Rebase.createClass(firebaseApp.database());
 
 export { firebaseApp };

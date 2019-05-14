@@ -7,21 +7,24 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 class UploadAvatar extends Component {
-    constructor() {
-        super();
-        this.state = {
-            preview: '',
-            formData:''
-        }
-        this.maxFileSize = 1024 * 1024 * 4; // 4MB
-        this.avatarPreview = '';
+    state = {
+        preview: '',
+        formData:''
     }
+    componentDidMount = () => {
 
+        // console.dir(Dropzone);
+    }
+    
+    
+    maxFileSize = 1024 * 1024 * 4; // 4MB
+    avatarPreview = '';
+    
     onDrop = (acceptedFiles, rejectedFiles) => {
         const errors = {};
         const acceptedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
         const formData = new FormData();
-        formData.append('avatar', acceptedFiles[0]);
+        formData.append('avatar', acceptedFiles[0]);        
 
         if (rejectedFiles.length > 0) {
             if (rejectedFiles.length > 1) {
@@ -43,6 +46,10 @@ class UploadAvatar extends Component {
             formData
         });
     };
+    getFilesFromEvent = (stuff) => {
+        console.log('stuff: ', stuff);
+        
+    }
     submitAvatar = () => {
         this.props.uploadAvatarImage(this.state.formData);
     }
