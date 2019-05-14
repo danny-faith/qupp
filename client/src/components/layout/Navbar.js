@@ -87,19 +87,6 @@ class Navbar extends Component {
 
         const guestLinks = (
             <ul id="nav-mobile" className="right hide-on-med-and-down">
-                <li className="avatar">
-                    <a href="#" ref={this.userRef} data-target="dropdown1" className="dropdown-trigger">
-                        <div className="avatar" style={{ backgroundImage: `url(${user.avatar})`}}>
-                        </div>
-                        {user.username}
-                    </a>
-                    <ul id="dropdown1" className="dropdown-content">
-                        <li><Link to="/dashboard">Dashboard</Link></li>
-                        <li><Link to="/my-account">Account</Link></li>
-                        <li className="divider"></li>
-                        <li><a href="!#" onClick={this.onLogoutClick}>Logout</a></li>
-                    </ul>
-                </li>
                 <li><Link to="/login">Login</Link></li>
                 <li><Link to="/register">Register</Link></li>
             </ul>

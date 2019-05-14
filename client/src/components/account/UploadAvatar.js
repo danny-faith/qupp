@@ -11,11 +11,6 @@ class UploadAvatar extends Component {
         preview: '',
         formData:''
     }
-    componentDidMount = () => {
-
-        // console.dir(Dropzone);
-    }
-    
     
     maxFileSize = 1024 * 1024 * 4; // 4MB
     avatarPreview = '';
@@ -46,10 +41,6 @@ class UploadAvatar extends Component {
             formData
         });
     };
-    getFilesFromEvent = (stuff) => {
-        console.log('stuff: ', stuff);
-        
-    }
     submitAvatar = () => {
         this.props.uploadAvatarImage(this.state.formData);
     }
