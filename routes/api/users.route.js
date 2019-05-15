@@ -156,17 +156,23 @@ router.post('/register', (req, res) => {
 //  @access Public
 router.post('/login', (req, res) => {
     const { errors, isValid } = validateLoginInput(req.body);
-
+    
     if (!isValid) {
         return res.status(400).json(errors);
     }
-    const { email } = req.body;
+    
+    const { usernameOrEmail } = req.body;
     const { password } = req.body;
-    User.findOne({email})
+    const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const isEmail = usernameOrEmail.match(regex) || [];
+    const loginIdentifier = (isEmail.length === 0) ? 'username' : 'email';
+    
+    User.findOne({ [loginIdentifier]: usernameOrEmail })
         .then(user => {
             //  Check for user
+            
             if (!user) {
-                errors.email = 'User not found';
+                errors.usernameOrEmail = 'User not found';
                 return res.status(404).json(errors);
             }
 
