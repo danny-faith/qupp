@@ -52,7 +52,7 @@ class CreatePlaylist extends Component {
                         <TextFieldGroup
                             name="slug"
                             type="text"
-                            label="Slug"
+                            label="Playlist URL"
                             value={this.state.slug}
                             onChange={this.onChange}
                             error={errors.slug}
