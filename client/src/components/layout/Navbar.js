@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/authActions';
 import { clearPlaylists } from '../../actions/playlistActions';
 import { withRouter } from 'react-router-dom';
+import Sidenav from './Sidenav';
 
 import logo from '../../logo-v2.svg';
 
@@ -68,6 +69,7 @@ class Navbar extends Component {
                 </a>
                 {isAuthenticated ? authLinks : guestLinks}
                 </div>
+            <Sidenav />
             </nav>
         )
     }
@@ -82,5 +84,7 @@ Navbar.propTypes = {
 const mapStateToProps = (state) => ({
     auth: state.auth
 });
+
+export { Navbar };
 
 export default connect(mapStateToProps, { logoutUser, clearPlaylists })(withRouter(Navbar));

@@ -11,9 +11,10 @@ class Sidenav extends Component {
   state = {
     isAuthenticated2: false
   }
-  componentDidMount = () => {
-    window.M.Sidenav.init(this.sideNavRef.current);
-
+  componentDidMount = () => {    
+    // window.M.Sidenav.init(this.sideNavRef.current);
+    console.log(window.M.Sidenav);
+    
   }
   onLogoutClick = (e) => {
 		e.preventDefault();

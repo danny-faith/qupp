@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Progress render should render correctly in "debug" mode 1`] = `
+<div
+  class="progress-bar"
+>
+  <span
+    style="width:undefined%"
+  />
+</div>
+`;
+
+exports[`Progress shallow should render correctly in "debug" mode 1`] = `
+<div
+  className="progress-bar"
+>
+  <span
+    style={
+      Object {
+        "width": "undefined%",
+      }
+    }
+  />
+</div>
+`;

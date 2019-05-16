@@ -54,7 +54,7 @@ class App extends Component {
         <Router>
           <div className="App">
             <Navbar />
-            <Sidenav />
+            {/* <Sidenav /> */}
             <Route exact path="/" component={Landing} />
             <Route exact path="/playlist/:slug" component={QuppListPage} />
             <div className="container">
