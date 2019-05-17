@@ -2,7 +2,13 @@ html,
 body {
   background-color: #181818;
   color: white;
+  height: 100%;
+  #root,
+  .App {
+    height: 100%;
+  }
 }
+
 .container {
   max-width: 95%;
   width: 100%;
