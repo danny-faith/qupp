@@ -35,23 +35,41 @@ describe('Register component', () => {
         );
         expect(component).toMatchSnapshot();
     });
+    
+    it('should fully render correctly', () => {
+        const auth = {
+            isAuthenticated: false,
+        }
+        const mockRegisterUserfn = jest.fn();
+        const component = mount(
+            <Register
+                auth={auth}
+                registerUser={mockRegisterUserfn}
+                errors={{}}
+                history={[]}
+            />
+        );
+        expect(component).toMatchSnapshot();
+    });
 
-    describe("Register component (react-test-renderer)", () => {
-        test("it shows the expected text when clicked (testing the wrong way!)", () => {
-            const component = create(
+    describe("Register component", () => {
+        test("it shows the expected text when user enters text", () => {
+            const wrapper = mount(
                 <Register 
                     auth={auth}
                     registerUser={mockRegisterUserfn}
                     errors={{}}
                     history={[]}
-                />);
-            const rootInstance = component.root;
-            const register = rootInstance.findByProps({name: "email"});
-            console.log(register.props);
-            expect(register.props.name).toBe("email");
+                />
+            );
+            wrapper.find('#email').at(1).simulate('change', 
+                {target: 
+                    {name: 'email', value: 'users-email@email.com'}
+                }
+            );
+            const text = wrapper.find('#email').at(1).html();
             
-            
-            // expect(instance.props.children).toBe("");
+            expect(text).toEqual(expect.stringContaining('users-email@email.com'));
         });
     });
     
