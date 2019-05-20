@@ -1,7 +1,149 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Navbar shallow should render correctly 1`] = `
-<ContextConsumer>
-  <Component />
-</ContextConsumer>
+exports[`Navbar component should shallow render correctly when user is authenticated 1`] = `
+<nav>
+  <div
+    className="nav-wrapper"
+  >
+    <Link
+      className="brand-logo"
+      replace={false}
+      to="/"
+    >
+      <img
+        alt="qupp logo"
+        src="logo-v2.svg"
+        width="90"
+      />
+    </Link>
+    <a
+      className="sidenav-trigger"
+      data-target="sidenav"
+      href="!#"
+    >
+      <i
+        className="material-icons"
+      >
+        menu
+      </i>
+    </a>
+    <ul
+      className="right hide-on-med-and-down"
+      id="nav-mobile"
+    >
+      <li>
+        <a
+          href="!#"
+          onClick={[Function]}
+        >
+          Logout
+        </a>
+      </li>
+      <li
+        className="avatar"
+      >
+        <a
+          className="dropdown-trigger"
+          data-target="dropdown1"
+          href="#"
+        >
+          <div
+            className="avatar"
+            style={
+              Object {
+                "backgroundImage": "url()",
+              }
+            }
+          />
+        </a>
+        <ul
+          className="dropdown-content"
+          id="dropdown1"
+        >
+          <li>
+            <Link
+              replace={false}
+              to="/dashboard"
+            >
+              Dashboard
+            </Link>
+          </li>
+          <li>
+            <Link
+              replace={false}
+              to="/my-account"
+            >
+              Account
+            </Link>
+          </li>
+          <li
+            className="divider"
+          />
+          <li>
+            <a
+              href="!#"
+              onClick={[Function]}
+            >
+              Logout
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <Connect(withRouter(Sidenav)) />
+</nav>
+`;
+
+exports[`Navbar component should shallow render correctly when user is not authenticated 1`] = `
+<nav>
+  <div
+    className="nav-wrapper"
+  >
+    <Link
+      className="brand-logo"
+      replace={false}
+      to="/"
+    >
+      <img
+        alt="qupp logo"
+        src="logo-v2.svg"
+        width="90"
+      />
+    </Link>
+    <a
+      className="sidenav-trigger"
+      data-target="sidenav"
+      href="!#"
+    >
+      <i
+        className="material-icons"
+      >
+        menu
+      </i>
+    </a>
+    <ul
+      className="right hide-on-med-and-down"
+      id="nav-mobile"
+    >
+      <li>
+        <Link
+          replace={false}
+          to="/login"
+        >
+          Login
+        </Link>
+      </li>
+      <li>
+        <Link
+          replace={false}
+          to="/register"
+        >
+          Register
+        </Link>
+      </li>
+    </ul>
+  </div>
+  <Connect(withRouter(Sidenav)) />
+</nav>
 `;

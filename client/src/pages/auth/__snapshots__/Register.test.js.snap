@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Register component should shallow render correctly 1`] = `
+<Row>
+  <Col
+    className="offset-s3"
+    s={6}
+  >
+    <h1
+      className="center"
+    >
+      Register
+    </h1>
+    <form
+      noValidate={true}
+      onSubmit={[Function]}
+    >
+      <Row>
+        <TextFieldGroup
+          label="Email"
+          name="email"
+          onChange={[Function]}
+          type="email"
+          value=""
+        />
+        <TextFieldGroup
+          label="Username"
+          name="username"
+          onChange={[Function]}
+          type="text"
+          value=""
+        />
+        <TextFieldGroup
+          label="Password"
+          name="password"
+          onChange={[Function]}
+          type="password"
+          value=""
+        />
+        <TextFieldGroup
+          label="Confirm password"
+          name="password2"
+          onChange={[Function]}
+          type="password"
+          value=""
+        />
+      </Row>
+      <Row>
+        <Col
+          s={12}
+        >
+          <Button
+            className="btn-small right"
+            node="button"
+            waves="light"
+          >
+            Register
+          </Button>
+        </Col>
+      </Row>
+    </form>
+  </Col>
+</Row>
+`;

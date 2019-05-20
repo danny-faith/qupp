@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import TextFieldGroup from '../../components/common/TextFieldGroup';
 import { loginUser } from '../../actions/authActions';
 
-class Login extends Component {
+export class Login extends Component {
   state = {
     usernameOrEmail: '',
     password: '',
@@ -52,15 +52,15 @@ class Login extends Component {
 					<form noValidate onSubmit={this.onSubmit}>
 						<Row>
 							<TextFieldGroup
-								placeholder="Username or email"
+								label="Username or email"
 								name="usernameOrEmail"
 								type="text"
-								value={this.state.email}
+								value={this.state.usernameOrEmail}
 								onChange={this.onChange}
 								error={errors.usernameOrEmail}
               />
 							<TextFieldGroup
-								placeholder="Password"
+								label="Password"
 								name="password"
 								type="password"
 								value={this.state.password}

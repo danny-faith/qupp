@@ -24,7 +24,8 @@ const TextFieldGroup = ({
                 })}
                 placeholder={placeholder}
                 label={label}
-                name={name} 
+                name={name}
+                id={name}
                 s={12}
                 value={value} 
                 onChange={onChange}

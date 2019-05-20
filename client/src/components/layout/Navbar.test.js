@@ -2,36 +2,66 @@ import React from 'react';
 import { shallow, render, mount } from 'enzyme';
 import { Navbar } from './Navbar';
 
-describe('Navbar shallow', () => {
-  it('should render correctly', () => {
-    const component = shallow(<Navbar />);
+describe('Navbar component', () => {
+  beforeAll(() => {
+    const object = {
+      value: jest.fn(() => { return { matches: true } })
+    };
+    Object.defineProperty(window, "M", object);
+    Object.defineProperty(window.M, "Dropdown", object);
+    Object.defineProperty(window.M.Dropdown, "init", object);
+  });
+  let wrapper;
+  const auth = {
+      isAuthenticated: true,
+      user: {
+        avatar: ''
+      }
+  }
+  beforeEach(() => {
+      wrapper = shallow(
+      <Navbar
+        auth={auth}
+        clearPlaylists={() => {}}
+        logoutUser={() => {}}
+      />)
+  });
+
+
+  it('should shallow render correctly when user is not authenticated', () => {
+    const auth = {
+      isAuthenticated: false,
+      user: {
+        avatar: ''
+      }
+    }
+    const component = shallow(
+      <Navbar
+        auth={auth}
+        clearPlaylists={() => {}}
+        logoutUser={() => {}}
+      />
+    );
   
     expect(component).toMatchSnapshot();
   });
-});
-
-// describe('Navbar render', () => {
-//   it('should render correctly', () => {
-//     const component = render(<Navbar isAuthenticated="true" />);
   
-//     expect(component).dive().toMatchSnapshot();
-//   });
-// });
+  it('should shallow render correctly when user is authenticated', () => {
+    const auth = {
+      isAuthenticated: true,
+      user: {
+        avatar: ''
+      }
+    }
+    const component = shallow(
+      <Navbar
+        auth={auth}
+        clearPlaylists={() => {}}
+        logoutUser={() => {}}
+      />
+    );
+  
+    expect(component).toMatchSnapshot();
+  });
 
-// describe('Examining the syntax of Jest tests', () => {
-   
-//     it('sums numbers', () => {
-//         expect(1 + 2).toEqual(3);
-//         expect(2 + 2).toEqual(4);
-//     });
-// });
-
-// import React from 'react';
-// import { render, cleanup} from 'react-testing-library';
-// import 'jest-dom/extend-expect';
-// import Navbar from './Navbar';
-
-// it('renders Navbar', () => {
-//     const { asFragment } = render(<Navbar />).dive();
-//     expect(asFragment()).toMatchSnapshot();
-// });
+});

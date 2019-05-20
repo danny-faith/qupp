@@ -9,7 +9,7 @@ import Sidenav from './Sidenav';
 
 import logo from '../../logo-v2.svg';
 
-class Navbar extends Component {
+export class Navbar extends Component {
     dropdownTriggerRef = React.createRef();
     shouldDropdownInit() {
         if (this.props.auth.isAuthenticated) {
@@ -84,7 +84,5 @@ Navbar.propTypes = {
 const mapStateToProps = (state) => ({
     auth: state.auth
 });
-
-export { Navbar };
 
 export default connect(mapStateToProps, { logoutUser, clearPlaylists })(withRouter(Navbar));
