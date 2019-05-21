@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/authActions';
 import { clearPlaylists } from '../../actions/playlistActions';
 import { withRouter } from 'react-router-dom';
-import Sidenav from './Sidenav';
 
 import logo from '../../logo-v2.svg';
 
@@ -69,7 +68,6 @@ export class Navbar extends Component {
                 </a>
                 {isAuthenticated ? authLinks : guestLinks}
                 </div>
-            <Sidenav />
             </nav>
         )
     }

@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextFieldGroup from '../common/TextFieldGroup';
 
-class CreatePlaylist extends Component {
+export class CreatePlaylist extends Component {
     state = {
-        name: this.props.name,
-        slug: this.props.slug,
+        name: this.props.name || '',
+        slug: this.props.slug || '',
         errors: {}
     }
     onSubmit = (e) => {

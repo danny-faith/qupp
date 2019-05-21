@@ -1,98 +1,154 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Navbar component should shallow render correctly when user is authenticated 1`] = `
-<nav>
-  <div
-    className="nav-wrapper"
+exports[`Navbar component should fully render correctly when user is authenticated 1`] = `
+<StaticRouter
+  basename=""
+  context={Object {}}
+  location="/"
+>
+  <Router
+    history={
+      Object {
+        "action": "POP",
+        "block": [Function],
+        "createHref": [Function],
+        "go": [Function],
+        "goBack": [Function],
+        "goForward": [Function],
+        "listen": [Function],
+        "location": Object {
+          "hash": "",
+          "pathname": "/",
+          "search": "",
+          "state": undefined,
+        },
+        "push": [Function],
+        "replace": [Function],
+      }
+    }
   >
-    <Link
-      className="brand-logo"
-      replace={false}
-      to="/"
+    <Navbar
+      auth={
+        Object {
+          "isAuthenticated": true,
+          "user": Object {
+            "avatar": "",
+          },
+        }
+      }
+      clearPlaylists={[Function]}
+      logoutUser={[Function]}
     >
-      <img
-        alt="qupp logo"
-        src="logo-v2.svg"
-        width="90"
-      />
-    </Link>
-    <a
-      className="sidenav-trigger"
-      data-target="sidenav"
-      href="!#"
-    >
-      <i
-        className="material-icons"
-      >
-        menu
-      </i>
-    </a>
-    <ul
-      className="right hide-on-med-and-down"
-      id="nav-mobile"
-    >
-      <li>
-        <a
-          href="!#"
-          onClick={[Function]}
+      <nav>
+        <div
+          className="nav-wrapper"
         >
-          Logout
-        </a>
-      </li>
-      <li
-        className="avatar"
-      >
-        <a
-          className="dropdown-trigger"
-          data-target="dropdown1"
-          href="#"
-        >
-          <div
-            className="avatar"
-            style={
-              Object {
-                "backgroundImage": "url()",
-              }
-            }
-          />
-        </a>
-        <ul
-          className="dropdown-content"
-          id="dropdown1"
-        >
-          <li>
-            <Link
-              replace={false}
-              to="/dashboard"
-            >
-              Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link
-              replace={false}
-              to="/my-account"
-            >
-              Account
-            </Link>
-          </li>
-          <li
-            className="divider"
-          />
-          <li>
+          <Link
+            className="brand-logo"
+            replace={false}
+            to="/"
+          >
             <a
-              href="!#"
+              className="brand-logo"
+              href="/"
               onClick={[Function]}
             >
-              Logout
+              <img
+                alt="qupp logo"
+                src="logo-v2.svg"
+                width="90"
+              />
             </a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-  <Connect(withRouter(Sidenav)) />
-</nav>
+          </Link>
+          <a
+            className="sidenav-trigger"
+            data-target="sidenav"
+            href="!#"
+          >
+            <i
+              className="material-icons"
+            >
+              menu
+            </i>
+          </a>
+          <ul
+            className="right hide-on-med-and-down"
+            id="nav-mobile"
+          >
+            <li>
+              <a
+                href="!#"
+                onClick={[Function]}
+              >
+                Logout
+              </a>
+            </li>
+            <li
+              className="avatar"
+            >
+              <a
+                className="dropdown-trigger"
+                data-target="dropdown1"
+                href="#"
+              >
+                <div
+                  className="avatar"
+                  style={
+                    Object {
+                      "backgroundImage": "url()",
+                    }
+                  }
+                />
+              </a>
+              <ul
+                className="dropdown-content"
+                id="dropdown1"
+              >
+                <li>
+                  <Link
+                    replace={false}
+                    to="/dashboard"
+                  >
+                    <a
+                      href="/dashboard"
+                      onClick={[Function]}
+                    >
+                      Dashboard
+                    </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    replace={false}
+                    to="/my-account"
+                  >
+                    <a
+                      href="/my-account"
+                      onClick={[Function]}
+                    >
+                      Account
+                    </a>
+                  </Link>
+                </li>
+                <li
+                  className="divider"
+                />
+                <li>
+                  <a
+                    href="!#"
+                    onClick={[Function]}
+                  >
+                    Logout
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </Navbar>
+  </Router>
+</StaticRouter>
 `;
 
 exports[`Navbar component should shallow render correctly when user is not authenticated 1`] = `
@@ -144,6 +200,5 @@ exports[`Navbar component should shallow render correctly when user is not authe
       </li>
     </ul>
   </div>
-  <Connect(withRouter(Sidenav)) />
 </nav>
 `;

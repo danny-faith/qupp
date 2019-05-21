@@ -1,6 +1,5 @@
 import React from 'react';
 import { shallow, render, mount } from 'enzyme';
-import { create } from "react-test-renderer";
 import { Register } from './Register';
 
 describe('Register component', () => {
@@ -20,7 +19,7 @@ describe('Register component', () => {
     });
 
     
-    it('should shallow render correctly', () => {
+    it('should shallow render(Shallow rendering) correctly', () => {
         const auth = {
             isAuthenticated: false,
         }
@@ -36,7 +35,7 @@ describe('Register component', () => {
         expect(component).toMatchSnapshot();
     });
     
-    it('should fully render correctly', () => {
+    it('should fully render(Full DOM) correctly', () => {
         const auth = {
             isAuthenticated: false,
         }
@@ -51,9 +50,25 @@ describe('Register component', () => {
         );
         expect(component).toMatchSnapshot();
     });
+    
+    it('should fully render(static render) correctly', () => {
+        const auth = {
+            isAuthenticated: false,
+        }
+        const mockRegisterUserfn = jest.fn();
+        const component = render(
+            <Register
+                auth={auth}
+                registerUser={mockRegisterUserfn}
+                errors={{}}
+                history={[]}
+            />
+        );
+        expect(component).toMatchSnapshot();
+    });
 
-    describe("Register component", () => {
-        test("it shows the expected text when user enters text", () => {
+    describe("Register inputs - ", () => {
+        test("email input shows the expected text when user enters text", () => {
             const wrapper = mount(
                 <Register 
                     auth={auth}
@@ -67,9 +82,27 @@ describe('Register component', () => {
                     {name: 'email', value: 'users-email@email.com'}
                 }
             );
-            const text = wrapper.find('#email').at(1).html();
+            const emailText = wrapper.find('#email').at(1).html();
             
-            expect(text).toEqual(expect.stringContaining('users-email@email.com'));
+            expect(emailText).toEqual(expect.stringContaining('users-email@email.com'));
+        });
+        test("username input shows the expected text when user enters text", () => {
+            const wrapper = mount(
+                <Register 
+                    auth={auth}
+                    registerUser={mockRegisterUserfn}
+                    errors={{}}
+                    history={[]}
+                />
+            );
+            wrapper.find('#username').at(1).simulate('change', 
+                {target: 
+                    {name: 'username', value: 'users-username'}
+                }
+            );
+            const usernameText = wrapper.find('#username').at(1).html();
+            
+            expect(usernameText).toEqual(expect.stringContaining('users-username'));
         });
     });
     
@@ -119,6 +152,7 @@ describe('Register component', () => {
           'submit', 
           {preventDefault() {}}
         )
+        
         // test to see arguments used after its been submitted 
         expect(mockRegisterUserfn.mock.calls[1][0]).toEqual(
             {
