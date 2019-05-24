@@ -25,7 +25,7 @@ router.get('/all', (req, res) => {
 });
 
 //  @route GET api/playlists/
-//  @description Get all playlists by user
+//  @description Get all playlists by logged in user
 //  @access Private
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     const errors = {};  
