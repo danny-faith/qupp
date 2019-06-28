@@ -56,7 +56,7 @@ class App extends Component {
             <Navbar />
             <Sidenav />
             <Route exact path="/" component={Landing} />
-            <Route exact path="/playlist/:slug" component={QuppListPage} />
+            <Route exact path="/playlist/:slug/:playlist_id?" component={QuppListPage} />
             <div className="container">
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
