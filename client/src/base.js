@@ -1,15 +1,19 @@
 import Rebase from 're-base';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/database';
+import 'firebase/auth';
 require('dotenv').config();
 
 const {
-    FIREBASE_API_KEY
+    REACT_APP_FIREBASE_API_KEY,
+    REACT_APP_FIREBASE_AUTH_DOMAIN,
+    REACT_APP_FIREBASE_DB_URL
 } = process.env;
 
 const firebaseApp = firebase.initializeApp({
-    apiKey: FIREBASE_API_KEY,
-    authDomain: "qupp-8353d.firebaseapp.com",
-    databaseURL: "https://qupp-8353d.firebaseio.com"
+    apiKey: REACT_APP_FIREBASE_API_KEY,
+    authDomain: REACT_APP_FIREBASE_AUTH_DOMAIN,
+    databaseURL: REACT_APP_FIREBASE_DB_URL
 });
 
 const base = Rebase.createClass(firebaseApp.database());

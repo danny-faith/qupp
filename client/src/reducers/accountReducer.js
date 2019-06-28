@@ -2,8 +2,6 @@ import {
     SET_AVATAR_IMAGE,
 } from '../actions/types';
 
-import isEmpty from '../validation/is-empty';
-
 const initialState = {
     avatar: null
 }

@@ -73,19 +73,33 @@ router.get('/user/:user_id', (req, res) => {
 //  @route GET api/playlists/:playlist_id
 //  @description Get playlist by playlist ID
 //  @access Public
-router.get('/:_id', (req, res) => {
+// router.get('/:_id', (req, res) => {
+//     const errors = {};    
+
+//     Playlist.find({ _id: req.params._id })
+//         .then(playlist => res.json(playlist))
+//         .catch(() => {
+//             errors.playlist = 'No playlists found';
+//             return res.status(404).json(errors);
+//         });
+// });
+
+//  @route GET api/playlists/:slug
+//  @description Get playlist by playlist slug
+//  @access Public
+router.get('/:slug', (req, res) => {
     const errors = {};    
 
-    Playlist.find({ _id: req.params._id })
+    Playlist.find({ slug: req.params.slug })
         .then(playlist => res.json(playlist))
         .catch(() => {
-            errors.playlist = 'No playlists found';
+            errors.playlist = 'No playlists found via slug';
             return res.status(404).json(errors);
         });
 });
 
 //  @route POST api/playlist
-//  @description Create playlist
+//  @description Create or edit playlist
 //  @access Private
 router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     const { errors } = validatePlaylistInput(req.body);

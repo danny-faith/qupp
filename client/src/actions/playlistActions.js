@@ -2,13 +2,11 @@ import axios from 'axios';
 import { 
     GET_ERRORS, 
     PLAYLISTS_LOADING, 
-    PLAYLIST_LOADING, 
     GET_PLAYLIST, 
     GET_PLAYLISTS,
     GET_ALL_PLAYLISTS,
     CLEAR_PLAYLISTS,
-    CLEAR_PLAYLIST,
-    EDIT_PLAYLIST
+    CLEAR_PLAYLIST
 } from './types';
 
 // Get all playlists by current user
@@ -39,11 +37,10 @@ export const getAllPlaylists = () => (dispatch) => {
         .catch(err => console.log(err));
 }
 
-// Get specific playlist by playlist ID
-export const getPlaylist = (playlist_id) => (dispatch) => {  
-    // dispatch(setPlaylistLoading());
-     
-    axios.get(`/api/playlists/${playlist_id}`)
+// Get specific playlist by playlist slug
+export const getPlaylist = (slug) => (dispatch) => {
+    
+    axios.get(`/api/playlists/${slug}`)
         .then(res =>
             dispatch({
                 type: GET_PLAYLIST,

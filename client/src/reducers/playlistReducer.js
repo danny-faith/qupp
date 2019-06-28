@@ -2,14 +2,11 @@ import {
     CREATE_PLAYLIST,
     GET_PLAYLIST,
     PLAYLISTS_LOADING,
-    PLAYLIST_NOT_FOUND,
     GET_PLAYLISTS,
     GET_ALL_PLAYLISTS,
     CLEAR_PLAYLISTS,
     CLEAR_PLAYLIST
 } from '../actions/types';
-
-import isEmpty from '../validation/is-empty';
 
 const initialState = {
     playlist: null,

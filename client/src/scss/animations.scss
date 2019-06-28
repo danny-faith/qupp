@@ -3,14 +3,14 @@
   transform: translateX(-120%);
   -webkit-transition: 0.5s;
   transition: 0.5s;
-  // max-height: 0;
-  // padding: 0 !important;
+  /* max-height: 0; */
+  /* padding: 0 !important; */
 }
 .queue-enter.queue-enter-active {
-  // max-height: 89px;
+  /* max-height: 89px; */
   -webkit-transform: translateX(0);
   transform: translateX(0);
-  // padding: 2rem 0 !important;
+  /* padding: 2rem 0 !important; */
 }
 .queue-exit {
   -webkit-transition: 0.5s;

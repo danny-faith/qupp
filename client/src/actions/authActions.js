@@ -48,11 +48,9 @@ export const setCurrentUser = (decoded) => {
 
 // Upload avatar image
 export const uploadAvatarImage = (formData) => (dispatch) => {  
-    // console.log('uploadAvatarImage');
     
     axios.post('/api/users/avatar', formData)
         .then(res => {
-            // console.log('uploadAvatarImage: ', res.data);
             window.M.toast({html: `Avatar successfully uploaded`, classes: 'green lighten-2'});
             
             dispatch(resetJWT(res.data));
@@ -64,7 +62,6 @@ export const resetJWT = (payload) => (dispatch) => {
     
     axios.post('/api/users/update-token', payload)
         .then(res => {
-            // console.log('res.body (resetJWT): ', res.data);
 
             // Set token to localstorage
             localStorage.setItem('jwtToken', res.data.token);
@@ -74,11 +71,6 @@ export const resetJWT = (payload) => (dispatch) => {
             const decoded = jwt_decode(res.data.token);
             // Set current user
             dispatch(setCurrentUser(decoded));
-            
-            // dispatch({
-            //     type: SET_CURRENT_USER,
-            //     payload: res.data.user
-            // })
         })
         .catch(err => console.log(err));
 }

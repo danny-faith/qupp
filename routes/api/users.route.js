@@ -156,17 +156,23 @@ router.post('/register', (req, res) => {
 //  @access Public
 router.post('/login', (req, res) => {
     const { errors, isValid } = validateLoginInput(req.body);
-
+    
     if (!isValid) {
         return res.status(400).json(errors);
     }
-    const { email } = req.body;
+    
+    const { usernameOrEmail } = req.body;
     const { password } = req.body;
-    User.findOne({email})
+    const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const isEmail = usernameOrEmail.match(regex) || [];
+    const loginIdentifier = (isEmail.length === 0) ? 'username' : 'email';
+    
+    User.findOne({ [loginIdentifier]: usernameOrEmail })
         .then(user => {
             //  Check for user
+            
             if (!user) {
-                errors.email = 'User not found';
+                errors.usernameOrEmail = 'User not found';
                 return res.status(404).json(errors);
             }
 
@@ -329,10 +335,11 @@ router.post('/forgot-password-reset', (req, res) => {
 //  @access Private
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'client/public/img/uploads/avatars/')
+        cb(null, `client/${(process.env.ENV === 'http://localhost:3002' ? 'public' : 'build')}/uploads/avatars/`)
     },
     filename: function (req, file, cb) {
-      cb(null, `${new Date().toISOString()}-${file.originalname}`)
+        const regex = / /gi;
+        cb(null, `${new Date().toISOString()}-${file.originalname.replace(regex, '-')}`)
     }
 });
 const fileFilter = (req, file, cb) => {
@@ -356,13 +363,12 @@ router.post(
     '/avatar', 
     passport.authenticate('jwt', { session: false }), 
     (req, res) => {
-        console.log('uploading avatar');
+        // console.log('uploading avatar');
         
         const errors = {};
         
         avatarUpload(req, res, (err) => {
             if (err instanceof multer.MulterError) {
-                // console.log('error', err);
                 
                 errors.filesize = err.message;
                 return res.status(413).json(errors);
@@ -375,9 +381,7 @@ router.post(
             // console.log('req.user', req.user);
             User.findById(req.user.id)
                 .then((user) => {
-                    // console.log(user);
-                    user.avatar = `img/uploads/avatars/${req.file.filename}`;
-                    console.log('saving Avatar to user');
+                    user.avatar = `uploads/avatars/${req.file.filename}`;
                     
                     user.save()
                         .then((user) => res.json(user))

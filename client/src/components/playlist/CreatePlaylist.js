@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Row, Col, Button } from 'react-materialize';
 import { createPlaylist } from '../../actions/playlistActions';
 import PropTypes from 'prop-types';
@@ -37,31 +37,29 @@ class CreatePlaylist extends Component {
         const { errors } = this.state;
 
         return (
-            <Row>
-                <Col s={12}>
-                    <h5>{this.props.title}</h5>
-                    <form onSubmit={this.onSubmit}>
-                        <TextFieldGroup
-                            name="name"
-                            type="text"
-                            label="Name"
-                            value={this.state.name}
-                            onChange={this.onChange}
-                            error={errors.name}
-              			/>
-                        <TextFieldGroup
-                            name="slug"
-                            type="text"
-                            label="Slug"
-                            value={this.state.slug}
-                            onChange={this.onChange}
-                            error={errors.slug}
-                            info="Please supply an easy to read URL for your playlist. No spaces, special characters or uppercase. Use underscores for spaces. E.g. daniels_party_jan"
-              			/>
-                        <Button className="right">{this.props.buttonText}</Button>
-                    </form>
-                </Col>
-            </Row>
+            <Fragment>
+                <h5>{this.props.title}</h5>
+                <form onSubmit={this.onSubmit}>
+                    <TextFieldGroup
+                        name="name"
+                        type="text"
+                        label="Name"
+                        value={this.state.name}
+                        onChange={this.onChange}
+                        error={errors.name}
+                    />
+                    <TextFieldGroup
+                        name="slug"
+                        type="text"
+                        label="Playlist URL"
+                        value={this.state.slug}
+                        onChange={this.onChange}
+                        error={errors.slug}
+                        info="Please supply an easy to read URL for your playlist. No spaces, special characters or uppercase. Use underscores for spaces. E.g. daniels_party_jan"
+                    />
+                    <Button className="right">{this.props.buttonText}</Button>
+                </form>
+            </Fragment>
         )
     }
 }

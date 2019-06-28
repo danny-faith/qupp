@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { Row, Col, Button } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import TextFieldGroup from '../common/TextFieldGroup';
+import TextFieldGroup from '../../components/common/TextFieldGroup';
 import { loginUser } from '../../actions/authActions';
 
 class Login extends Component {
   state = {
-    email: '',
+    usernameOrEmail: '',
     password: '',
     errors: {}
   }
@@ -24,7 +24,7 @@ class Login extends Component {
     e.preventDefault();
 
     const userData = {
-      email: this.state.email,
+      usernameOrEmail: this.state.usernameOrEmail,
       password: this.state.password
     }
     this.props.loginUser(userData);
@@ -52,12 +52,12 @@ class Login extends Component {
 					<form noValidate onSubmit={this.onSubmit}>
 						<Row>
 							<TextFieldGroup
-								placeholder="Email address"
-								name="email"
-								type="email"
+								placeholder="Username or email"
+								name="usernameOrEmail"
+								type="text"
 								value={this.state.email}
 								onChange={this.onChange}
-								error={errors.email}
+								error={errors.usernameOrEmail}
               />
 							<TextFieldGroup
 								placeholder="Password"

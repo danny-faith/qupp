@@ -1,23 +1,27 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import base from '../base';
+import firebaseApp from '../base';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import { getPlaylist, clearPlaylists } from '../actions/playlistActions';
 import isEmpty from '../utils/isEmpty';
 
 import { Row, Col, Button } from 'react-materialize';
 
-import SearchForm from '../components/SearchForm';
+import SearchForm from '../components/playlist/SearchForm';
 import Header from '../components/layout/Header';
 import Song from '../components/playlist/Song';
 
-import { MyProvider } from '../context';
+require('dotenv').config();
 
+const { 
+  REACT_APP_FIREBASE_EMAIL,
+  REACT_APP_FIREBASE_PASSWORD
+} = process.env;
 class QuppListPage extends Component {
   state = { 
     playlist: {
-      songs: [],
+      qupplist: [],
       queue: [],
     },
     playing: false,
@@ -27,6 +31,12 @@ class QuppListPage extends Component {
     searchResults: []
   }
   componentDidMount = () => {
+    firebaseApp.initializedApp.auth().signInWithEmailAndPassword(REACT_APP_FIREBASE_EMAIL, REACT_APP_FIREBASE_PASSWORD).catch(function(error) {
+        // Handle Errors here.
+        console.log(`${error.code} ${error.message}`);
+        window.M.toast({html: `${error.code} ${error.message}`, classes: 'red lighten-2'})
+    });
+
     // sync to users speicific playlist
     base.syncState(`playlists/${this.props.match.params.playlist_id}`, {
       context: this,
@@ -41,10 +51,14 @@ class QuppListPage extends Component {
           }
         }
       }
-    });
+    });    
 
     this.props.clearPlaylists();
-    this.props.getPlaylist(this.props.match.params.playlist_id);    
+    this.props.getPlaylist(this.props.match.params.slug);    
+  }
+  componentWillUnmount = () => {
+    // prevent memeory leak from setInterval()
+    clearInterval(this.progress);
   }
   playClickHandler = () => {
     
@@ -52,13 +66,10 @@ class QuppListPage extends Component {
       playing: !prevState.playing
     }), () => {
       if (this.state.playing === false) {
-        // debugger;
         // If player has just been stopped, stop / clear timeout
         clearInterval(this.progress);
       } else {
-        
         this.playSong();
-    
         if (this.state.playlist.queue.length > 1) {
           this.populateUpNext();
         }
@@ -108,12 +119,10 @@ class QuppListPage extends Component {
     });
   }
   componentWillUpdate = (stuff) => {
-    // FOR TESTING. CHECK HOW MANY TIMES `componentWillUpdate` runs
+    // TODO - FOR TESTING. CHECK HOW MANY TIMES `componentWillUpdate` runs
     // console.log('componentWillUpdate: ', stuff);
     // console.log(this.state);
     if (this.state.playing && this.state.playlist.queue.length === 0) {
-      // console.log('were playing but theres nothing in the queue?');
-      
       this.setState({playing: false});
     }
   }
@@ -135,16 +144,16 @@ class QuppListPage extends Component {
     }));
   }
   addAllToQueueHandler = () => {
-    this.addSongToQueueOrPlaylist(this.state.playlist.songs, 'queue');
+    this.addSongToQueueOrPlaylist(this.state.playlist.qupplist, 'queue');
   }
   addSongToQueueOrPlaylist = (songPayload, type) => {
     const errors = {};
     let playlist = {...this.state.playlist};
     
     // Check to see if song being added to qupplist is already there
-    if (type === 'songs' && !isEmpty(playlist.songs)) {
-      Object.keys(playlist.songs).map(key => {
-        if (playlist.songs[key].spotId === songPayload.spotId) {
+    if (type === 'qupplist' && !isEmpty(playlist.qupplist)) {
+      Object.keys(playlist.qupplist).forEach(key => {
+        if (playlist.qupplist[key].spotId === songPayload.spotId) {
           errors.addSong = `"${songPayload.name}" is a duplicate, cannot add`;
         }
       });
@@ -155,14 +164,14 @@ class QuppListPage extends Component {
     }
     
     // Firebase removes empty arrays
-    // so if playlist.queue || playlist.songs exists, add to it
+    // so if playlist.queue || playlist.qupplist exists, add to it
     // else(because Firebase removed it) create an empty array of either `song` or `queue` (type) then add to it
 
     // if songPayload > 1 then we're adding all in qupplist to the queue
     if (songPayload.length > 1) {
-      // if playlist.songs is empty due to Firebase then create empty array
-      if (isEmpty(playlist.songs)) {
-        playlist.songs = [];
+      // if playlist.qupplist is empty due to Firebase then create empty array
+      if (isEmpty(playlist.qupplist)) {
+        playlist.qupplist = [];
       }
       if (isEmpty(playlist.queue)) {
         playlist.queue = [];
@@ -188,6 +197,12 @@ class QuppListPage extends Component {
     this.setState({
       playlist
     }, () => {
+      if (type === 'queue') {
+        this.populateNowPlaying(false);
+        if (this.state.playlist.queue.length > 1) {
+          this.populateUpNext();
+        }
+      }
       // if array then multple songs have been added to queue
       if (Array.isArray(songPayload)) {
         songPayload.map(item => window.M.toast({html: `${item.name}, ${item.album} added`, classes: 'green lighten-2'}));
@@ -205,31 +220,40 @@ class QuppListPage extends Component {
     
     this.setState({
       playlist: copyOfPlaylist
+    }, () => {
+      const copyOfState = {...this.state};
+      if (this.state.playlist.queue.length < 2) {
+        copyOfState.upNext = {};
+        if (isEmpty(this.state.playlist.queue)) {
+          copyOfState.nowPlaying = {};
+        }
+        this.setState(copyOfState);
+      }
     });
   }
   render() {
     let playlistContent = '';
     let playlistName = '';
     let queueContent = '';
-    // wonder if isEmpty would work in if() below?
-    if (this.state.playlist.hasOwnProperty('songs') && Object.keys(this.state.playlist.songs).length > 0){
+    // TODO wonder if isEmpty would work in if() below?
+    if (this.state.playlist.hasOwnProperty('qupplist') && Object.keys(this.state.playlist.qupplist).length > 0){
       playlistContent = 
       Object
-      .keys(this.state.playlist.songs)
+      .keys(this.state.playlist.qupplist)
       .map(key => 
         <Song 
           removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
           addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
           addSongToQueue={this.addSongToQueue} 
           addSongToPlaylist={this.addSongToPlaylist} 
-          data={this.state.playlist.songs[key]} 
+          data={this.state.playlist.qupplist[key]} 
           type="qupplist"
           colour="grey"
           key={key}
         />
       );
     } else {
-      playlistContent = "No songs in playlist, search to add some!";
+      playlistContent = "No qupplist in playlist, search to add some!";
     }
     
     if (this.state.playlist.hasOwnProperty('queue') && Object.keys(this.state.playlist.queue).length > 0){
@@ -247,7 +271,7 @@ class QuppListPage extends Component {
         />
       );
     } else {
-      queueContent = "No songs in queue, search to add some!";
+      queueContent = "No qupplist in queue, search to add some!";
     }
 
     if (!isEmpty(this.props.playlists.playlist)) {
@@ -267,7 +291,7 @@ class QuppListPage extends Component {
           {/* <MyProvider value={{nowPlaying, upNext}}> */}
           {/* Remove context and just prop drill :( */}
           <Header 
-            songs={(this.state.playlist.songs === undefined) ? 0 : this.state.playlist.songs.length} 
+            qupplist={(this.state.playlist.qupplist === undefined) ? 0 : this.state.playlist.qupplist.length} 
             username={this.props.auth.user.name} 
             playlistname={playlistName} 
             nowPlayingName={this.state.nowPlaying.name} 
