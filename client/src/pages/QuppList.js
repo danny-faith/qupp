@@ -24,6 +24,7 @@ class QuppListPage extends Component {
       qupplist: [],
       queue: [],
     },
+    firebaseSyncFlag: true,
     playing: false,
     progress: 0,
     nowPlaying: {},
@@ -33,28 +34,33 @@ class QuppListPage extends Component {
   componentDidMount = () => {
     firebaseApp.initializedApp.auth().signInWithEmailAndPassword(REACT_APP_FIREBASE_EMAIL, REACT_APP_FIREBASE_PASSWORD).catch(function(error) {
         // Handle Errors here.
-        console.log(`${error.code} ${error.message}`);
         window.M.toast({html: `${error.code} ${error.message}`, classes: 'red lighten-2'})
     });
-
-    // sync to users speicific playlist
-    base.syncState(`playlists/${this.props.match.params.playlist_id}`, {
-      context: this,
-      state: 'playlist',
-      then() {
-        if (!isEmpty(this.state.playlist.queue)) {
-          this.populateNowPlaying(false);
-        }
-        if (this.state.playlist.hasOwnProperty('queue')) {
-          if (this.state.playlist.queue.length > 1) {
-            this.populateUpNext();
-          }
-        }
-      }
-    });    
-
+    
     this.props.clearPlaylists();
     this.props.getPlaylist(this.props.match.params.slug);    
+  }
+  componentDidUpdate = () => {
+    if (!isEmpty(this.props.playlists.playlist) && this.state.firebaseSyncFlag === true) {
+      // sync to users speicific playlist 
+      base.syncState(`playlists/${this.props.playlists.playlist[0]._id}`, {
+        context: this,
+        state: 'playlist',
+        then() {
+          if (!isEmpty(this.state.playlist.queue)) {
+            this.populateNowPlaying(false);
+          }
+          if (this.state.playlist.hasOwnProperty('queue')) {
+            if (this.state.playlist.queue.length > 1) {
+              this.populateUpNext();
+            }
+          }
+        }
+      });
+      let firebaseSyncFlag = {...this.state.firebaseSyncFlag};
+      firebaseSyncFlag = false;
+      this.setState({firebaseSyncFlag});
+    }
   }
   componentWillUnmount = () => {
     // prevent memeory leak from setInterval()
@@ -120,8 +126,6 @@ class QuppListPage extends Component {
   }
   componentWillUpdate = (stuff) => {
     // TODO - FOR TESTING. CHECK HOW MANY TIMES `componentWillUpdate` runs
-    // console.log('componentWillUpdate: ', stuff);
-    // console.log(this.state);
     if (this.state.playing && this.state.playlist.queue.length === 0) {
       this.setState({playing: false});
     }
@@ -130,7 +134,6 @@ class QuppListPage extends Component {
     let nowPlaying = {...this.state.nowPlaying};
     nowPlaying = this.state.playlist.queue[0];
     const playBool = (play) ? this.playSong : null;
-    // this.playSong should not be in callback. Makes function less versatile
     this.setState({nowPlaying}, playBool);
   }
   populateUpNext = () => {    
