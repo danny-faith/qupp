@@ -120,8 +120,6 @@ class QuppListPage extends Component {
   }
   componentWillUpdate = (stuff) => {
     // TODO - FOR TESTING. CHECK HOW MANY TIMES `componentWillUpdate` runs
-    // console.log('componentWillUpdate: ', stuff);
-    // console.log(this.state);
     if (this.state.playing && this.state.playlist.queue.length === 0) {
       this.setState({playing: false});
     }
@@ -130,7 +128,6 @@ class QuppListPage extends Component {
     let nowPlaying = {...this.state.nowPlaying};
     nowPlaying = this.state.playlist.queue[0];
     const playBool = (play) ? this.playSong : null;
-    // this.playSong should not be in callback. Makes function less versatile
     this.setState({nowPlaying}, playBool);
   }
   populateUpNext = () => {    
