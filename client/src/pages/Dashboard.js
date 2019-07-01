@@ -35,8 +35,10 @@ class Dashboard extends Component {
 
 		let playlistContent;
 
-		if (isEmpty(playlists) || loading) {
+		if (loading) {
 			playlistContent = <Spinner />;
+		} else if (isEmpty(playlists)) {
+			playlistContent = 'No playlists';
 		} else {
 			playlistContent = playlists
 			.map(item => 
