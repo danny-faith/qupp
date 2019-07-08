@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Input } from 'react-materialize';
+import { Row, Col, Button, TextInput } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -40,7 +40,7 @@ class ChangePassword extends Component {
 			<form noValidate onSubmit={this.onSubmit}>
 				<Row>
 					<Col s={12}>
-						<Input
+						<TextInput
 							id={"password"}
 							className={classnames({
 								'invalid': errors.password
@@ -57,7 +57,7 @@ class ChangePassword extends Component {
 				</Row>
 				<Row>
 					<Col s={12}>
-						<Input
+						<TextInput
 							id={"password2"}
 							className={classnames({
 								'invalid': errors.password2

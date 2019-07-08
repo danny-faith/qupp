@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import propTypes from 'prop-types';
-import { Input } from 'react-materialize';
+import { TextInput } from 'react-materialize';
 
 
 const TextFieldGroup = ({
@@ -17,7 +17,7 @@ const TextFieldGroup = ({
 }) => {
   return (
 		<React.Fragment>
-            <Input
+            <TextInput
                 type={type} 
                 className={classnames('form-control form-control-lg', {
                     'is-invalid': error
