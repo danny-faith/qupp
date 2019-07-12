@@ -55,7 +55,7 @@ class Login extends Component {
 								placeholder="Username or email"
 								name="usernameOrEmail"
 								type="text"
-								value={this.state.email}
+								value={this.state.usernameOrEmail}
 								onChange={this.onChange}
 								error={errors.usernameOrEmail}
               />

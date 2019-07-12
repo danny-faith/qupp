@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Row, Col, Button } from 'react-materialize';
+import { Button } from 'react-materialize';
 import { createPlaylist } from '../../actions/playlistActions';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
