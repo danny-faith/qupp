@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Modal } from 'react-materialize';
+import Messenger from '../chat/Messenger';
+import Users from '../chat/Users';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/authActions';
@@ -10,6 +13,7 @@ import logo from '../../logo-v2.svg';
 
 class Navbar extends Component {
     dropdownTriggerRef = React.createRef();
+    chatRoomRef = React.createRef();
     shouldDropdownInit() {
         if (this.props.auth.isAuthenticated) {
             window.M.Dropdown.init(this.dropdownTriggerRef.current);
@@ -19,6 +23,9 @@ class Navbar extends Component {
 		e.preventDefault();
 		this.props.clearPlaylists();
 		this.props.logoutUser(this.props.history);
+    }
+    chatroomClick = (e) => {
+
     }
     componentDidMount = () => {
         this.shouldDropdownInit();
@@ -33,6 +40,11 @@ class Navbar extends Component {
             <ul id="nav-mobile" className="right hide-on-med-and-down">
                 <li>
                     <a href="!#" onClick={this.onLogoutClick}>Logout</a>
+                </li>
+                <li>
+                    <Modal className="bg-grey-darkest" header="Messenger" trigger={<a ref={this.chatRoomRef} href="!#" onClick={this.chatroomClick}>Messenger</a>}>
+                       <Users />
+                    </Modal>
                 </li>
                 <li className="avatar">
                     <a href="#" ref={this.dropdownTriggerRef} data-target="dropdown1" className="dropdown-trigger">
@@ -61,7 +73,7 @@ class Navbar extends Component {
             <nav ref={this.navRef}>
                 <div className="nav-wrapper">
                 <Link to="/" className="brand-logo">
-                    <img width="90" alt="qupp logo" src={logo} />
+                    <img width="90" alt="qupp logo" src={logo} className="ml-1" />
                 </Link>
                 <a href="!#" data-target="sidenav" className="sidenav-trigger">
                     <i className="material-icons">menu</i>
