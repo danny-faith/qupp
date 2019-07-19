@@ -7,8 +7,8 @@ import TextFieldGroup from '../common/TextFieldGroup';
 
 class CreatePlaylist extends Component {
     state = {
-        name: this.props.name,
-        slug: this.props.slug,
+        name: this.props.name || '',
+        slug: this.props.slug || '',
         errors: {}
     }
     onSubmit = (e) => {
