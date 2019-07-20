@@ -51,7 +51,7 @@ class Login extends Component {
 					<h2 className="center">Login</h2>
 					<form noValidate onSubmit={this.onSubmit}>
 						<Row>
-							<TextFieldGroup
+							{/* <TextFieldGroup
 								placeholder="Username or email"
 								name="usernameOrEmail"
 								type="text"
@@ -66,7 +66,7 @@ class Login extends Component {
 								value={this.state.password}
 								onChange={this.onChange}
 								error={errors.password}
-							/>
+							/> */}
 							<Col s={12}>
 								<Link className='col s12' to="/forgotten-password">Forgotten password?</Link>
 								<Button className="btn-small right" waves="light">Login</Button>
