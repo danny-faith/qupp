@@ -17,15 +17,15 @@ class ChangePassword extends Component {
   }
   onSubmit = e => {
     e.preventDefault();
-		console.log(this.props);
-		
-		const payload = {
-			isAuthenticated: this.props.auth.isAuthenticated,
-			token: this.props.location.search.replace('?', '').split('=')[1],
-			userId: this.props.auth.user.id,
-			password: this.state.password,
-			password2: this.state.password2
-		}
+	console.log(this.props);
+	
+	const payload = {
+		isAuthenticated: this.props.auth.isAuthenticated,
+		token: this.props.location.search.replace('?', '').split('=')[1],
+		userId: this.props.auth.user.id,
+		password: this.state.password,
+		password2: this.state.password2
+	}
     this.props.changePassword(payload);
 	}
 	componentWillReceiveProps = (nextProps) => {

@@ -18,9 +18,9 @@ const TextFieldGroup = ({
     
     return (
 		<React.Fragment>
-            <input
+            <TextInput
                 type={type} 
-                inputClassName={classnames('form-control form-control-lg', {
+                className={classnames('form-control form-control-lg', {
                     'is-invalid': error
                 })}
                 placeholder={placeholder}
