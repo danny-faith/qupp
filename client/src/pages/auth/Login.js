@@ -51,36 +51,36 @@ class Login extends Component {
 					<h2 className="center">Login</h2>
 					<form noValidate onSubmit={this.onSubmit}>
 						<Row>
-						<input
+						{/* <TextInput
 							type={'text'} 
 							placeholder={'Username or email'}
 							name={'usernameOrEmail'} 
 							value={this.state.usernameOrEmail}
 							onChange={this.onChange}
 						/>
-						<input
+						<TextInput
 							type={'text'} 
 							placeholder={'Password'}
 							name={'password'} 
 							value={this.state.password}
 							onChange={this.onChange}
-						/>
-							{/* <TextFieldGroup
+						/> */}
+							<TextFieldGroup
 								placeholder="Username or email"
 								name="usernameOrEmail"
 								type="text"
 								value={this.state.usernameOrEmail}
 								onChange={this.onChange}
 								error={errors.usernameOrEmail}
-							/> */}
-							{/* <TextFieldGroup
+							/>
+							<TextFieldGroup
 								placeholder="Password"
 								name="password"
 								type="password"
 								value={this.state.password}
 								onChange={this.onChange}
 								error={errors.password}
-							/> */}
+							/>
 							<Col s={12}>
 								<Link className='col s12' to="/forgotten-password">Forgotten password?</Link>
 								<Button className="btn-small right" waves="light">Login</Button>
