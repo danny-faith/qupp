@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Modal } from 'react-materialize';
-import Messenger from '../chat/Messenger';
-import Users from '../chat/Users';
+import Messenger from '../messenger/Messenger';
+import Users from '../messenger/Users';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/authActions';
@@ -14,6 +14,7 @@ import logo from '../../logo-v2.svg';
 class Navbar extends Component {
     dropdownTriggerRef = React.createRef();
     messengerRef = React.createRef();
+    usersRef = React.createRef();
     shouldDropdownInit() {
         if (this.props.auth.isAuthenticated) {
             window.M.Dropdown.init(this.dropdownTriggerRef.current);
@@ -30,6 +31,8 @@ class Navbar extends Component {
     }
     componentDidMount = () => {
         this.shouldDropdownInit();
+        // console.log(this.usersRef);
+        
     }
     componentDidUpdate = () => {
         this.shouldDropdownInit();
@@ -43,8 +46,8 @@ class Navbar extends Component {
                     <a href="!#" onClick={this.onLogoutClick}>Logout</a>
                 </li>
                 <li>
-                    <Modal id="messengerUsers" className="bg-grey-darkest" header="Messenger" trigger={<a ref={this.messengerRef} href="!#" onClick={this.messengerClick}>Messenger</a>}>
-                       <Users />
+                    <Modal id="messengerUsers" className="bg-grey-darkest" header="Messengerrr" ref={this.usersRef} trigger={<a ref={this.messengerRef} href="!#" onClick={this.messengerClick}>Messenger</a>}>
+                       <Users usersRef={this.usersRef} />
                     </Modal>
                 </li>
                 <li className="avatar">
