@@ -13,7 +13,7 @@ import logo from '../../logo-v2.svg';
 
 class Navbar extends Component {
     dropdownTriggerRef = React.createRef();
-    chatRoomRef = React.createRef();
+    messengerRef = React.createRef();
     shouldDropdownInit() {
         if (this.props.auth.isAuthenticated) {
             window.M.Dropdown.init(this.dropdownTriggerRef.current);
@@ -24,8 +24,9 @@ class Navbar extends Component {
 		this.props.clearPlaylists();
 		this.props.logoutUser(this.props.history);
     }
-    chatroomClick = (e) => {
-
+    messengerClick = (e) => {
+        console.log(e);
+        
     }
     componentDidMount = () => {
         this.shouldDropdownInit();
@@ -42,7 +43,7 @@ class Navbar extends Component {
                     <a href="!#" onClick={this.onLogoutClick}>Logout</a>
                 </li>
                 <li>
-                    <Modal className="bg-grey-darkest" header="Messenger" trigger={<a ref={this.chatRoomRef} href="!#" onClick={this.chatroomClick}>Messenger</a>}>
+                    <Modal id="messengerUsers" className="bg-grey-darkest" header="Messenger" trigger={<a ref={this.messengerRef} href="!#" onClick={this.messengerClick}>Messenger</a>}>
                        <Users />
                     </Modal>
                 </li>

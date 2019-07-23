@@ -2,11 +2,14 @@ import React, { Component } from 'react'
 import { Button, Row, Col } from 'react-materialize';
 
 export default class Users extends Component {
+    userClick = (e) => {
+        console.log(e);
+    }
     render() {
         return (
             <div>
                 <Row>
-                    <Col><Button className="bg-green" waves="light">Daniel Blythe</Button></Col>
+                    <Col><Button onClick={this.userClick} className="bg-green" waves="light">Daniel Blythe</Button></Col>
                 </Row>
                 <Row>
                     <Col><Button className="bg-green" waves="light">Liam Balcombe</Button></Col>
