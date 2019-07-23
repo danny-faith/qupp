@@ -1,64 +1,78 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Button } from 'react-materialize';
+import { Row, Col, Button, TextInput } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextFieldGroup from '../../components/common/TextFieldGroup';
 import { loginUser } from '../../actions/authActions';
 
 class Login extends Component {
-  state = {
-    usernameOrEmail: '',
-    password: '',
-    errors: {}
-  }
-  onChange = e => {
+	state = {
+		usernameOrEmail: '',
+		password: '',
+		errors: {}
+	}
+	onChange = e => {
 		const errors = this.state.errors;
 		errors[e.target.name] = '';
 		this.setState({
 			[e.target.name]: e.target.value,
 			errors
 		});
-  }
-  onSubmit = e => {
-    e.preventDefault();
+	}
+  	onSubmit = e => {
+    	e.preventDefault();
 
-    const userData = {
-      usernameOrEmail: this.state.usernameOrEmail,
-      password: this.state.password
-    }
-    this.props.loginUser(userData);
+		const userData = {
+			usernameOrEmail: this.state.usernameOrEmail,
+			password: this.state.password
+		}
+    	this.props.loginUser(userData);
 	}
 	componentDidMount = () => {
 		if (this.props.auth.isAuthenticated) {
-				this.props.history.push('/dashboard');
+			this.props.history.push('/dashboard');
 		}
 	}
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.auth.isAuthenticated) {
-      this.props.history.push('/dashboard');
-    }
+  	componentWillReceiveProps = (nextProps) => {
+		if (nextProps.auth.isAuthenticated) {
+			this.props.history.push('/dashboard');
+		}
 		if (nextProps.errors) {
 			this.setState({errors: nextProps.errors});
 		}
 	}
-  render() {
+  	render() {
 		const { errors } = this.state;
 
-    return (
-      <Row>
+		return (
+			<Row>
 				<Col s={12} m={6} className="offset-m3">
 					<h2 className="center">Login</h2>
 					<form noValidate onSubmit={this.onSubmit}>
 						<Row>
+						{/* <TextInput
+							type={'text'} 
+							placeholder={'Username or email'}
+							name={'usernameOrEmail'} 
+							value={this.state.usernameOrEmail}
+							onChange={this.onChange}
+						/>
+						<TextInput
+							type={'text'} 
+							placeholder={'Password'}
+							name={'password'} 
+							value={this.state.password}
+							onChange={this.onChange}
+						/> */}
 							<TextFieldGroup
 								placeholder="Username or email"
 								name="usernameOrEmail"
 								type="text"
-								value={this.state.email}
+								value={this.state.usernameOrEmail}
 								onChange={this.onChange}
 								error={errors.usernameOrEmail}
-              />
+							/>
 							<TextFieldGroup
 								placeholder="Password"
 								name="password"
@@ -72,22 +86,22 @@ class Login extends Component {
 								<Button className="btn-small right" waves="light">Login</Button>
 							</Col>
 						</Row>
-          </form>
-         </Col>
-      </Row>
-    )
-  }
+					</form>
+				</Col>
+			</Row>
+		)
+  	}
 }
 
 Login.propTypes = {
-  loginUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+	loginUser: PropTypes.func.isRequired,
+	auth: PropTypes.object.isRequired,
+	errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  auth: state.auth,
-  errors: state.errors
+	auth: state.auth,
+	errors: state.errors
 });
 
 export default connect(mapStateToProps, { loginUser })(Login);

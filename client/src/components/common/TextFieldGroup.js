@@ -3,7 +3,6 @@ import classnames from 'classnames';
 import propTypes from 'prop-types';
 import { TextInput } from 'react-materialize';
 
-
 const TextFieldGroup = ({
     name,
     placeholder,
@@ -15,7 +14,9 @@ const TextFieldGroup = ({
     onChange,
     disabled
 }) => {
-  return (
+    console.log('hello');
+    
+    return (
 		<React.Fragment>
             <TextInput
                 type={type} 
@@ -33,7 +34,7 @@ const TextFieldGroup = ({
             {error && (<p className="red-text col s12 no-margin">{error}</p>)}
             {info && (<p className="helper-text col s12">{info}</p>)}
         </React.Fragment>
-  )
+    )
 }
 
 TextFieldGroup.propTypes = {

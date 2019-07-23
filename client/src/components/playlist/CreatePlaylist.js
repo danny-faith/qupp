@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Row, Col, Button } from 'react-materialize';
+import { Button } from 'react-materialize';
 import { createPlaylist } from '../../actions/playlistActions';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -7,8 +7,8 @@ import TextFieldGroup from '../common/TextFieldGroup';
 
 class CreatePlaylist extends Component {
     state = {
-        name: this.props.name,
-        slug: this.props.slug,
+        name: this.props.name || '',
+        slug: this.props.slug || '',
         errors: {}
     }
     onSubmit = (e) => {
@@ -43,7 +43,7 @@ class CreatePlaylist extends Component {
                     <TextFieldGroup
                         name="name"
                         type="text"
-                        label="Name"
+                        placeholder="Name"
                         value={this.state.name}
                         onChange={this.onChange}
                         error={errors.name}
@@ -51,7 +51,7 @@ class CreatePlaylist extends Component {
                     <TextFieldGroup
                         name="slug"
                         type="text"
-                        label="Playlist URL"
+                        placeholder="Playlist URL"
                         value={this.state.slug}
                         onChange={this.onChange}
                         error={errors.slug}
