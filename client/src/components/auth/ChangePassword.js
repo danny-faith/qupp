@@ -1,76 +1,65 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, TextInput } from 'react-materialize';
+import { Row, Col, Button } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import { withRouter } from 'react-router-dom';
 import { changePassword } from '../../actions/authActions';
+import TextFieldGroup from '../common/TextFieldGroup';
 
 class ChangePassword extends Component {
-  state = {
-    password: '',
+	state = {
+		password: '',
 		password2: '',
-    errors: {}
-  }
-  onChange = e => {
-    this.setState({[e.target.name]: e.target.value});
-  }
-  onSubmit = e => {
-    e.preventDefault();
-	console.log(this.props);
-	
-	const payload = {
-		isAuthenticated: this.props.auth.isAuthenticated,
-		token: this.props.location.search.replace('?', '').split('=')[1],
-		userId: this.props.auth.user.id,
-		password: this.state.password,
-		password2: this.state.password2
+		errors: {}
 	}
-    this.props.changePassword(payload);
+	onChange = e => {
+		this.setState({[e.target.name]: e.target.value});
+	}
+  	onSubmit = e => {
+    	e.preventDefault();
+		console.log(this.props);
+	
+		const payload = {
+			isAuthenticated: this.props.auth.isAuthenticated,
+			token: this.props.location.search.replace('?', '').split('=')[1],
+			userId: this.props.auth.user.id,
+			password: this.state.password,
+			password2: this.state.password2
+		}
+    	this.props.changePassword(payload);
 	}
 	componentWillReceiveProps = (nextProps) => {
 		if (nextProps.errors) {
 			this.setState({errors: nextProps.errors});
 		}
 	}
-  render() {
+  	render() {
 		const { errors } = this.state;
 
-    return (
+		return (
 			<form noValidate onSubmit={this.onSubmit}>
 				<Row>
 					<Col s={12}>
-						<TextInput
-							id={"password"}
-							className={classnames({
-								'invalid': errors.password
-							})} 
-							type="password"
+						<TextFieldGroup
+							placeholder="New password"
 							name="password"
-							s={12}
-							label="New password"
-							onChange={this.onChange}
+							type="password"
 							value={this.state.password}
-							/>
-							{errors.password && (<p className="red-text col no-margin">{errors.password}</p>)}
+							onChange={this.onChange}
+							error={errors.password}
+						/>
 					</Col>
 				</Row>
 				<Row>
 					<Col s={12}>
-						<TextInput
-							id={"password2"}
-							className={classnames({
-								'invalid': errors.password2
-							})} 
-							type="password"
+						<TextFieldGroup
+							placeholder="Confirm new password"
 							name="password2"
-							s={12}
-							label="Confirm new password"
-							onChange={this.onChange}
+							type="password"
 							value={this.state.password2}
-							/>
-							{errors.password2 && (<p className="red-text col no-margin">{errors.password2}</p>)}
-							{errors.verifyPasswordRest && (<p className="red-text col no-margin">{errors.verifyPasswordRest}</p>)}
+							onChange={this.onChange}
+							error={errors.password2}
+						/>
 					</Col>
 				</Row>
 				<Row>
@@ -79,8 +68,8 @@ class ChangePassword extends Component {
 					</Col>
 				</Row>
 			</form>
-    )
-  }
+		)
+  	}
 }
 
 ChangePassword.propTypes = {

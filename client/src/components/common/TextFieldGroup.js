@@ -13,9 +13,7 @@ const TextFieldGroup = ({
     type,
     onChange,
     disabled
-}) => {
-    console.log('hello');
-    
+}) => {    
     return (
 		<React.Fragment>
             <TextInput
