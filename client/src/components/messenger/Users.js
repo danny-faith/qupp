@@ -4,40 +4,38 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getAllUsers, clearAllUsers } from '../../actions/messengerActions';
 import Spinner from '../common/Spinner';
+import isEmpty from '../../validation/is-empty';
 
 class Users extends Component {
     componentDidMount = () => {
-        // this.instance = document.querySelector('#messengerUsers');
-        // console.log(this.props.usersRef.current);
-        // console.log(this.instance);
-        // console.log(this.props);
         this.props.getAllUsers();
     }
     userClick = (e) => {
-        // console.log(e);
-        // const instance2 = window.M.Modal.getInstance(this.instance);
-        // console.log(this.props.usersRef.current.instance.el);
-        
+        e.preventDefault();
         const instance = window.M.Modal.getInstance(this.props.usersRef.current.instance.el);
-        // console.log(instance);
-        
         instance.close();
     }
     render() {
+		const loading = this.props.messenger.loading;
+		const users = this.props.messenger.users;
+        
+        let userContent;
+
+        if (loading) {
+            userContent = <Spinner />;
+        } else if (isEmpty(users)) {
+            userContent = 'No users to talk to :(';
+        } else {
+            userContent = users.map(user => (
+                <Row key={user._id}>
+                    <Col><Button onClick={this.userClick} className="bg-green" waves="light">{user.username}</Button></Col>
+                </Row>
+            ));
+        }
+
         return (
             <div>
-                <Row>
-                    <Col><Button onClick={this.userClick} className="bg-green" waves="light">Daniel Blythe</Button></Col>
-                </Row>
-                <Row>
-                    <Col><Button className="bg-green" waves="light">Liam Balcombe</Button></Col>
-                </Row>
-                <Row>
-                    <Col><Button className="bg-grey" waves="light">Billy Wright</Button></Col>
-                </Row>
-                <Row>
-                    <Col><Button className="bg-green" waves="light">Rosie Forsyth</Button>   </Col>
-                </Row>
+                {userContent}
             </div>
         )
     }
@@ -46,13 +44,13 @@ class Users extends Component {
 Users.propTypes = {
 	getAllUsers: PropTypes.func.isRequired,
 	clearAllUsers: PropTypes.func.isRequired,
-	users: PropTypes.object,
+	messenger: PropTypes.object,
 	auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
 	auth: state.auth,
-	users: state.users
+	messenger: state.messenger
 });
 
 export default connect(mapStateToProps, { getAllUsers, clearAllUsers })(Users);
