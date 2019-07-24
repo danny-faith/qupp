@@ -6,7 +6,7 @@ const passport = require('passport');
 require('dotenv').config();
 
 mongoose.Promise = global.Promise;
-var promise = mongoose.connect('mongodb://localhost/qupp_db_EBDNBFJN');
+var promise = mongoose.connect('mongodb://localhost/qupp_db_EBDNBFJN', { useNewUrlParser: true });
 
 promise.then(function(db) {
   console.log('DATABASE CONNECTED!!');
