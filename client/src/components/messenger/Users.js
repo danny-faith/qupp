@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
 import { Button, Row, Col } from 'react-materialize';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { getAllUsers, clearAllUsers } from '../../actions/messengerActions';
+import Spinner from '../common/Spinner';
 
-export default class Users extends Component {
+class Users extends Component {
     componentDidMount = () => {
         // this.instance = document.querySelector('#messengerUsers');
         // console.log(this.props.usersRef.current);
         // console.log(this.instance);
-        
+        // console.log(this.props);
+        this.props.getAllUsers();
     }
     userClick = (e) => {
         // console.log(e);
@@ -38,3 +43,16 @@ export default class Users extends Component {
     }
 }
 
+Users.propTypes = {
+	getAllUsers: PropTypes.func.isRequired,
+	clearAllUsers: PropTypes.func.isRequired,
+	users: PropTypes.object,
+	auth: PropTypes.object.isRequired
+}
+
+const mapStateToProps = (state) => ({
+	auth: state.auth,
+	users: state.users
+});
+
+export default connect(mapStateToProps, { getAllUsers, clearAllUsers })(Users);
