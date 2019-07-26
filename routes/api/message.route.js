@@ -10,8 +10,7 @@ const Message = require('../../models/Message');
 //  @description Get duo message
 //  @access Private
 router.get('/:user', passport.authenticate('jwt', { session: false }), (req, res) => {
-
-    if (isEmpty(req.user.username)) {
+    if (isEmpty(req.user.id)) {
         return res.status(404).json({ msg: 'No primary user in request'});
     }
     // TODO: change `req.user.username` to `req.user._id`

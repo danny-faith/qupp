@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { Button, Row, Col } from 'react-materialize';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getAllUsers, clearAllUsers } from '../../actions/messengerActions';
+import { getAllUsers, clearAllUsers, getMessageRoom } from '../../actions/messengerActions';
 import Spinner from '../common/Spinner';
 import isEmpty from '../../validation/is-empty';
+import Messenger from './Messenger';
 
 class Users extends Component {
     componentDidMount = () => {
@@ -12,8 +13,11 @@ class Users extends Component {
     }
     userClick = (e) => {
         e.preventDefault();
-        const instance = window.M.Modal.getInstance(this.props.usersRef.current.instance.el);
-        instance.close();
+        // const instance = window.M.Modal.getInstance(this.props.usersRef.current.instance.el);
+        // instance.close();
+        console.log(e.target.dataset.userid);
+        
+        this.props.getMessageRoom(e.target.dataset.userid);
     }
     render() {
 		const loading = this.props.messenger.loading;
@@ -28,7 +32,7 @@ class Users extends Component {
         } else {
             userContent = users.map(user => (
                 <Row key={user._id}>
-                    <Col><Button onClick={this.userClick} className="bg-green" waves="light">{user.username}</Button></Col>
+                    <Col><Button onClick={this.userClick} data-userid={user._id} className="bg-green" waves="light">{user.username}</Button></Col>
                 </Row>
             ));
         }
@@ -44,6 +48,7 @@ class Users extends Component {
 Users.propTypes = {
 	getAllUsers: PropTypes.func.isRequired,
 	clearAllUsers: PropTypes.func.isRequired,
+	getMessageRoom: PropTypes.func.isRequired,
 	messenger: PropTypes.object,
 	auth: PropTypes.object.isRequired
 }
@@ -53,4 +58,4 @@ const mapStateToProps = (state) => ({
 	messenger: state.messenger
 });
 
-export default connect(mapStateToProps, { getAllUsers, clearAllUsers })(Users);
+export default connect(mapStateToProps, { getAllUsers, clearAllUsers, getMessageRoom })(Users);

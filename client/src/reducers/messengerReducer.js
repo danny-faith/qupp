@@ -1,7 +1,7 @@
 import { 
     CREATE_MESSAGE_ROOM, 
     GET_MESSAGE_ROOM, 
-    MESSAGE_ROOM_LOADING, 
+    LOADING_MESSAGE_ROOM, 
     CLEAR_MESSAGE_ROOM,
     GET_ALL_USERS,
     LOADING_ALL_USERS,
@@ -10,11 +10,21 @@ import {
 
 const initialState = {
     users: null,
-    loading: false
+    loading: false,
+    messages: null
 }
 
 export default function(state = initialState, action) {
     switch (action.type) {
+        case LOADING_MESSAGE_ROOM:
+            return {
+                ...state,
+                loading: true
+            }
+        case GET_MESSAGE_ROOM:
+            return {
+                ...state
+            }
         case CREATE_MESSAGE_ROOM:
             return {
                 ...state
