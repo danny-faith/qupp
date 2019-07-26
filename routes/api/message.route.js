@@ -13,8 +13,6 @@ router.get('/:user', passport.authenticate('jwt', { session: false }), (req, res
     if (isEmpty(req.user.id)) {
         return res.status(404).json({ msg: 'No primary user in request'});
     }
-    // TODO: change `req.user.username` to `req.user._id`
-    console.log(req.user.id, req.params.user);
     
     Message.find({ users: { $all: [req.user.id, req.params.user] } })
         .then(message => {            

@@ -31,6 +31,11 @@ export default function(state = initialState, action) {
             return {
                 ...state
             }
+        case CLEAR_MESSAGE_ROOM:
+            return {
+                ...state,
+                messageRoom: {}
+            }
         case LOADING_ALL_USERS:
             return {
                 ...state,
