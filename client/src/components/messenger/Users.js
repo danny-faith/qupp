@@ -15,9 +15,9 @@ class Users extends Component {
         e.preventDefault();
         // const instance = window.M.Modal.getInstance(this.props.usersRef.current.instance.el);
         // instance.close();
-        console.log(e.target.dataset.userid);
+        console.log(e.target.dataset.secondaryUserId);
         
-        this.props.getMessageRoom(e.target.dataset.userid);
+        this.props.getMessageRoom(e.target.dataset.secondaryUserId);
     }
     render() {
 		const loading = this.props.messenger.loading;
@@ -32,7 +32,7 @@ class Users extends Component {
         } else {
             userContent = users.map(user => (
                 <Row key={user._id}>
-                    <Col><Button onClick={this.userClick} data-userid={user._id} className="bg-green" waves="light">{user.username}</Button></Col>
+                    <Col><Button onClick={this.userClick} data-secondary-user-id={user._id} className="bg-green" waves="light">{user.username}</Button></Col>
                 </Row>
             ));
         }

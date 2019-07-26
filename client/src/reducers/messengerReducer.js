@@ -11,7 +11,7 @@ import {
 const initialState = {
     users: null,
     loading: false,
-    messages: null
+    messageRoom: null
 }
 
 export default function(state = initialState, action) {
@@ -23,7 +23,9 @@ export default function(state = initialState, action) {
             }
         case GET_MESSAGE_ROOM:
             return {
-                ...state
+                ...state,
+                messageRoom: action.payload,
+                loading: false
             }
         case CREATE_MESSAGE_ROOM:
             return {

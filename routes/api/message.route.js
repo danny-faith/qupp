@@ -14,10 +14,12 @@ router.get('/:user', passport.authenticate('jwt', { session: false }), (req, res
         return res.status(404).json({ msg: 'No primary user in request'});
     }
     // TODO: change `req.user.username` to `req.user._id`
-    Message.find({ users: { $all: [req.user.username, req.params.user] } })
-        .then(message => {
+    console.log(req.user.id, req.params.user);
+    
+    Message.find({ users: { $all: [req.user.id, req.params.user] } })
+        .then(message => {            
             if (message.length === 0) {
-                return res.status(404).json({ msg: 'No message room found' });
+                return res.status(404).json({ msg: 'No message room found', primUser: req.user.id });
             } else {
                 return res.json(message);
             }

@@ -24,10 +24,10 @@ export const getAllUsers = () => (dispatch) => {
 }
 
 // Get message room
-export const getMessageRoom = (userId) => (dispatch) => {  
+export const getMessageRoom = (secondaryUserId) => (dispatch) => {  
     dispatch(messageRoomLoading());
      
-    axios.get(`/api/message/${userId}`)
+    axios.get(`/api/message/${secondaryUserId}`)
         .then(res =>
             dispatch({
                 type: GET_MESSAGE_ROOM,
@@ -35,8 +35,13 @@ export const getMessageRoom = (userId) => (dispatch) => {
             })
         )
         .catch(err => {
+            const payload = {
+                users: `${err.response.data.primUser},${secondaryUserId}`
+            }
+            console.log(err.response.data.primUser, secondaryUserId);
             if (err.response.status === 404) {
                 console.log('couldnt find a room. make one');
+                dispatch(createMessageRoom(payload));
             } else {
                 window.M.toast({html: 'There was an error finding / opening the message room. Please try again ', classes: 'red lighten-2'});
             }
@@ -44,6 +49,18 @@ export const getMessageRoom = (userId) => (dispatch) => {
 }
 
 // Create message room
+export const createMessageRoom = (payload) => (dispatch) => {
+    axios.post('/api/message', payload)
+        .then(res => 
+            dispatch({
+                type: CREATE_MESSAGE_ROOM,
+                payload: res.data
+            })
+        )
+        .catch(err => {
+            console.log(err);
+        });
+}
 
 // Clear all users
 export const clearAllUsers = () => (dispatch) => {
