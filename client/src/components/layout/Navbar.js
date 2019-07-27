@@ -14,7 +14,7 @@ class Navbar extends Component {
     dropdownTriggerRef = React.createRef();
     messengerRef = React.createRef();
     usersRef = React.createRef();
-    
+
     shouldDropdownInit = () => {
         if (this.props.auth.isAuthenticated) {
             window.M.Dropdown.init(this.dropdownTriggerRef.current);
@@ -24,10 +24,6 @@ class Navbar extends Component {
 		e.preventDefault();
 		this.props.clearPlaylists();
 		this.props.logoutUser(this.props.history);
-    }
-    messengerClick = (e) => {
-        console.log(e);
-        
     }
     componentDidMount = () => {
         this.shouldDropdownInit();
@@ -45,7 +41,7 @@ class Navbar extends Component {
                 </li>
                 <li>
                     <Modal id="messengerUsers" className="bg-grey-darkest" header="Messengerrr" ref={this.usersRef} trigger={<a ref={this.messengerRef} href="!#" onClick={this.messengerClick}>Messenger</a>}>
-                       <Messenger usersRef={this.usersRef} />
+                       <Messenger />
                     </Modal>
                 </li>
                 <li className="avatar">

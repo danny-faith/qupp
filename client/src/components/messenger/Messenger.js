@@ -1,43 +1,41 @@
 import React, { Component } from 'react'
-import { Button, Row, Col } from 'react-materialize';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getAllUsers, clearAllUsers, getMessageRoom } from '../../actions/messengerActions';
-import Spinner from '../common/Spinner';
+import { Button } from 'react-materialize';
+import { getAllUsers, clearAllUsers, getMessageRoom, clearMessageRoom } from '../../actions/messengerActions';
 import isEmpty from '../../validation/is-empty';
+import Users from './Users';
+import Messages from './Messages';
 
 class Messenger extends Component {
-    componentDidMount = () => {
-        this.props.getAllUsers();
+    state = {
+        areWeTalking: false,
+        currentRoom: null
     }
-    userClick = (e) => {
-        e.preventDefault();
-        // const instance = window.M.Modal.getInstance(this.props.usersRef.current.instance.el);
-        // instance.close();
-        
-        this.props.getMessageRoom(e.target.dataset.secondaryUserId);
+    backButtonHandler = () => {
+        this.props.clearMessageRoom();
+        this.setState({
+            areWeTalking: false
+        });
+    }
+    // TODO BUG if there is no messageRoom. You have to click twice on the user to open the room
+    componentWillReceiveProps = (props) => {
+        if (!isEmpty(props.messenger.messageRoom)) {
+            if (this.state.currentRoom !== props.messenger.messageRoom[0]._id) {
+                this.setState({
+                    areWeTalking: true,
+                    currentRoom: props.messenger.messageRoom[0]._id
+                }, () => {
+                    
+                });
+            }
+        }
     }
     render() {
-		const loading = this.props.messenger.loading;
-		const users = this.props.messenger.users;
-        
-        let userContent;
-
-        if (loading) {
-            userContent = <Spinner />;
-        } else if (isEmpty(users)) {
-            userContent = 'No users to talk to :(';
-        } else {
-            userContent = users.map(user => (
-                <Row key={user._id}>
-                    <Col><Button onClick={this.userClick} data-secondary-user-id={user._id} className="bg-green" waves="light">{user.username}</Button></Col>
-                </Row>
-            ));
-        }
-
         return (
             <div>
-                {userContent}
+                {(this.state.areWeTalking) && <Button onClick={this.backButtonHandler}>Back</Button>}
+                {(this.state.areWeTalking) ? <Messages /> : <Users />}
             </div>
         )
     }
@@ -47,6 +45,7 @@ Messenger.propTypes = {
 	getAllUsers: PropTypes.func.isRequired,
 	clearAllUsers: PropTypes.func.isRequired,
 	getMessageRoom: PropTypes.func.isRequired,
+	clearMessageRoom: PropTypes.func.isRequired,
 	messenger: PropTypes.object,
 	auth: PropTypes.object.isRequired
 }
@@ -56,4 +55,4 @@ const mapStateToProps = (state) => ({
 	messenger: state.messenger
 });
 
-export default connect(mapStateToProps, { getAllUsers, clearAllUsers, getMessageRoom })(Messenger);
+export default connect(mapStateToProps, { getAllUsers, clearAllUsers, getMessageRoom, clearMessageRoom })(Messenger );
