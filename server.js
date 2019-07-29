@@ -6,7 +6,7 @@ const passport = require('passport');
 require('dotenv').config();
 
 mongoose.Promise = global.Promise;
-var promise = mongoose.connect('mongodb://localhost/qupp_db_EBDNBFJN');
+var promise = mongoose.connect('mongodb://localhost/qupp_db_EBDNBFJN', { useNewUrlParser: true });
 
 promise.then(function(db) {
   console.log('DATABASE CONNECTED!!');
@@ -29,6 +29,7 @@ const PORT = pt || 8080;
 const usersRouter = require('./routes/api/users.route');
 const playlistRouter = require('./routes/api/playlist.route');
 const spotifyRouter = require('./routes/api/authSpotify.route');
+const messageRouter = require('./routes/api/message.route');
 
 const app = express();
 
@@ -81,6 +82,7 @@ app.use(function(req, res, next) {
 app.use('/api/users', usersRouter);
 app.use('/api/playlists', playlistRouter);
 app.use('/api/authspotify', spotifyRouter);
+app.use('/api/message', messageRouter);
 
 app.get('*', (req, res) => {
     // console.log('Catch all route');

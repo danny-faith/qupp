@@ -1,0 +1,11 @@
+.chat-textstream {
+	height: 40vh;
+	overflow-y: auto;
+}
+.modal {
+	max-height: 85%;
+	.modal-content {
+		overflow-y: auto;
+		height: 77vh;
+	}
+}

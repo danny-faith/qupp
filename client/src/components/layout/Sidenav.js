@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
+import { Modal } from 'react-materialize';
+import Messenger from '../messenger/Messenger';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/authActions';
@@ -7,6 +9,7 @@ import { clearPlaylists } from '../../actions/playlistActions';
 import { withRouter } from 'react-router-dom';
 
 class Sidenav extends Component {
+  messengerRef = React.createRef();
   sideNavRef = React.createRef();
   state = {
     isAuthenticated2: false
@@ -37,8 +40,14 @@ class Sidenav extends Component {
             <a href="#name"><span className="white-text name pb-4">{user.username}</span></a>
             </div>
           </li>
+
           <li><Link to="/dashboard">Dashboard</Link></li>
           <li><Link to="/my-account">Account</Link></li>
+          <li>
+            <Modal id="messengerUsers" className="bg-grey-darkest" header="Messenger" ref={this.usersRef} trigger={<a ref={this.messengerRef} href="!#" onClick={this.messengerClick}>Messenger</a>}>
+                <Messenger />
+            </Modal>
+          </li>
           <li className="divider"></li>
           <li><button onClick={this.onLogoutClick}>Logout</button></li>
         </ul>

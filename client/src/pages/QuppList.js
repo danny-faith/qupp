@@ -43,6 +43,7 @@ class QuppListPage extends Component {
   componentDidUpdate = () => {
     if (!isEmpty(this.props.playlists.playlist) && this.state.firebaseSyncFlag === true) {
       // sync to users speicific playlist 
+      // TODO move syncState into `firebaseApp.initializedApp` then()
       base.syncState(`playlists/${this.props.playlists.playlist[0]._id}`, {
         context: this,
         state: 'playlist',

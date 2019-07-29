@@ -397,10 +397,18 @@ router.post(
 //  @route GET api/users/current
 //  @description Returns current users
 //  @access Private
+// TODO remove as was a test route
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log('/current route');
-    
     res.json(req.user);
+});
+
+//  @route GET api/users/all
+//  @description Returns all users
+//  @access Private
+router.get('/all', passport.authenticate('jwt', { session: false }), (req, res) => {
+    User.find()
+        .then(users => res.json(users))
+        .catch(err => console.log(err));
 });
 
 module.exports = router;

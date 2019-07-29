@@ -17,3 +17,12 @@ export const EDIT_PLAYLIST = 'EDIT_PLAYLIST';
 
 // Type: Account
 export const SET_AVATAR_IMAGE = 'SET_AVATAR_IMAGE';
+
+// Type: Messenger
+export const CREATE_MESSAGE_ROOM = 'CREATE_MESSAGE_ROOM';
+export const GET_MESSAGE_ROOM = 'GET_MESSAGE_ROOM';
+export const LOADING_MESSAGE_ROOM = 'LOADING_MESSAGE_ROOM';
+export const CLEAR_MESSAGE_ROOM = 'CLEAR_MESSAGE_ROOM';
+export const LOADING_ALL_USERS = 'LOADING_ALL_USERS';
+export const GET_ALL_USERS = 'GET_ALL_USERS';
+export const CLEAR_ALL_USERS = 'CLEAR_ALL_USERS';

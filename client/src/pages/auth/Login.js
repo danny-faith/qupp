@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Button, TextInput } from 'react-materialize';
+import { Row, Col, Button } from 'react-materialize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextFieldGroup from '../../components/common/TextFieldGroup';
@@ -51,20 +51,6 @@ class Login extends Component {
 					<h2 className="center">Login</h2>
 					<form noValidate onSubmit={this.onSubmit}>
 						<Row>
-						{/* <TextInput
-							type={'text'} 
-							placeholder={'Username or email'}
-							name={'usernameOrEmail'} 
-							value={this.state.usernameOrEmail}
-							onChange={this.onChange}
-						/>
-						<TextInput
-							type={'text'} 
-							placeholder={'Password'}
-							name={'password'} 
-							value={this.state.password}
-							onChange={this.onChange}
-						/> */}
 							<TextFieldGroup
 								placeholder="Username or email"
 								name="usernameOrEmail"
