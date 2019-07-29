@@ -68,11 +68,10 @@ class Messages extends Component {
     render() {
         let messages = '';
         if (!isEmpty(this.state.messages)) {
-            messages = this.state.messages.map(message =>
-                <Row className="m-0">
+            messages = this.state.messages.map((message, index) =>
+                <Row className="m-0" key={index}>
                     <Col s={12}>
                         <p 
-                            key={message} 
                             className={
                                 classNames('message message--recipient p-2 rounded-sm m-1', {
                                         'text-right bg-blue-dark float-right': message.user === this.props.auth.user.id,
