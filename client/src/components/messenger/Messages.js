@@ -34,7 +34,7 @@ class Messages extends Component {
         });
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                // this.handleFormSubmit(e);
+                this.handleFormSubmit();
             }
         })
     }
@@ -44,7 +44,9 @@ class Messages extends Component {
         });
     }
     handleFormSubmit = (e) => {
-        e.preventDefault();
+        if (!isEmpty(e)) {
+            e.preventDefault();
+        }
         if (this.state.message === '') {
             return;
         }
