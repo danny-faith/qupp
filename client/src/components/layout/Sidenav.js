@@ -44,7 +44,7 @@ class Sidenav extends Component {
           <li><Link to="/dashboard">Dashboard</Link></li>
           <li><Link to="/my-account">Account</Link></li>
           <li>
-            <Modal id="messengerUsers" className="bg-grey-darkest" header="Messengerrr" ref={this.usersRef} trigger={<a ref={this.messengerRef} href="!#" onClick={this.messengerClick}>Messenger</a>}>
+            <Modal id="messengerUsers" className="bg-grey-darkest" header="Messenger" ref={this.usersRef} trigger={<a ref={this.messengerRef} href="!#" onClick={this.messengerClick}>Messenger</a>}>
                 <Messenger />
             </Modal>
           </li>
