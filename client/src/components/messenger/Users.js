@@ -28,7 +28,7 @@ class Users extends Component {
         } else if (isEmpty(users)) {
             userContent = 'No users to talk to :(';
         } else {
-            userContent = users.map(user => (
+            userContent = users.filter(user => this.props.auth.user.id !== user._id).map(user => (
                 <Row key={user._id}>
                     <Col><Button onClick={this.userClick} data-secondary-user-id={user._id} className="bg-green" waves="light">{user.username}</Button></Col>
                 </Row>
