@@ -29,7 +29,9 @@ export default function(state = initialState, action) {
             }
         case CREATE_MESSAGE_ROOM:
             return {
-                ...state
+                ...state,
+                messageRoom: action.payload,
+                loading: false
             }
         case CLEAR_MESSAGE_ROOM:
             return {

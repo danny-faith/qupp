@@ -21,10 +21,13 @@ class Messenger extends Component {
     // TODO BUG if there is no messageRoom. You have to click twice on the user to open the room
     componentWillReceiveProps = (props) => {
         if (!isEmpty(props.messenger.messageRoom)) {
-            if (this.state.currentRoom !== props.messenger.messageRoom[0]._id) {
+            // debugger;
+            console.log(props.messenger.messageRoom);
+            
+            if (this.state.currentRoom !== this.props.messenger.messageRoom._id) {
                 this.setState({
                     areWeTalking: true,
-                    currentRoom: props.messenger.messageRoom[0]._id
+                    currentRoom: props.messenger.messageRoom._id
                 }, () => {
                     
                 });

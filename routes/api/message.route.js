@@ -14,9 +14,9 @@ router.get('/:user', passport.authenticate('jwt', { session: false }), (req, res
         return res.status(404).json({ msg: 'No primary user in request'});
     }
     
-    Message.find({ users: { $all: [req.user.id, req.params.user] } })
+    Message.findOne({ users: { $all: [req.user.id, req.params.user] } })
         .then(message => {            
-            if (message.length === 0) {
+            if (isEmpty(message)) {
                 return res.status(404).json({ msg: 'No message room found', primUser: req.user.id });
             } else {
                 return res.json(message);
@@ -35,7 +35,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
     
     Message.find({ users: { $all: [users[0], users[1]] } })
         .then(message => {
-            if (message.length === 0) {
+            if (isEmpty(message)) {
                 // Create message
                 const messageFields = {
                     type: 'duo',
