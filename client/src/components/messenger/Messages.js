@@ -22,7 +22,6 @@ class Messages extends Component {
     }
     componentDidMount = () => {
         firebaseApp.initializedApp.auth().signInWithEmailAndPassword(REACT_APP_FIREBASE_EMAIL, REACT_APP_FIREBASE_PASSWORD).catch(function(error) {
-
             window.M.toast({html: `${error.code} ${error.message}`, classes: 'red lighten-2'})
         }).then(() => {
             base.syncState(`messenger/${this.props.messenger.messageRoom._id}`, {
