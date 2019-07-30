@@ -25,7 +25,7 @@ class Messages extends Component {
             // Handle Errors here.
             window.M.toast({html: `${error.code} ${error.message}`, classes: 'red lighten-2'})
         }).then(() => {
-            base.syncState(`messenger/${this.props.messenger.messageRoom[0]._id}`, {
+            base.syncState(`messenger/${this.props.messenger.messageRoom._id}`, {
                 context: this,
                 state: 'messages',
                 then() {
@@ -68,11 +68,10 @@ class Messages extends Component {
     render() {
         let messages = '';
         if (!isEmpty(this.state.messages)) {
-            messages = this.state.messages.map(message =>
-                <Row className="m-0">
+            messages = this.state.messages.map((message, index) =>
+                <Row className="m-0" key={index}>
                     <Col s={12}>
                         <p 
-                            key={message} 
                             className={
                                 classNames('message message--recipient p-2 rounded-sm m-1', {
                                         'text-right bg-blue-dark float-right': message.user === this.props.auth.user.id,
