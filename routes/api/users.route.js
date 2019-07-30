@@ -182,6 +182,9 @@ router.post('/login', (req, res) => {
                     if (isMatch) {
                         // User matched
                         const payload = { id: user.id, username: user.username, avatar:user.avatar } // create payload
+                        // Set user to online
+                        console.log(User);
+                        
                         // Sign token
                         jwt.sign(payload, SECRET, { expiresIn: 3600}, (err, token) => {
                             res.json({success: true, token: 'Bearer ' + token});

@@ -29,6 +29,7 @@ class Messages extends Component {
                 context: this,
                 state: 'messages',
                 then() {
+                    this.scrollMessagesToBottom();
                 }
               });
         });
@@ -36,12 +37,21 @@ class Messages extends Component {
             if (e.key === 'Enter') {
                 this.handleFormSubmit();
             }
-        })
+        });
     }
     handleOnChange = (e) => {
         this.setState({
             [e.target.name]: e.target.value
         });
+    }
+    scrollMessagesToBottom = () => {
+        this.chatTextStream.current.scrollTop = this.chatTextStream.current.scrollHeight;
+    }
+    componentDidUpdate = (prevProps, prevState) => {
+        // if we get new messages then call scroll to bottom of chat
+        if (this.state.messages.length > prevState.messages.length) {
+            this.scrollMessagesToBottom();
+        }
     }
     handleFormSubmit = (e) => {
         if (!isEmpty(e)) {
@@ -52,7 +62,8 @@ class Messages extends Component {
         }
         const message = {
             text: this.state.message,
-            user: this.props.auth.user.id
+            user: this.props.auth.user.id,
+            date: Date()
         }
         let copyOfState = {...this.state};
         if (isEmpty(copyOfState.messages)){
@@ -62,7 +73,7 @@ class Messages extends Component {
         copyOfState.message = '';
         this.setState(
             copyOfState, () => {
-            this.chatTextStream.current.scrollTop = this.chatTextStream.current.scrollHeight;
+            this.scrollMessagesToBottom();
         });
     }
     render() {
@@ -73,7 +84,7 @@ class Messages extends Component {
                     <Col s={12}>
                         <p 
                             className={
-                                classNames('message message--recipient p-2 rounded-sm m-1', {
+                                classNames('message message--recipient p-3 rounded-sm m-1', {
                                         'text-right bg-blue-dark float-right': message.user === this.props.auth.user.id,
                                         'bg-grey-dark float-left': message.user !== this.props.auth.user.id
                                     }

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const passport = require('passport');
+const messengerUserStatusCheck = require('./cron');
 require('dotenv').config();
 
 mongoose.Promise = global.Promise;
@@ -59,8 +60,10 @@ if (NODE_ENV === "development") {
     // console.log('were in prod mode');
     app.use( express.static( `${__dirname}/client/build` ) );
 }
-// console.log('express static: ', `${__dirname}/client/build`);
 
+// check messenger users online status
+// cron job
+messengerUserStatusCheck.start();
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
