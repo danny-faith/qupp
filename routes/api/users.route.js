@@ -27,51 +27,6 @@ const {
     ENV
 } = process.env;
 
-/**
- * Endpoint: Create and add new user. `password` method creates an encrypted/hashed
- * password using the password supplied by the user and sent in the body
- */
-
-// router.post('/', (req, res) => {
-//     const newUser = req.body;
-//     const user = new User(newUser);
-//     user.setPassword(req.body.password); // method that creates the users password
-    
-//     user.save(function(err, userModel) {
-//         if (err) {
-//             return res.status(500).send(err);
-//         }
-//         res.status(201).send(userModel);
-//     })
-// });
-
-/**
- * Endpoint: Not currently used. But simply returns an object containing the users details
- * given the search term of the users username.
- */
-
-// router.get('/:username', (req, res, next) => {
-//     console.log('get user');
-    
-//     var { username } = req.params;
-//     User.find({ username: username }).exec(function(err, user) {
-//         if (err) {
-//             next();
-//         } else {
-//             res.status(200).json(user);
-//         }
-//     });
-// });
-
-/**
- * Endpoint: Not currently used. Simply returns all users.
- */
-
-// router.get('/', (req, res) => {
-//     console.log('/login route requested');    
-//     res.sendFile(`${__dirname}/client/build.index.html`);
-// });
-
 //  @route GET api/users/register
 //  @description Register user
 //  @access Public
@@ -394,6 +349,27 @@ router.post(
             })
     }
 );
+
+//  @route PUT api/users/:userId
+//  @description Update users email or lastOnline time
+//  @access Private
+router.put('/:userId', passport.authenticate('jwt', { session: false }), (req, res) => {
+    // console.log('req.body: ', req.body);
+    
+    User.findOne({ _id: req.params.userId })
+        .then(user => {
+            // console.log('user: ', user);
+            user.email = (!isEmpty(req.body.email)) ? req.body.email : user.email;
+            user.lastOnline = (!isEmpty(req.body.lastOnline)) ? req.body.lastOnline : user.lastOnline;
+            // console.log('user.lastOnline: ', user.lastOnline);
+            user.save()
+                .then((user) => res.json(user))
+                .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+
+    // res.json(req.params.userId);
+});
 
 //  @route GET api/users/current
 //  @description Returns current users

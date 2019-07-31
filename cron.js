@@ -6,22 +6,22 @@ const messengerUserStatusCheck = cron.schedule('* * * * *', () => {
     console.log('running a task every minute');
     User.find({ online: true })
         .then(users => {
-            // console.log(users.length);
-            const a = Moment(users[2].lastOnline);
-            const b = Moment(Date.now());
-            console.log(users[2].username);
-            
-            console.log('users[0].lastOnline: ', users[2].lastOnline);
-            
-            console.log(b.diff(a, 'minutes'));
-            // users.forEach(user => {
-            //     // console.log(user);
-            //     const a = Moment(user.lastOnline);
-            //     const b = Moment(Date.now());
-            //     console.log(a.diff(b));
-                
-            //     // console.log(Moment(user.lastOnline));
-            // })
+            users.forEach(user => {
+                const date = new Date();
+		        date.setTime( date.getTime() - new Date().getTimezoneOffset()*60*1000 )
+                const a = Moment(user.lastOnline);
+                const b = Moment(date);
+                // console.log(b.diff(a, 'minutes'));
+
+                // below accounts for timezones
+                if (b.diff(a, 'minutes') > 1) {
+                    // user has not been on qupp for 2 mins - set their status to offline
+                    user.online = false;
+                    user.save()
+                        .then(() => {})
+                        .catch((err) => console.log(err));
+                }
+            })
         })
         .catch(err => console.log(err));
 });

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken';
-import { setCurrentUser, logoutUser } from './actions/authActions';
+import { setCurrentUser, logoutUser, updateUserLastOnlineOrEmail } from './actions/authActions';
 import store from './store';
 import PrivateRoute from './components/common/PrivateRoute';
 
@@ -33,7 +33,6 @@ if (localStorage.jwtToken) {
 	const decoded = jwt_decode(localStorage.jwtToken);
 	// Set user and isAuthenticated
 	store.dispatch(setCurrentUser(decoded));
-
 	// Check for expired token
 	const currentTime = Date.now() / 1000;
 
@@ -42,38 +41,61 @@ if (localStorage.jwtToken) {
 		store.dispatch(logoutUser());
 		// TODO: Clear current profile
 		// Redirect to login
+		// TODO: feel like this redirect should be using React Router if poss' to avoid that double page refresh
 		window.location.href = '/login';
 	}
 }
 
+setInterval(() => {
+	// if localStorage.jwtToken exists then user must be logged in
+	if (localStorage.jwtToken) {
+		const decoded = jwt_decode(localStorage.jwtToken);
+		const exp = new Date(decoded.exp * 1000);
+		const iat = new Date(decoded.iat * 1000);
+		// TODO use exp and iat to tell whether user will have been auto logged out and therefore when to clear the interval and update userOnline to false
+		// console.log('exp: ', exp);
+		// console.log('iat: ', iat);
+		// console.log(decoded);
+
+		// below accounts for timezones
+		const date = new Date();
+		date.setTime( date.getTime() - new Date().getTimezoneOffset()*60*1000 )
+		const payload = {
+			userId: decoded.id,
+			lastOnline: date
+		}
+		store.dispatch(updateUserLastOnlineOrEmail(payload));
+	}
+}, 2000);
+
 class App extends Component {
 	render() {
 		return (
-		<Provider store={ store }> 
-			<Router>
-				<div className="App">
-					<Navbar />
-					<Sidenav />
-					<Route exact path="/" component={Landing} />
-					<Route exact path="/playlist/:slug" component={QuppListPage} />
-					<div className="container">
-						<Route exact path="/register" component={Register} />
-						<Route exact path="/login" component={Login} />
-						<Switch>
-							<PrivateRoute exact path="/dashboard" component={Dashboard} />
-						</Switch>
-						<Switch>
-							<PrivateRoute exact path="/my-account" component={MyAccountPage} />
-						</Switch>
-						<Route exact path="/playlists" component={ViewAllPlaylists} />
-						<Route exact path="/forgotten-password" component={ForgotPasswordPage} />
-						<Route exact path="/reset-password" component={ResetPasswordPage} />
-						<Route exact path="/edit-playlist/:slug" component={EditQupplistPage} />
-						<Route exact path="not-found" component={Error404} />
+			<Provider store={ store }> 
+				<Router>
+					<div className="App">
+						<Navbar />
+						<Sidenav />
+						<Route exact path="/" component={Landing} />
+						<Route exact path="/playlist/:slug" component={QuppListPage} />
+						<div className="container">
+							<Route exact path="/register" component={Register} />
+							<Route exact path="/login" component={Login} />
+							<Switch>
+								<PrivateRoute exact path="/dashboard" component={Dashboard} />
+							</Switch>
+							<Switch>
+								<PrivateRoute exact path="/my-account" component={MyAccountPage} />
+							</Switch>
+							<Route exact path="/playlists" component={ViewAllPlaylists} />
+							<Route exact path="/forgotten-password" component={ForgotPasswordPage} />
+							<Route exact path="/reset-password" component={ResetPasswordPage} />
+							<Route exact path="/edit-playlist/:slug" component={EditQupplistPage} />
+							<Route exact path="not-found" component={Error404} />
+						</div>
 					</div>
-				</div>
-			</Router>
-		</Provider>
+				</Router>
+			</Provider>
 		);
 	}
 }
