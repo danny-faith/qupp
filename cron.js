@@ -3,7 +3,7 @@ const User = require('./models/User');
 const Moment = require('moment');
 
 const messengerUserStatusCheck = cron.schedule('* * * * *', () => {
-    console.log('running a task every minute');
+    // console.log('running a task every minute');
     User.find({ online: true })
         .then(users => {
             users.forEach(user => {
@@ -14,7 +14,7 @@ const messengerUserStatusCheck = cron.schedule('* * * * *', () => {
                 // console.log(b.diff(a, 'minutes'));
 
                 // below accounts for timezones
-                if (b.diff(a, 'minutes') > 1) {
+                if (b.diff(a, 'minutes') > 0) {
                     // user has not been on qupp for 2 mins - set their status to offline
                     user.online = false;
                     user.save()

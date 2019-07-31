@@ -28,6 +28,7 @@ class Messages extends Component {
                 context: this,
                 state: 'messages',
                 then() {
+                    // TODO:bug this scrollMessagesToBottom() has a problem if you select message rooms too quickly
                     this.scrollMessagesToBottom();
                 }
               });
