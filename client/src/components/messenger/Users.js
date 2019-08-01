@@ -5,6 +5,7 @@ import { getAllUsers, clearAllUsers, getMessageRoom } from '../../actions/messen
 import { Button, Row, Col } from 'react-materialize';
 import isEmpty from '../../validation/is-empty';
 import Spinner from '../common/Spinner';
+import classNames from 'classnames';
 
 class Users extends Component {
     componentDidMount = () => {
@@ -28,9 +29,21 @@ class Users extends Component {
         } else if (isEmpty(users)) {
             userContent = 'No users to talk to :(';
         } else {
+            console.log(this.props.messenger.users);
+            
             userContent = users.filter(user => this.props.auth.user.id !== user._id).map(user => (
                 <Row key={user._id}>
-                    <Col><Button onClick={this.userClick} data-secondary-user-id={user._id} className="bg-green" waves="light">{user.username}</Button></Col>
+                    <Col>
+                        <Button 
+                            onClick={this.userClick} 
+                            data-secondary-user-id={user._id} 
+                            className={
+                                classNames('bg-grey', {
+                                    'bg-green': user.online
+                                })
+                            } 
+                            waves="light">{user.username}</Button>
+                    </Col>
                 </Row>
             ));
         }

@@ -123,3 +123,15 @@ export const changePassword = (payload) => (dispatch) => {
             console.log(err);
         });
 }
+
+// Update user email and/or lastOnline
+export const updateUserLastOnlineOrEmail = (payload) => () => {
+    // console.log('payload: ', payload);
+    
+    axios.put(`/api/users/${payload.userId}`, payload)
+        .then(() => {
+            // do I need a .then() ?
+            // TODO maybe dispatch in here to send news online/offline status to redux to re-render user colour in messenger
+        })
+        .catch(err => console.log(err));
+}
