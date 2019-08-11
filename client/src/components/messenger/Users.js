@@ -29,7 +29,7 @@ class Users extends Component {
         } else if (isEmpty(users)) {
             userContent = 'No users to talk to :(';
         } else {
-            console.log(this.props.messenger.users);
+            // console.log(this.props.messenger.users);
             
             userContent = users.filter(user => this.props.auth.user.id !== user._id).map(user => (
                 <Row key={user._id}>

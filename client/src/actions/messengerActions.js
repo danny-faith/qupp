@@ -14,11 +14,21 @@ export const getAllUsers = () => (dispatch) => {
     dispatch(setAllUsersLoading());
      
     axios.get('/api/users/all')
-        .then(res =>
-            dispatch({
-                type: GET_ALL_USERS,
-                payload: res.data
-            })
+        .then(res => {
+                const filteredData = res.data.map(obj => {
+                    let filteredObj = {};
+                    for (let key in obj) {
+                        if (key === '_id' || key === 'username' || key === 'online') {
+                            filteredObj[key] = obj[key]
+                        }
+                    }
+                    return filteredObj;
+                });
+                dispatch({
+                    type: GET_ALL_USERS,
+                    payload: filteredData
+                });
+            }
         )
         .catch(err => console.log(err));
 }
