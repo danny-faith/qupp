@@ -13,22 +13,12 @@ import {
 export const getAllUsers = () => (dispatch) => {  
     dispatch(setAllUsersLoading());
      
-    axios.get('/api/users/all')
-        .then(res => {
-                const filteredData = res.data.map(obj => {
-                    let filteredObj = {};
-                    for (let key in obj) {
-                        if (key === '_id' || key === 'username' || key === 'online') {
-                            filteredObj[key] = obj[key]
-                        }
-                    }
-                    return filteredObj;
-                });
-                dispatch({
-                    type: GET_ALL_USERS,
-                    payload: filteredData
-                });
-            }
+    axios.get('/api/users/messenger-users')
+        .then(res => 
+            dispatch({
+                type: GET_ALL_USERS,
+                payload: res.data
+            })
         )
         .catch(err => console.log(err));
 }
