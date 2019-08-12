@@ -388,4 +388,24 @@ router.get('/all', passport.authenticate('jwt', { session: false }), (req, res) 
         .catch(err => console.log(err));
 });
 
+//  @route GET api/users/messenger-users
+//  @description Returns messenger-users users
+//  @access Private
+router.get('/messenger-users', passport.authenticate('jwt', { session: false }), (req, res) => {
+    User.find()
+        .then(users => {
+            const filteredData = users.map(obj => {
+                    let filteredObj = {};
+                    for (let key in obj) {
+                        if (key === '_id' || key === 'username' || key === 'online') {
+                            filteredObj[key] = obj[key]
+                        }
+                    }
+                    return filteredObj;
+                });
+            res.json(filteredData)
+        })
+        .catch(err => console.log(err));
+});
+
 module.exports = router;
