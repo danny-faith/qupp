@@ -389,7 +389,7 @@ router.get('/all', passport.authenticate('jwt', { session: false }), (req, res) 
 });
 
 //  @route GET api/users/messenger-users
-//  @description Returns messenger-users users
+//  @description Returns id, username and online status for all users (for use with messenger)
 //  @access Private
 router.get('/messenger-users', passport.authenticate('jwt', { session: false }), (req, res) => {
     User.find()
