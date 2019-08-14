@@ -392,18 +392,9 @@ router.get('/all', passport.authenticate('jwt', { session: false }), (req, res) 
 //  @description Returns id, username and online status for all users (for use with messenger)
 //  @access Private
 router.get('/messenger-users', passport.authenticate('jwt', { session: false }), (req, res) => {
-    User.find()
+    User.find({}, 'id username online')
         .then(users => {
-            const filteredData = users.map(obj => {
-                    let filteredObj = {};
-                    for (let key in obj) {
-                        if (key === '_id' || key === 'username' || key === 'online') {
-                            filteredObj[key] = obj[key]
-                        }
-                    }
-                    return filteredObj;
-                });
-            res.json(filteredData)
+            res.json(users)
         })
         .catch(err => console.log(err));
 });

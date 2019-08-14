@@ -137,8 +137,10 @@ class QuppListPage extends Component {
     const playBool = (play) ? this.playSong : null;
     this.setState({nowPlaying}, playBool);
   }
-  populateUpNext = () => {    
+  populateUpNext = () => {
+    console.log('populating upNext')    
     let upNext = {...this.state.upNext};
+    console.log('this.state.playlist.queue[1]: ', this.state.playlist.queue[1])
     upNext = this.state.playlist.queue[1];
     this.setState({upNext});
   }
@@ -203,7 +205,9 @@ class QuppListPage extends Component {
     }, () => {
       if (type === 'queue') {
         this.populateNowPlaying(false);
+        console.log('populateNowPlaying')
         if (this.state.playlist.queue.length > 1) {
+          console.log('populateUpNext')
           this.populateUpNext();
         }
       }
@@ -221,18 +225,22 @@ class QuppListPage extends Component {
     const copyOfPlaylist = {...this.state.playlist};
     const index = copyOfPlaylist[type].findIndex(x => x.spotId === songIdToRemove);
     copyOfPlaylist[type].splice(index, 1);
+
+    if (type === 'queue') {
+      console.log('its a queue type change')
+      if (this.state.playlist.queue.length < 2) {
+        console.log('remove upNext')
+        copyOfPlaylist.upNext = {};
+        if (isEmpty(this.state.playlist.queue)) {
+          console.log('remove nowPlaying')
+          copyOfPlaylist.nowPlaying = {};
+        }
+      }
+    }
     
     this.setState({
       playlist: copyOfPlaylist
     }, () => {
-      const copyOfState = {...this.state};
-      if (this.state.playlist.queue.length < 2) {
-        copyOfState.upNext = {};
-        if (isEmpty(this.state.playlist.queue)) {
-          copyOfState.nowPlaying = {};
-        }
-        this.setState(copyOfState);
-      }
     });
   }
   render() {
@@ -240,7 +248,7 @@ class QuppListPage extends Component {
     let playlistName = '';
     let queueContent = '';
     // TODO wonder if isEmpty would work in if() below?
-    if (this.state.playlist.hasOwnProperty('qupplist') && Object.keys(this.state.playlist.qupplist).length > 0){
+    if (this.state.playlist.hasOwnProperty('qupplist') && Object.keys(this.state.playlist.qupplist).length > 0) {
       playlistContent = 
       Object
       .keys(this.state.playlist.qupplist)
@@ -295,7 +303,7 @@ class QuppListPage extends Component {
           {/* <MyProvider value={{nowPlaying, upNext}}> */}
           {/* Remove context and just prop drill :( */}
           <Header 
-            qupplist={(this.state.playlist.qupplist === undefined) ? 0 : this.state.playlist.qupplist.length} 
+            numberOfSongsInQupplist={(this.state.playlist.qupplist === undefined) ? 0 : this.state.playlist.qupplist.length} 
             username={this.props.auth.user.name} 
             playlistname={playlistName} 
             nowPlayingName={this.state.nowPlaying.name} 
@@ -304,7 +312,7 @@ class QuppListPage extends Component {
             upNextName={this.state.upNext.name} 
             upNextAlbum={this.state.upNext.album} 
             upNextArtists={this.state.upNext.artists}
-            progress={this.state.progress}
+            progressValue={this.state.progress}
           />
 
           <div className="container">
