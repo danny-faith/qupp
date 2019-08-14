@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col } from 'react-materialize';
 import NowPlaying from '../common/NowPlaying';
 import UpNext from '../common/UpNext';
-import ProgressBar from '../playlist/ProgressBar';
+import ProgressBar from '../playlist/ProgressBar.tsx';
 
 class Header extends Component {
   render() {

@@ -1,60 +1,65 @@
 {
-  "name": "qupp",
-  "version": "1.0.0",
-  "description": "App that allows users to create playlists using Spotify's API",
-  "engines": {
-    "node": "11.0.0"
-  },
-  "scripts": {
-    "build:css": "postcss src/App.scss -o src/index.css",
-    "watch:css": "postcss src/App.scss -o src/index.css -w",
-    "start": "npm run watch:css & PORT=3002 react-scripts start",
-    "build": "npm run build:css && react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "proxy": "http://127.0.0.1:8080/",
-  "author": "Daniel Blythe",
-  "license": "ISC",
-  "dependencies": {
-    "axios": "^0.18.0",
-    "babel-preset-es2015-node6": "^0.4.0",
-    "classnames": "^2.2.6",
-    "dotenv": "^6.1.0",
-    "firebase": "^5.5.8",
-    "firebase-admin": "^7.3.0",
-    "http2": "^3.3.7",
-    "jwt-decode": "^2.2.0",
-    "morgan": "^1.9.1",
-    "node-pre-gyp": "^0.11.0",
-    "node-sass": "^4.9.4",
-    "prop-types": "^15.6.2",
-    "re-base": "^4.0.0",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "react-dropzone": "^10.0.0",
-    "react-materialize": "^3.3.3",
-    "react-redux": "^6.0.0",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "2.0.5",
-    "react-spotify-player": "^1.0.4",
-    "react-transition-group": "^2.5.0",
-    "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0",
-    "source-map-support": "^0.5.9"
-  },
-  "devDependencies": {
-    "autoprefixer": "^9.4.9",
-    "postcss-cli": "^6.1.2",
-    "tailwindcss": "^0.7.4"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+	"name": "qupp",
+	"version": "1.0.0",
+	"description": "App that allows users to create playlists using Spotify's API",
+	"engines": {
+		"node": "11.0.0"
+	},
+	"scripts": {
+		"build:css": "postcss src/App.scss -o src/index.css",
+		"watch:css": "postcss src/App.scss -o src/index.css -w",
+		"start": "npm run watch:css & PORT=3002 react-scripts start",
+		"build": "npm run build:css && react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject"
+	},
+	"proxy": "http://127.0.0.1:8080/",
+	"author": "Daniel Blythe",
+	"license": "ISC",
+	"dependencies": {
+		"@types/jest": "^24.0.17",
+		"@types/node": "^12.7.1",
+		"@types/react": "^16.9.1",
+		"@types/react-dom": "^16.8.5",
+		"axios": "^0.18.0",
+		"babel-preset-es2015-node6": "^0.4.0",
+		"classnames": "^2.2.6",
+		"dotenv": "^6.1.0",
+		"firebase": "^5.5.8",
+		"firebase-admin": "^7.3.0",
+		"http2": "^3.3.7",
+		"jwt-decode": "^2.2.0",
+		"morgan": "^1.9.1",
+		"node-pre-gyp": "^0.11.0",
+		"node-sass": "^4.9.4",
+		"prop-types": "^15.6.2",
+		"re-base": "^4.0.0",
+		"react": "^16.8.4",
+		"react-dom": "^16.8.4",
+		"react-dropzone": "^10.0.0",
+		"react-materialize": "^3.3.3",
+		"react-redux": "^6.0.0",
+		"react-router-dom": "^4.3.1",
+		"react-scripts": "2.0.5",
+		"react-spotify-player": "^1.0.4",
+		"react-transition-group": "^2.5.0",
+		"redux": "^4.0.1",
+		"redux-thunk": "^2.3.0",
+		"source-map-support": "^0.5.9",
+		"typescript": "^3.5.3"
+	},
+	"devDependencies": {
+		"autoprefixer": "^9.4.9",
+		"postcss-cli": "^6.1.2",
+		"tailwindcss": "^0.7.4"
+	},
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"browserslist": [
+		">0.2%",
+		"not dead",
+		"not ie <= 11",
+		"not op_mini all"
+	]
 }
