@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col } from 'react-materialize';
 import NowPlaying from '../common/NowPlaying';
 import UpNext from '../common/UpNext';
-import ProgressBar from '../playlist/ProgressBar.tsx';
+import ProgressBar from '../playlist/ProgressBar';
 
 class Header extends Component {
   render() {
@@ -13,7 +13,8 @@ class Header extends Component {
         <p className="text-1xl mt-0">{this.props.qupplist} {(this.props.qupplist === 1) ? 'song' : 'songs'} in qupplist</p>
         <Row>
           <Col s={6} offset="s3">
-            <ProgressBar progress={this.props.progress} />
+            <ProgressBar />
+            <ProgressBar />
             <NowPlaying nowPlayingName={this.props.nowPlayingName} nowPlayingAlbum={this.props.nowPlayingAlbum} nowPlayingArtists={this.props.nowPlayingArtists}/>
             <UpNext upNextName={this.props.upNextName} upNextAlbum={this.props.upNextAlbum} upNextArtists={this.props.upNextArtists}/>
           </Col>
