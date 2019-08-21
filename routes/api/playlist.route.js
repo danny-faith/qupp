@@ -15,7 +15,7 @@ const Playlist = require('../../models/Playlist');
 router.get('/all', (req, res) => {
     const errors = {};    
 
-    Playlist.find()
+    Playlist.find({}, 'id slug name')
         .sort({ createdAt: 'desc' })
         .then(playlists => res.json(playlists))
         .catch(() => {
@@ -41,13 +41,13 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         });
 });
 
-//  @route GET api/playlists/user:user_id
+//  @route GET api/playlists/user/:user_id
 //  @description Get all playlists by user
 //  @access Public
 router.get('/user/:user_id', (req, res) => {
     const errors = {};    
 
-    Playlist.find({ user: req.params.user_id })
+    Playlist.find({ user: req.params.user_id }, 'id slug name')
         .then(playlists => res.json(playlists))
         .catch(() => {
             errors.playlists = 'No playlists found';
