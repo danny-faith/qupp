@@ -6,6 +6,17 @@ const isEmpty = require('../../validation/is-empty');
 // Load Message model
 const Message = require('../../models/Message');
 
+//  @route GET api/message/messenger-users
+//  @description Returns id, username and online status for all users (for use with messenger)
+//  @access Private
+router.get('/messenger-users', passport.authenticate('jwt', { session: false }), (req, res) => {
+    User.find({}, 'id username online')
+        .then(users => {
+            res.json(users)
+        })
+        .catch(err => console.log(err));
+});
+
 //  @route GET api/message
 //  @description Get duo message
 //  @access Private

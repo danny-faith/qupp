@@ -13,7 +13,7 @@ import {
 export const getAllUsers = () => (dispatch) => {  
     dispatch(setAllUsersLoading());
      
-    axios.get('/api/users/messenger-users')
+    axios.get('/api/message/messenger-users')
         .then(res => 
             dispatch({
                 type: GET_ALL_USERS,
