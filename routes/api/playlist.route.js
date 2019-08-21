@@ -9,13 +9,13 @@ const validatePlaylistInput = require('../../validation/playlist');
 // Load Playlist model
 const Playlist = require('../../models/Playlist');
 
-//  @route GET api/playlists/
+//  @route GET api/playlists/all
 //  @description Get all playlists
 //  @access Public
 router.get('/all', (req, res) => {
     const errors = {};    
 
-    Playlist.find()
+    Playlist.find({}, 'id slug name')
         .sort({ createdAt: 'desc' })
         .then(playlists => res.json(playlists))
         .catch(() => {
@@ -32,7 +32,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
     // console.log(req.user);
       
 
-    Playlist.find({ user: req.user._id })
+    Playlist.find({ user: req.user._id }, 'id slug name')
         .sort({ createdAt: 'desc' })
         .then(playlists => res.json(playlists))
         .catch(() => {
@@ -41,13 +41,13 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         });
 });
 
-//  @route GET api/playlists/user:user_id
+//  @route GET api/playlists/user/:user_id
 //  @description Get all playlists by user
 //  @access Public
 router.get('/user/:user_id', (req, res) => {
     const errors = {};    
-
-    Playlist.find({ user: req.params.user_id })
+    console.log('route hit')
+    Playlist.find({ user: req.params.user_id }, 'id slug name')
         .then(playlists => res.json(playlists))
         .catch(() => {
             errors.playlists = 'No playlists found';
