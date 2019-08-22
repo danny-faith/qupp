@@ -13,9 +13,9 @@ import classNames from 'classnames';
 
 interface IUsersProps {
 	getAllUsers: () => void;
-	getMessageRoom: (arg0: any) => void;
-	messenger: { loading: any; users: any };
-	auth: { user: { id: any } };
+	getMessageRoom: (arg0: string) => void;
+	messenger: { loading: boolean; users: [] }; // cannot make users: object[]
+	auth: { user: { id: string } };
 }
 
 const Users = (props: IUsersProps) => {
@@ -25,7 +25,7 @@ const Users = (props: IUsersProps) => {
 
 	const userClick = (e: {
 		preventDefault: () => void;
-		target: { dataset: { secondaryUserId: any } };
+		target: { dataset: { secondaryUserId: string } };
 	}) => {
 		e.preventDefault();
 		props.getMessageRoom(e.target.dataset.secondaryUserId);
@@ -70,7 +70,7 @@ Users.propTypes = {
 	auth: PropTypes.object.isRequired
 };
 
-const mapStateToProps = (state: { auth: any; messenger: any }) => ({
+const mapStateToProps = (state: { auth: object; messenger: object }) => ({
 	auth: state.auth,
 	messenger: state.messenger
 });
