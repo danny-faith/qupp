@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getAllUsers, clearAllUsers, getMessageRoom } from '../../actions/messengerActions';
@@ -7,52 +7,46 @@ import isEmpty from '../../validation/is-empty';
 import Spinner from '../common/Spinner';
 import classNames from 'classnames';
 
-class Users extends Component {
-    componentDidMount = () => {
-        this.props.getAllUsers();
-    }
-    userClick = (e) => {
-        e.preventDefault();
-        // const instance = window.M.Modal.getInstance(this.props.usersRef.current.instance.el);
-        // instance.close();
-        
-        this.props.getMessageRoom(e.target.dataset.secondaryUserId);
-    }
-    render() {
-        const loading = this.props.messenger.loading;
-		const users = this.props.messenger.users;
-        
-        let userContent;
+const Users = (props) => {
+    useEffect(() => {
+        props.getAllUsers();
+    }, []);
 
-        if (loading) {
-            userContent = <Spinner />;
-        } else if (isEmpty(users)) {
-            userContent = 'No users to talk to :(';
-        } else {
-            // console.log(this.props.messenger.users);
-            
-            userContent = users.filter(user => this.props.auth.user.id !== user._id).map(user => (
-                <Row key={user._id}>
-                    <Col>
-                        <Button 
-                            onClick={this.userClick} 
-                            data-secondary-user-id={user._id} 
-                            className={
-                                classNames('bg-grey', {
-                                    'bg-green': user.online
-                                })
-                            } 
-                            waves="light">{user.username}</Button>
-                    </Col>
-                </Row>
-            ));
-        }
-        return (
-            <div>
-                {userContent}
-            </div>
-        )
+    const userClick = (e) => {
+        e.preventDefault();
+        props.getMessageRoom(e.target.dataset.secondaryUserId);
     }
+    const loading = props.messenger.loading;
+    const users = props.messenger.users;
+    
+    let userContent;
+
+    if (loading) {
+        userContent = <Spinner />;
+    } else if (isEmpty(users)) {
+        userContent = 'No users to talk to :(';
+    } else {  
+        userContent = users.filter(user => props.auth.user.id !== user._id).map(user => (
+            <Row key={user._id}>
+                <Col>
+                    <Button 
+                        onClick={userClick} 
+                        data-secondary-user-id={user._id} 
+                        className={
+                            classNames('bg-grey', {
+                                'bg-green': user.online
+                            })
+                        } 
+                        waves="light">{user.username}</Button>
+                </Col>
+            </Row>
+        ));
+    }
+    return (
+        <div>
+            {userContent}
+        </div>
+    )
 }
 
 Users.propTypes = {
