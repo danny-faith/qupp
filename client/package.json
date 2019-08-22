@@ -50,6 +50,7 @@
 		"typescript": "^3.5.3"
 	},
 	"devDependencies": {
+		"@types/classnames": "^2.2.9",
 		"@types/react-redux": "^7.1.2",
 		"autoprefixer": "^9.4.9",
 		"postcss-cli": "^6.1.2",
