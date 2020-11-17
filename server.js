@@ -16,13 +16,14 @@ promise.then(function(db) {
 
 const {
   PORT:pt,
-  NODE_ENV
+  NODE_ENV,
+  REACT_APP_FIREBASE_DB_URL
 } = process.env;
 
 // TODO
 // below looks the same as 
-// 'app.listen(process.env.PORT || 8080)'
-const PORT = pt || 8080;
+// 'app.listen(process.env.PORT || 8081)'
+const PORT = pt || 8081;
 // so could remove all the extra rubbish way down(app.listen) and just have the (directly) above
 // 'app.listen(PORT)'
 
@@ -42,7 +43,7 @@ app.use(require('express-session')({
     secret: 'keyboard cat',
     resave: true,
     saveUninitialized: true
-  }));
+}));
 
 // Passport middleware
 app.use(passport.initialize());
@@ -67,7 +68,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 
-// set CORS headers on server as server listens on port 8080
+// set CORS headers on server as server listens on port 8081
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
@@ -95,4 +96,4 @@ app.get('*', (req, res) => {
 
 
 
-app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 8081);
