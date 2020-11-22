@@ -158,11 +158,10 @@ class QuppListPage extends Component {
     
     // Check to see if song being added to qupplist is already there
     if (type === 'qupplist' && !isEmpty(playlist.qupplist)) {
-      Object.keys(playlist.qupplist).forEach(key => {
-        if (playlist.qupplist[key].spotId === songPayload.spotId) {
-          errors.addSong = `"${songPayload.name}" is a duplicate, cannot add`;
-        }
-      });
+      const found = playlist.qupplist.find((x) => x.spotId === songPayload.spotId)
+      if (found) {
+        errors.addSong = `"${songPayload.name}" is a duplicate, cannot add`;
+      }
     }
     
     if(!isEmpty(errors)) {
@@ -248,41 +247,38 @@ class QuppListPage extends Component {
     let playlistContent = '';
     let playlistName = '';
     let queueContent = '';
+    const { playlist, searchResults, playlist: { qupplist, queue } } = this.state
     // TODO wonder if isEmpty would work in if() below?
-    if (this.state.playlist.hasOwnProperty('qupplist') && Object.keys(this.state.playlist.qupplist).length > 0) {
-      playlistContent = 
-      Object
-      .keys(this.state.playlist.qupplist)
-      .map(key => 
-        <Song 
-          removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
-          addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
-          addSongToQueue={this.addSongToQueue} 
-          addSongToPlaylist={this.addSongToPlaylist} 
-          data={this.state.playlist.qupplist[key]} 
-          type="qupplist"
-          colour="grey"
-          key={key}
-        />
-      );
+    if (playlist.hasOwnProperty('qupplist') && qupplist.length > 0) {
+      playlistContent = qupplist
+        .map(song => 
+          <Song 
+            removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
+            addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
+            addSongToQueue={this.addSongToQueue} 
+            addSongToPlaylist={this.addSongToPlaylist} 
+            data={song} 
+            type="qupplist"
+            colour="grey"
+            key={song.spotId}
+          />
+        );
     } else {
       playlistContent = "No qupplist in playlist, search to add some!";
     }
     
-    if (this.state.playlist.hasOwnProperty('queue') && Object.keys(this.state.playlist.queue).length > 0){
-      queueContent = 
-      Object
-      .keys(this.state.playlist.queue)
-      .map(key => 
-        <Song 
-          removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
-          addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
-          data={this.state.playlist.queue[key]} 
-          type="queue"
-          colour="grey"
-          key={key}
-        />
-      );
+    if (this.state.playlist.hasOwnProperty('queue') && queue.length > 0){
+      queueContent = queue
+        .map(song => 
+          <Song 
+            removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
+            addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
+            data={song} 
+            type="queue"
+            colour="grey"
+            key={song.spotId}
+          />
+        );
     } else {
       queueContent = "No qupplist in queue, search to add some!";
     }
@@ -329,18 +325,18 @@ class QuppListPage extends Component {
                 <h1>search</h1>
                 <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
                 <Button className="white darken-1 text-black font-bold" onClick={() => {this.setState({searchResults: []})}}>Clear search results</Button>
-                {Object
-                  .keys(this.state.searchResults)
-                  .map(key => 
-                    <Song 
-                      addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
-                      addSongToQueue={this.addSongToQueue} 
-                      addSongToPlaylist={this.addSongToPlaylist} 
-                      type="search"
-                      data={this.state.searchResults[key]} 
-                      key={key}
-                    />
-                  )
+                {
+                  searchResults
+                    .map(song =>
+                      <Song 
+                        addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
+                        addSongToQueue={this.addSongToQueue} 
+                        addSongToPlaylist={this.addSongToPlaylist} 
+                        type="search"
+                        data={song} 
+                        key={song.spotId}
+                      />
+                    )
                 }
                 <h1 className="text-yellow darken-1">queue</h1>
                 <div className="queue-list">
