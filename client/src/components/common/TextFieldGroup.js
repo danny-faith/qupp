@@ -16,7 +16,7 @@ const TextFieldGroup = ({
 }) => {    
     return (
 		<React.Fragment>
-            <input
+            <TextInput
                 type={type} 
                 className={classnames('form-control form-control-lg', {
                     'is-invalid': error
