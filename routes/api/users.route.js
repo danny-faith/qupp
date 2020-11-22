@@ -171,6 +171,7 @@ router.post('/update-token', passport.authenticate('jwt', { session: false }), (
 //  @description Find user's email address and send forgot password email
 //  @access Public
 router.post('/forgot-password', (req, res) => {
+    console.log('HELLO!');
     const { errors, isValid } = validateForgotPasswordInput(req.body);
 
     if (!isValid) {
@@ -213,6 +214,7 @@ router.post('/forgot-password', (req, res) => {
             transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
                     errors.mailFailed = "There was an error sending the email";
+                    errors.err = err
                     return res.status(500).json(errors);
                 }
                 // if sending email successful store against user along with whether or not token has been used

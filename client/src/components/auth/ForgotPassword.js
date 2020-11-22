@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Button, Input } from 'react-materialize';
+import TextFieldGroup from '../common/TextFieldGroup'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -34,17 +35,17 @@ class ForgotPassword extends Component {
 				<form noValidate onSubmit={this.onSubmit}>
 					<Row>
 						<Col s={12}>
-							<Input
-							id={"email"}
-							className={classnames({
-							'invalid': errors.email
-							})} 
-							type="email"
-							name="email"
-							s={12}
-							label="Email address"
-							onChange={this.onChange}
-							value={this.state.email}
+							<TextFieldGroup
+								id="email"
+								type="email"
+								name="email"
+								label="Email address"
+								s={12}
+								onChange={this.onChange}
+								value={this.state.email}
+								className={classnames({
+									'invalid': errors.email
+								})}
 							/>
 							{errors.email && (<p className="red-text col no-margin">{errors.email}</p>)}
 						</Col>

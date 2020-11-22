@@ -74,8 +74,8 @@ class ChangePassword extends Component {
 
 ChangePassword.propTypes = {
 	changePassword: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  	auth: PropTypes.object.isRequired,
+  	errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
