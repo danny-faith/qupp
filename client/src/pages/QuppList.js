@@ -185,10 +185,11 @@ class QuppListPage extends Component {
       const newQueue = [...songPayload, ...playlist.queue];
       playlist.queue = newQueue;
     } else {
+      console.log('type:', type);
       // check where we're adding song to exists, if it doesn't then ...
       if (this.state.playlist.hasOwnProperty(type)) {
         // if queue has more than one entry, add songPayload to second([1]) place in 
-        if (type === 'queue' & this.state.playlist.queue.length > 0) {
+        if (type === 'queue' && this.state.playlist.queue.length > 0) {
           playlist.queue.splice(1, 0, songPayload);
         } else {
           playlist[type].unshift(songPayload);
