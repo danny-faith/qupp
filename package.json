@@ -9,9 +9,13 @@
     "node": "11.0.0"
   },
   "scripts": {
+    "build": "cd client && npm run build",
+    "install-client": "cd client && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
     "client": "npm start --prefix client",
-    "server": "nodemon --ignore 'client/' server.js",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "dev-server": "nodemon --ignore 'client/' server.js",
+    "server": "node server.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run dev-server\" \"npm run client\""
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -26,10 +30,12 @@
     "gravatar": "^1.8.0",
     "js-base64": "^2.4.9",
     "jsonwebtoken": "^8.4.0",
+    "moment": "^2.24.0",
     "mongoose": "^5.3.4",
     "mongoose-unique-validator": "^2.0.2",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
+    "node-cron": "^2.0.3",
     "node-sass": "^4.9.4",
     "nodemailer": "^5.1.1",
     "passport": "^0.4.0",

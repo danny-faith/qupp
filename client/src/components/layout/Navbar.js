@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Modal } from 'react-materialize';
+import Messenger from '../messenger/Messenger';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/authActions';
@@ -10,7 +12,10 @@ import logo from '../../logo-v2.svg';
 
 class Navbar extends Component {
     dropdownTriggerRef = React.createRef();
-    shouldDropdownInit() {
+    messengerRef = React.createRef();
+    usersRef = React.createRef();
+
+    shouldDropdownInit = () => {
         if (this.props.auth.isAuthenticated) {
             window.M.Dropdown.init(this.dropdownTriggerRef.current);
         }
@@ -33,6 +38,11 @@ class Navbar extends Component {
             <ul id="nav-mobile" className="right hide-on-med-and-down">
                 <li>
                     <a href="!#" onClick={this.onLogoutClick}>Logout</a>
+                </li>
+                <li>
+                    <Modal id="messengerUsers" className="bg-grey-darkest" header="Messenger" ref={this.usersRef} trigger={<a ref={this.messengerRef} href="!#" onClick={this.messengerClick}>Messenger</a>}>
+                       <Messenger />
+                    </Modal>
                 </li>
                 <li className="avatar">
                     <a href="#" ref={this.dropdownTriggerRef} data-target="dropdown1" className="dropdown-trigger">
@@ -61,7 +71,7 @@ class Navbar extends Component {
             <nav ref={this.navRef}>
                 <div className="nav-wrapper">
                 <Link to="/" className="brand-logo">
-                    <img width="90" alt="qupp logo" src={logo} />
+                    <img width="90" alt="qupp logo" src={logo} className="ml-1" />
                 </Link>
                 <a href="!#" data-target="sidenav" className="sidenav-trigger">
                     <i className="material-icons">menu</i>

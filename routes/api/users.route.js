@@ -27,51 +27,6 @@ const {
     ENV
 } = process.env;
 
-/**
- * Endpoint: Create and add new user. `password` method creates an encrypted/hashed
- * password using the password supplied by the user and sent in the body
- */
-
-// router.post('/', (req, res) => {
-//     const newUser = req.body;
-//     const user = new User(newUser);
-//     user.setPassword(req.body.password); // method that creates the users password
-    
-//     user.save(function(err, userModel) {
-//         if (err) {
-//             return res.status(500).send(err);
-//         }
-//         res.status(201).send(userModel);
-//     })
-// });
-
-/**
- * Endpoint: Not currently used. But simply returns an object containing the users details
- * given the search term of the users username.
- */
-
-// router.get('/:username', (req, res, next) => {
-//     console.log('get user');
-    
-//     var { username } = req.params;
-//     User.find({ username: username }).exec(function(err, user) {
-//         if (err) {
-//             next();
-//         } else {
-//             res.status(200).json(user);
-//         }
-//     });
-// });
-
-/**
- * Endpoint: Not currently used. Simply returns all users.
- */
-
-// router.get('/', (req, res) => {
-//     console.log('/login route requested');    
-//     res.sendFile(`${__dirname}/client/build.index.html`);
-// });
-
 //  @route GET api/users/register
 //  @description Register user
 //  @access Public
@@ -167,7 +122,7 @@ router.post('/login', (req, res) => {
     const isEmail = usernameOrEmail.match(regex) || [];
     const loginIdentifier = (isEmail.length === 0) ? 'username' : 'email';
     
-    User.findOne({ [loginIdentifier]: usernameOrEmail })
+    User.findOneAndUpdate({ [loginIdentifier]: usernameOrEmail }, { online: true }, { useFindAndModify: false })
         .then(user => {
             //  Check for user
             
@@ -182,6 +137,7 @@ router.post('/login', (req, res) => {
                     if (isMatch) {
                         // User matched
                         const payload = { id: user.id, username: user.username, avatar:user.avatar } // create payload
+                        
                         // Sign token
                         jwt.sign(payload, SECRET, { expiresIn: 3600}, (err, token) => {
                             res.json({success: true, token: 'Bearer ' + token});
@@ -215,6 +171,7 @@ router.post('/update-token', passport.authenticate('jwt', { session: false }), (
 //  @description Find user's email address and send forgot password email
 //  @access Public
 router.post('/forgot-password', (req, res) => {
+    console.log('HELLO!');
     const { errors, isValid } = validateForgotPasswordInput(req.body);
 
     if (!isValid) {
@@ -257,6 +214,7 @@ router.post('/forgot-password', (req, res) => {
             transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
                     errors.mailFailed = "There was an error sending the email";
+                    errors.err = err
                     return res.status(500).json(errors);
                 }
                 // if sending email successful store against user along with whether or not token has been used
@@ -394,13 +352,42 @@ router.post(
     }
 );
 
+//  @route PUT api/users/:userId
+//  @description Update users email or lastOnline time
+//  @access Private
+router.put('/:userId', passport.authenticate('jwt', { session: false }), (req, res) => {
+    // console.log('req.body: ', req.body);
+    
+    User.findOne({ _id: req.params.userId })
+        .then(user => {
+            // console.log('user: ', user);
+            user.email = (!isEmpty(req.body.email)) ? req.body.email : user.email;
+            user.lastOnline = (!isEmpty(req.body.lastOnline)) ? req.body.lastOnline : user.lastOnline;
+            // console.log('user.lastOnline: ', user.lastOnline);
+            user.save()
+                .then((user) => res.json(user))
+                .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+
+    // res.json(req.params.userId);
+});
+
 //  @route GET api/users/current
 //  @description Returns current users
 //  @access Private
+// TODO remove as was a test route
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log('/current route');
-    
     res.json(req.user);
+});
+
+//  @route GET api/users/all
+//  @description Returns all users
+//  @access Private
+router.get('/all', passport.authenticate('jwt', { session: false }), (req, res) => {
+    User.find()
+        .then(users => res.json(users))
+        .catch(err => console.log(err));
 });
 
 module.exports = router;

@@ -5618,13 +5618,14 @@
 .z-auto {
   z-index: auto !important;
 }
-@import url("./scss/animations.scss");
-@import url("./scss/general.scss");
-@import url("./scss/account.scss");
-@import url("./scss/qupplist.scss");
-@import url("./scss/nav.scss");
-@import url("./scss/landing.scss");
-@import url("./scss/overrides.scss");
+@import url('./scss/animations.scss');
+@import url('./scss/general.scss');
+@import url('./scss/account.scss');
+@import url('./scss/qupplist.scss');
+@import url('./scss/nav.scss');
+@import url('./scss/landing.scss');
+@import url('./scss/messenger.scss');
+@import url('./scss/overrides.scss');
 
 @media (min-width: 600px) {
   .sm\:list-reset {
