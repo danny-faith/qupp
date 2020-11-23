@@ -295,7 +295,6 @@ class QuppListPage extends Component {
       : <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2">Play ►</Button>;
 
     return (
-        
         <Fragment>
           {/* <MyProvider value={{nowPlaying, upNext}}> */}
           {/* Remove context and just prop drill :( */}

@@ -6,8 +6,16 @@ const passport = require('passport');
 const messengerUserStatusCheck = require('./cron');
 require('dotenv').config();
 
+const {
+  PORT = 8082,
+  NODE_ENV,
+  MONGODB_URI = "mongodb://localhost/qupp_db_EBDNBFJN"
+} = process.env;
+console.log('Server running at port:', PORT);
+// const MONGODB_URI = 
+
 mongoose.Promise = global.Promise;
-var promise = mongoose.connect('mongodb://localhost/qupp_db_EBDNBFJN', { useNewUrlParser: true });
+var promise = mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 promise.then(function(db) {
   console.log('DATABASE CONNECTED!!');
@@ -15,15 +23,10 @@ promise.then(function(db) {
   console.log('CONNECTION ERROR', err);
 });
 
-const {
-  PORT:pt,
-  NODE_ENV
-} = process.env;
-
 // TODO
 // below looks the same as 
 // 'app.listen(process.env.PORT || 8082)'
-const PORT = pt || 8082;
+// const PORT = pt || 8082;
 // so could remove all the extra rubbish way down(app.listen) and just have the (directly) above
 // 'app.listen(PORT)'
 
@@ -100,4 +103,4 @@ app.get('*', (req, res) => {
 
 
 
-app.listen(process.env.PORT || 8082);
+app.listen(PORT);
