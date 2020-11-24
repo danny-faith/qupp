@@ -12,13 +12,18 @@ import SearchForm from '../components/playlist/SearchForm';
 import Header from '../components/layout/Header';
 import Song from '../components/playlist/Song';
 
-import {
-  REACT_APP_FIREBASE_PASSWORD,
-  REACT_APP_FIREBASE_EMAIL,
-} from '../config.js'
+// import {
+//   REACT_APP_FIREBASE_PASSWORD,
+//   REACT_APP_FIREBASE_EMAIL,
+// } from '../config.js'
+import config from '../config.js'
 
 // require('dotenv').config();
 
+const { 
+  REACT_APP_FIREBASE_EMAIL,
+  REACT_APP_FIREBASE_PASSWORD
+} = config;
 // const { 
 //   REACT_APP_FIREBASE_EMAIL,
 //   REACT_APP_FIREBASE_PASSWORD
