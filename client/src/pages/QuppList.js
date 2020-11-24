@@ -12,12 +12,17 @@ import SearchForm from '../components/playlist/SearchForm';
 import Header from '../components/layout/Header';
 import Song from '../components/playlist/Song';
 
-require('dotenv').config();
-
-const { 
+import {
+  REACT_APP_FIREBASE_PASSWORD,
   REACT_APP_FIREBASE_EMAIL,
-  REACT_APP_FIREBASE_PASSWORD
-} = process.env;
+} from '../config.js'
+
+// require('dotenv').config();
+
+// const { 
+//   REACT_APP_FIREBASE_EMAIL,
+//   REACT_APP_FIREBASE_PASSWORD
+// } = process.env;
 class QuppListPage extends Component {
   state = { 
     playlist: {
@@ -32,7 +37,10 @@ class QuppListPage extends Component {
     searchResults: []
   }
   componentDidMount = () => {
-    firebaseApp.initializedApp.auth().signInWithEmailAndPassword(REACT_APP_FIREBASE_EMAIL, REACT_APP_FIREBASE_PASSWORD).catch(function(error) {
+    firebaseApp.initializedApp
+      .auth()
+      .signInWithEmailAndPassword(REACT_APP_FIREBASE_EMAIL, REACT_APP_FIREBASE_PASSWORD)
+      .catch(function(error) {
         // Handle Errors here.
         window.M.toast({html: `${error.code} ${error.message}`, classes: 'red lighten-2'})
     });
