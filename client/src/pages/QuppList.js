@@ -15,7 +15,7 @@ import Song from '../components/playlist/Song';
 import {
   REACT_APP_FIREBASE_PASSWORD,
   REACT_APP_FIREBASE_EMAIL,
-} from '../../config.js'
+} from '../config.js'
 
 // require('dotenv').config();
 
