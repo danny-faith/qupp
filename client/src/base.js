@@ -6,7 +6,7 @@ import {
     REACT_APP_FIREBASE_API_KEY,
     REACT_APP_FIREBASE_AUTH_DOMAIN,
     REACT_APP_FIREBASE_DB_URL,
-} from './base.js'
+} from './config.js'
 // require('dotenv').config();
 
 // const {
