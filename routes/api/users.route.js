@@ -1,4 +1,5 @@
 const express = require('express');
+const admin = require('firebase-admin');
 const User = require('../../models/User');
 const router = express.Router();
 const gravatar = require('gravatar');
@@ -24,8 +25,11 @@ const {
     SMTP_PORT, 
     SMTP_AUTH_USER, 
     SMTP_AUTH_PASS,
-    ENV
+    ENV,
+    // GOOGLE_APPLICATION_CREDENTIALS,
+    FIREBASE_DB_URL,
 } = process.env;
+  
 
 //  @route GET api/users/register
 //  @description Register user
@@ -110,6 +114,7 @@ router.post('/register', (req, res) => {
 //  @description Login User / Returning JWT Token
 //  @access Public
 router.post('/login', (req, res) => {
+
     const { errors, isValid } = validateLoginInput(req.body);
     
     if (!isValid) {
@@ -138,9 +143,33 @@ router.post('/login', (req, res) => {
                         // User matched
                         const payload = { id: user.id, username: user.username, avatar:user.avatar } // create payload
                         
+                        // Create custom Firebase token
+                        admin.initializeApp({
+                            credential: admin.credential.applicationDefault(),
+                            databaseURL: FIREBASE_DB_URL
+                        });
+
+                        let customToken
+                        console.log('user', user);
+                    
+                        admin
+                            .auth()
+                            .createCustomToken('special')
+                            .then((res) => {
+                                // Send token back to client
+                                customToken = res
+                            })
+                            .catch((error) => {
+                                console.log('Error creating custom token:', error);
+                            });
+
                         // Sign token
                         jwt.sign(payload, SECRET, { expiresIn: 3600}, (err, token) => {
-                            res.json({success: true, token: 'Bearer ' + token});
+                            res.json({
+                                success: true,
+                                token: 'Bearer ' + token,
+                                firebaseToken: customToken
+                            });
                         });
                         
                     } else {

@@ -21,7 +21,7 @@ const firebaseApp = firebase.initializeApp({
     apiKey: REACT_APP_FIREBASE_API_KEY,
     authDomain: REACT_APP_FIREBASE_AUTH_DOMAIN,
     databaseURL: REACT_APP_FIREBASE_DB_URL
-});
+}, 'frontend');
 
 const base = Rebase.createClass(firebaseApp.database());
 
