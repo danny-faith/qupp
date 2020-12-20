@@ -90,6 +90,7 @@ class QuppListPage extends Component {
       }
     });    
   }
+  
   playSong = () => {
     const { duration_ms } = this.state.nowPlaying;
     const duration_secs = duration_ms / 1000;
