@@ -42,6 +42,7 @@ class QuppListPage extends Component {
     searchResults: []
   }
   componentDidMount = () => {
+    console.log('hell');
     // firebaseApp.initializedApp
     //   .auth()
     //   .signInWithEmailAndPassword(REACT_APP_FIREBASE_EMAIL, REACT_APP_FIREBASE_PASSWORD)
@@ -51,7 +52,7 @@ class QuppListPage extends Component {
     // });
     const firebaseToken = localStorage.getItem('firebaseToken')
     console.log('firebaseToken', firebaseToken);
-    
+
     firebaseApp.initializedApp
     .auth().signInWithCustomToken(firebaseToken)
     .then((user) => {
