@@ -7,13 +7,6 @@ import firebaseApp from '../../base';
 import classNames from 'classnames';
 import isEmpty from '../../validation/is-empty';
 
-require('dotenv').config();
-
-const { 
-  REACT_APP_FIREBASE_EMAIL,
-  REACT_APP_FIREBASE_PASSWORD
-} = process.env;
-
 class Messages extends Component {
     chatTextStream = React.createRef();
     state = {
@@ -21,16 +14,21 @@ class Messages extends Component {
         messages: []
     }
     componentDidMount = () => {
-        firebaseApp.initializedApp.auth().signInWithEmailAndPassword(REACT_APP_FIREBASE_EMAIL, REACT_APP_FIREBASE_PASSWORD).catch(function(error) {
-            window.M.toast({html: `${error.code} ${error.message}`, classes: 'red lighten-2'})
-        }).then(() => {
-            base.syncState(`messenger/${this.props.messenger.messageRoom._id}`, {
-                context: this,
-                state: 'messages',
-                then() {
-                    // TODO:bug this scrollMessagesToBottom() has a problem if you select message rooms too quickly
-                    this.scrollMessagesToBottom();
-                }
+        const firebaseToken = localStorage.getItem('firebaseToken')
+
+        firebaseApp.initializedApp
+            .auth()
+            .signInWithCustomToken(firebaseToken)
+            .catch(function(error) {
+                window.M.toast({html: `${error.code} ${error.message}`, classes: 'red lighten-2'})
+            }).then(() => {
+                base.syncState(`messenger/${this.props.messenger.messageRoom._id}`, {
+                    context: this,
+                    state: 'messages',
+                    then() {
+                        // TODO:bug this scrollMessagesToBottom() has a problem if you select message rooms too quickly
+                        this.scrollMessagesToBottom();
+                    }
               });
         });
         document.addEventListener('keydown', (e) => {
