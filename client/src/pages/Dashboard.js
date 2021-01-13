@@ -13,8 +13,8 @@ class Dashboard extends Component {
 	}
 
 	componentDidMount = () => {
-		this.props.clearPlaylist();
-		this.props.getPlaylists(this.props.auth.user);
+		this.props.clearPlaylist()
+		this.props.getPlaylists(this.props.auth.user)
 	}
 
 	componentWillReceiveProps = (nextProps) => {
@@ -25,16 +25,8 @@ class Dashboard extends Component {
 		}
 	}
 
-	playListContent = () => {
-		const loading = this.props.playlists.loading;
-		const playlists = this.props.playlists.playlists;
-	
-		if (loading) {
-			return <Spinner />;
-		} else if (isEmpty(playlists)) {
-			return 'No playlists';
-		} else {
-			return playlists
+	arrayOfPlaylistComps = (playlists) => (
+		playlists
 			.map((item) => (
 				<PlaylistListItem 
 					key={item._id}
@@ -43,7 +35,20 @@ class Dashboard extends Component {
 					slug={item.slug} 
 					shareLink={item.share_link}
 				/>
-			));
+			)
+		)
+	)
+
+	playlistContent = () => {
+		const { loading } = this.props.playlists
+		const { playlists } = this.props.playlists
+	
+		if (loading) {
+			return <Spinner />
+		} else if (isEmpty(playlists)) {
+			return 'No playlists'
+		} else {
+			return this.arrayOfPlaylistComps(playlists)
 		}
 	}
 
@@ -53,7 +58,7 @@ class Dashboard extends Component {
 				<h1>Dashboard</h1>
 				<CreatePlaylist title="Create a qupplist"/>
 				<h2>qupplists</h2>
-				{this.playlistContent}
+				{this.playlistContent()}
 			</div>
 		)
 	}
@@ -69,6 +74,6 @@ Dashboard.propTypes = {
 const mapStateToProps = (state) => ({
 	auth: state.auth,
 	playlists: state.playlist
-});
+})
 
-export default connect(mapStateToProps, { getPlaylists, clearPlaylist })(Dashboard);
+export default connect(mapStateToProps, { getPlaylists, clearPlaylist })(Dashboard)
