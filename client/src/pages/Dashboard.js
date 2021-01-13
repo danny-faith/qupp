@@ -27,13 +27,13 @@ class Dashboard extends Component {
 
 	arrayOfPlaylistComps = (playlists) => (
 		playlists
-			.map((item) => (
+			.map((playlist) => (
 				<PlaylistListItem 
-					key={item._id}
-					id={item._id}
-					name={item.name} 
-					slug={item.slug} 
-					shareLink={item.share_link}
+					key={playlist._id}
+					id={playlist._id}
+					name={playlist.name} 
+					slug={playlist.slug} 
+					shareLink={playlist.share_link}
 				/>
 			)
 		)
