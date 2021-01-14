@@ -21,7 +21,7 @@ import Landing from './pages/Landing';
 import MyAccountPage from './pages/user/MyAccount';
 import ForgotPasswordPage from './pages/user/ForgotPassword';
 import ResetPasswordPage from './pages/user/ResetPassword';
-import QuppListPage from './pages/QuppList';
+import QuppListPage from './pages/QuppList/QuppList';
 import EditQupplistPage from './pages/EditQupplist';
 
 // Check for token

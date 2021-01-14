@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import PlaylistListItem from '../components/playlist/PlaylistListItem';
-import isEmpty from '../utils/isEmpty';
-import CreatePlaylist from '../components/playlist/CreatePlaylist';
-import { getPlaylists, clearPlaylist } from '../actions/playlistActions';
-import Spinner from '../components/common/Spinner';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import isEmpty from '../utils/isEmpty'
+import arrayOfPlaylistComps from '../utils/arrayOfPlaylistComps'
+import CreatePlaylist from '../components/playlist/CreatePlaylist'
+import { getPlaylists, clearPlaylist } from '../actions/playlistActions'
+import Spinner from '../components/common/Spinner'
 
 class Dashboard extends Component {
 	state = {
@@ -25,20 +25,6 @@ class Dashboard extends Component {
 		}
 	}
 
-	arrayOfPlaylistComps = (playlists) => (
-		playlists
-			.map((playlist) => (
-				<PlaylistListItem 
-					key={playlist._id}
-					id={playlist._id}
-					name={playlist.name} 
-					slug={playlist.slug} 
-					shareLink={playlist.share_link}
-				/>
-			)
-		)
-	)
-
 	playlistContent = () => {
 		const { loading } = this.props.playlists
 		const { playlists } = this.props.playlists
@@ -48,7 +34,7 @@ class Dashboard extends Component {
 		} else if (isEmpty(playlists)) {
 			return 'No playlists'
 		} else {
-			return this.arrayOfPlaylistComps(playlists)
+			return arrayOfPlaylistComps(playlists)
 		}
 	}
 

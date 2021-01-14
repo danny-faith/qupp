@@ -2,28 +2,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import isEmpty from '../utils/isEmpty'
+import arrayOfPlaylistComps from '../utils/arrayOfPlaylistComps'
 import Spinner from '../components/common/Spinner'
-import PlaylistListItem from '../components/playlist/PlaylistListItem'
 import { getAllPlaylists } from '../actions/playlistActions'
 
 class ViewAllPlaylists extends Component {
     componentDidMount = () => {
         this.props.getAllPlaylists()
     }
-
-    arrayOfPlaylistComps = (playlists) => (
-		playlists
-			.map((playlist) => (
-				<PlaylistListItem 
-					key={playlist._id}
-					id={playlist._id}
-					name={playlist.name} 
-					slug={playlist.slug} 
-					shareLink={playlist.share_link}
-				/>
-			)
-		)
-	)
 
     playlistContent = () => {
         const loading = this.props.playlists.loading
@@ -32,7 +18,7 @@ class ViewAllPlaylists extends Component {
         if (isEmpty(playlists) || loading) {
             return <Spinner />
         } else {
-            return this.arrayOfPlaylistComps(playlists)
+            return arrayOfPlaylistComps(playlists)
         }
     }
 

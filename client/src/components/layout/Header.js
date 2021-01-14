@@ -1,23 +1,21 @@
-import React, { Component } from 'react';
-import { Row, Col } from 'react-materialize';
-import NowPlaying from '../common/NowPlaying';
-import UpNext from '../common/UpNext';
-import ProgressBar from '../playlist/ProgressBar';
+import React, { Component } from 'react'
+import { Row, Col } from 'react-materialize'
+import NowPlaying from '../common/NowPlaying'
+import UpNext from '../common/UpNext'
+import ProgressBar from '../playlist/ProgressBar'
 
 class Header extends Component {
+
     render() {
         const {
             playlistname,
             username,
             numberOfSongsInQupplist,
             progressValue,
-            nowPlayingName,
-            nowPlayingAlbum,
-            nowPlayingArtists,
-            upNextName,
-            upNextAlbum,
-            upNextArtists,
+            nowPlaying,
+            upNext,
         } = this.props
+
         return (
             <div className="header text-center py-8">
                 <h1 className="text-5xl my-0">{playlistname}</h1>
@@ -30,20 +28,16 @@ class Header extends Component {
                     <Col s={6} offset="s3">
                         <ProgressBar progress={progressValue} />
                         <NowPlaying
-                            nowPlayingName={nowPlayingName}
-                            nowPlayingAlbum={nowPlayingAlbum}
-                            nowPlayingArtists={nowPlayingArtists}
+                            nowPlaying={nowPlaying}
                         />
                         <UpNext
-                            upNextName={upNextName}
-                            upNextAlbum={upNextAlbum}
-                            upNextArtists={upNextArtists}
+                            upNext={upNext}
                         />
                     </Col>
                 </Row>
             </div>
-        );
+        )
     }
-};
+}
 
-export default Header;
+export default Header
