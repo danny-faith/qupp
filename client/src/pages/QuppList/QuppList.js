@@ -9,7 +9,7 @@ import isEmpty from '../../utils/isEmpty';
 import { Row, Col, Button } from 'react-materialize';
 
 import SearchForm from '../../components/playlist/SearchForm';
-import Header from '../../components/layout/Header';
+import Header from '../../components/playlist/Header';
 import SongList from './SongList';
 
 import { populateNowPlaying } from './services/player'

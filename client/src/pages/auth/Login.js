@@ -52,7 +52,7 @@ class Login extends Component {
 					<form noValidate onSubmit={this.onSubmit}>
 						<Row>
 							<TextFieldGroup
-								placeholder="Username or email"
+								label="Username or email"
 								name="usernameOrEmail"
 								type="text"
 								value={this.state.usernameOrEmail}
@@ -60,7 +60,7 @@ class Login extends Component {
 								error={errors.usernameOrEmail}
 							/>
 							<TextFieldGroup
-								placeholder="Password"
+								label="Password"
 								name="password"
 								type="password"
 								value={this.state.password}

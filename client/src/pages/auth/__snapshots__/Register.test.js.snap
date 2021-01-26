@@ -1,0 +1,396 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Register component should fully render(Full DOM) correctly 1`] = `
+<Register
+  auth={
+    Object {
+      "isAuthenticated": false,
+    }
+  }
+  errors={Object {}}
+  history={Array []}
+  registerUser={[MockFunction]}
+>
+  <Row>
+    <div
+      className="row"
+    >
+      <Col
+        className="offset-s3"
+        s={6}
+      >
+        <div
+          className="col s6 offset-s3"
+        >
+          <h1
+            className="center"
+          >
+            Register
+          </h1>
+          <form
+            noValidate={true}
+            onSubmit={[Function]}
+          >
+            <Row>
+              <div
+                className="row"
+              >
+                <TextFieldGroup
+                  label="Email"
+                  name="email"
+                  onChange={[Function]}
+                  type="email"
+                  value=""
+                >
+                  <Input
+                    checked={false}
+                    className="form-control form-control-lg"
+                    id="email"
+                    label="Email"
+                    name="email"
+                    onChange={[Function]}
+                    s={12}
+                    type="email"
+                    value=""
+                  >
+                    <div
+                      className="col input-field s12"
+                    >
+                      <input
+                        checked={false}
+                        className="form-control form-control-lg"
+                        id="email"
+                        name="email"
+                        onChange={[Function]}
+                        type="email"
+                        value=""
+                      />
+                      <label
+                        className=""
+                        htmlFor="email"
+                      >
+                        Email
+                      </label>
+                    </div>
+                  </Input>
+                </TextFieldGroup>
+                <TextFieldGroup
+                  label="Username"
+                  name="username"
+                  onChange={[Function]}
+                  type="text"
+                  value=""
+                >
+                  <Input
+                    checked={false}
+                    className="form-control form-control-lg"
+                    id="username"
+                    label="Username"
+                    name="username"
+                    onChange={[Function]}
+                    s={12}
+                    type="text"
+                    value=""
+                  >
+                    <div
+                      className="col input-field s12"
+                    >
+                      <input
+                        checked={false}
+                        className="form-control form-control-lg"
+                        id="username"
+                        name="username"
+                        onChange={[Function]}
+                        type="text"
+                        value=""
+                      />
+                      <label
+                        className=""
+                        htmlFor="username"
+                      >
+                        Username
+                      </label>
+                    </div>
+                  </Input>
+                </TextFieldGroup>
+                <TextFieldGroup
+                  label="Password"
+                  name="password"
+                  onChange={[Function]}
+                  type="password"
+                  value=""
+                >
+                  <Input
+                    checked={false}
+                    className="form-control form-control-lg"
+                    id="password"
+                    label="Password"
+                    name="password"
+                    onChange={[Function]}
+                    s={12}
+                    type="password"
+                    value=""
+                  >
+                    <div
+                      className="col input-field s12"
+                    >
+                      <input
+                        checked={false}
+                        className="form-control form-control-lg"
+                        id="password"
+                        name="password"
+                        onChange={[Function]}
+                        type="password"
+                        value=""
+                      />
+                      <label
+                        className=""
+                        htmlFor="password"
+                      >
+                        Password
+                      </label>
+                    </div>
+                  </Input>
+                </TextFieldGroup>
+                <TextFieldGroup
+                  label="Confirm password"
+                  name="password2"
+                  onChange={[Function]}
+                  type="password"
+                  value=""
+                >
+                  <Input
+                    checked={false}
+                    className="form-control form-control-lg"
+                    id="password2"
+                    label="Confirm password"
+                    name="password2"
+                    onChange={[Function]}
+                    s={12}
+                    type="password"
+                    value=""
+                  >
+                    <div
+                      className="col input-field s12"
+                    >
+                      <input
+                        checked={false}
+                        className="form-control form-control-lg"
+                        id="password2"
+                        name="password2"
+                        onChange={[Function]}
+                        type="password"
+                        value=""
+                      />
+                      <label
+                        className=""
+                        htmlFor="password2"
+                      >
+                        Confirm password
+                      </label>
+                    </div>
+                  </Input>
+                </TextFieldGroup>
+              </div>
+            </Row>
+            <Row>
+              <div
+                className="row"
+              >
+                <Col
+                  s={12}
+                >
+                  <div
+                    className="col s12"
+                  >
+                    <Button
+                      className="btn-small right"
+                      node="button"
+                      waves="light"
+                    >
+                      <button
+                        className="btn waves-effect waves-light btn-small right"
+                        disabled={false}
+                      >
+                        Register
+                      </button>
+                    </Button>
+                  </div>
+                </Col>
+              </div>
+            </Row>
+          </form>
+        </div>
+      </Col>
+    </div>
+  </Row>
+</Register>
+`;
+
+exports[`Register component should fully render(static render) correctly 1`] = `
+<div
+  class="row"
+>
+  <div
+    class="col s6 offset-s3"
+  >
+    <h1
+      class="center"
+    >
+      Register
+    </h1>
+    <form
+      novalidate=""
+    >
+      <div
+        class="row"
+      >
+        <div
+          class="col input-field s12"
+        >
+          <input
+            class="form-control form-control-lg"
+            id="email"
+            name="email"
+            type="email"
+            value=""
+          />
+          <label
+            class=""
+            for="email"
+          >
+            Email
+          </label>
+        </div>
+        <div
+          class="col input-field s12"
+        >
+          <input
+            class="form-control form-control-lg"
+            id="username"
+            name="username"
+            type="text"
+            value=""
+          />
+          <label
+            class=""
+            for="username"
+          >
+            Username
+          </label>
+        </div>
+        <div
+          class="col input-field s12"
+        >
+          <input
+            class="form-control form-control-lg"
+            id="password"
+            name="password"
+            type="password"
+            value=""
+          />
+          <label
+            class=""
+            for="password"
+          >
+            Password
+          </label>
+        </div>
+        <div
+          class="col input-field s12"
+        >
+          <input
+            class="form-control form-control-lg"
+            id="password2"
+            name="password2"
+            type="password"
+            value=""
+          />
+          <label
+            class=""
+            for="password2"
+          >
+            Confirm password
+          </label>
+        </div>
+      </div>
+      <div
+        class="row"
+      >
+        <div
+          class="col s12"
+        >
+          <button
+            class="btn waves-effect waves-light btn-small right"
+          >
+            Register
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`Register component should shallow render(Shallow rendering) correctly 1`] = `
+<Row>
+  <Col
+    className="offset-s3"
+    s={6}
+  >
+    <h1
+      className="center"
+    >
+      Register
+    </h1>
+    <form
+      noValidate={true}
+      onSubmit={[Function]}
+    >
+      <Row>
+        <TextFieldGroup
+          label="Email"
+          name="email"
+          onChange={[Function]}
+          type="email"
+          value=""
+        />
+        <TextFieldGroup
+          label="Username"
+          name="username"
+          onChange={[Function]}
+          type="text"
+          value=""
+        />
+        <TextFieldGroup
+          label="Password"
+          name="password"
+          onChange={[Function]}
+          type="password"
+          value=""
+        />
+        <TextFieldGroup
+          label="Confirm password"
+          name="password2"
+          onChange={[Function]}
+          type="password"
+          value=""
+        />
+      </Row>
+      <Row>
+        <Col
+          s={12}
+        >
+          <Button
+            className="btn-small right"
+            node="button"
+            waves="light"
+          >
+            Register
+          </Button>
+        </Col>
+      </Row>
+    </form>
+  </Col>
+</Row>
+`;

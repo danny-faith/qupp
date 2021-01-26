@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { registerUser } from '../../actions/authActions';
 import TextFieldGroup from '../../components/common/TextFieldGroup';
 
-class Register extends Component {
+export class Register extends Component {
 	state = {
 		username: '',
 		email: '',

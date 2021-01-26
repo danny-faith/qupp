@@ -5,23 +5,23 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextFieldGroup from '../common/TextFieldGroup';
 
-class CreatePlaylist extends Component {
-	state = {
-		name: this.props.name || '',
-		slug: this.props.slug || '',
-		errors: {}
-	};
-	onSubmit = e => {
-		e.preventDefault();
-		const newPlaylist = {
-			name: this.state.name,
-			slug: this.state.slug
-		};
-		newPlaylist.id = this.props.id ? this.props.id : null;
-		this.props.createPlaylist(newPlaylist);
-	};
-	onChange = e => {
-		const errors = this.state.errors;
+export class CreatePlaylist extends Component {
+    state = {
+        name: this.props.name || '',
+        slug: this.props.slug || '',
+        errors: {}
+    }
+    onSubmit = (e) => {
+        e.preventDefault();
+        const newPlaylist = {
+            name: this.state.name,
+            slug: this.state.slug
+        }
+        newPlaylist.id = (this.props.id) ? this.props.id : null;
+        this.props.createPlaylist(newPlaylist);
+    }
+    onChange = (e) => {        
+        const errors = this.state.errors;
 		errors[e.target.name] = '';
 		this.setState({
 			[e.target.name]: e.target.value,

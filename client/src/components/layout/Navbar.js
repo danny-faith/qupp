@@ -10,7 +10,7 @@ import { withRouter } from 'react-router-dom';
 
 import logo from '../../logo-v2.svg';
 
-class Navbar extends Component {
+export class Navbar extends Component {
     dropdownTriggerRef = React.createRef();
     messengerRef = React.createRef();
     usersRef = React.createRef();
