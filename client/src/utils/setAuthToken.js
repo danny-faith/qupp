@@ -1,14 +1,10 @@
 import axios from 'axios';
-import { ifElse, type, both, is, not, tap } from 'ramda'
-
-/**
- * use lensProp to get inside axios
- */
+import { ifElse, is } from 'ramda'
 
 const setAuthToken = ifElse(
     is(String),
-    (token) => axios.defaults.headers.common['Authorization'] = token,
-    () => delete axios.defaults.headers.common['Authorization'],
+    (token) => axios.defaults.headers.common.Authorization = token,
+    () => delete axios.defaults.headers.common.Authorization,
 )
 
-export default setAuthToken;
+export default setAuthToken
