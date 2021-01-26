@@ -12,6 +12,8 @@ import SearchForm from '../../components/playlist/SearchForm';
 import Header from '../../components/layout/Header';
 import SongList from './SongList';
 
+import { populateNowPlaying } from './services/player'
+
 class QuppListPage extends Component {
     state = { 
         playlist: {
@@ -33,22 +35,25 @@ class QuppListPage extends Component {
             .auth()
             .signInWithCustomToken(firebaseToken)
             .then((user) => {
-                // Signed in
-                // ...
-                console.log('user', user);
             })
             .catch((error) => {
                 var errorCode = error.code;
                 var errorMessage = error.message;
-                // ...
         })
 
         this.props.clearPlaylists();
         this.props.getPlaylist(this.props.match.params.slug);    
     }
 
+    syncToFirebase = () => {
+        
+    }
+
     componentDidUpdate = () => {
-        if (!isEmpty(this.props.playlists.playlist) && this.state.firebaseSyncFlag === true) {
+        const havePlaylistsAndFirebaseIsSynced = (
+            !isEmpty(this.props.playlists.playlist) && this.state.firebaseSyncFlag === true
+        )
+        if (havePlaylistsAndFirebaseIsSynced) {
             // sync to users speicific playlist 
             // TODO move syncState into `firebaseApp.initializedApp` then()
             base.syncState(`playlists/${this.props.playlists.playlist[0]._id}`, {
@@ -56,7 +61,7 @@ class QuppListPage extends Component {
                 state: 'playlist',
                 then() {
                     if (!isEmpty(this.state.playlist.queue)) {
-                        this.populateNowPlaying(false);
+                        this.populateNowPlaying();
                     }
                     if (this.state.playlist.hasOwnProperty('queue')) {
                         if (this.state.playlist.queue.length > 1) {
@@ -77,6 +82,20 @@ class QuppListPage extends Component {
     }
 
     playClickHandler = () => {
+        // already have data in list
+        /**
+         * 1. Play nowPlaying song
+         * 2. Once complete check for more songs
+         * 3. if more songs then play next song
+         * 4. if no more songs, stop playing
+         */
+
+        // const copyOfState = {...this.state}
+        // copyOfState.playing = !this.state.playing
+        // this.setState(copyOfState, async () => {
+        //     await this.playSong2()
+        //     if ()
+        // })
 
         this.setState((prevState) => ({
             playing: !prevState.playing
@@ -93,6 +112,28 @@ class QuppListPage extends Component {
         });    
     }
   
+    playSong2 = async () => {
+        const { duration_ms } = this.state.nowPlaying;
+        const duration_secs = duration_ms / 1000;
+
+        let secondsPassed = Math.round((duration_secs / 100)  * this.state.progress);
+        return new Promise(resolve => {
+            this.progress = setInterval(() => {
+                const percent = Math.round((secondsPassed / duration_secs) * 100);
+                this.setState({progress: percent});
+                if (percent >= 100) {
+                    clearInterval(this.progress);
+                    // this.removeFirstSongFromQueue()
+                    if (this.state.playlist.queue) {
+                        // this.playNextSong();
+                        resolve('resolved');
+                    }
+                }
+                secondsPassed ++;
+            }, 10);
+          });
+    }
+
     playSong = () => {
         const { duration_ms } = this.state.nowPlaying;
         const duration_secs = duration_ms / 1000;
@@ -105,47 +146,86 @@ class QuppListPage extends Component {
             this.setState({progress: percent});
             if (percent >= 100) {
                 clearInterval(this.progress);
-                this.playNextSong();
+                // this.removeFirstSongFromQueue()
+                if (this.state.playlist.queue) {
+                    this.playNextSong();
+                }
             }
             secondsPassed ++;
-        }, 1000);
+        }, 10);
+    }
+
+    removeFirstSongFromQueue = () => {
+        const copyOfState = {...this.state}
+        console.log('removeFirstSongFromQueue state', this.state.playlist);
+        if (copyOfState.playlist.queue.length > 0) {
+            const { queue } = copyOfState.playlist
+            console.log('removeFirstSongFromQueue > 0', this.state.playlist.queue.length);
+            copyOfState.playlist.queue = queue.slice(1);
+            this.setState(copyOfState)
+        }
     }
 
     playNextSong = () => {
-        // Remove first song from queue
-        const copyOfPlaylist = {...this.state.playlist};
-        copyOfPlaylist.queue.shift();
-        this.setState({playlist: copyOfPlaylist}, () => {
-            if (this.state.playlist.queue.length === 0) {
-                this.setState({
-                    nowPlaying: {},
-                    upNext: {}
-                });
-                return window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'});
-            }
-            if (this.state.playlist.queue.length > 1) {
-                this.populateUpNext();
-            } else {        
-                this.setState({ upNext: {} });
-            }
-            if (this.state.playlist.queue.length > 0) {
-                this.populateNowPlaying(true);
-            }
-        });
+        const copyOfState = {...this.state};
+        const { queue } = copyOfState.playlist
+        copyOfState.progress = 0
+        copyOfState.playlist.queue = queue.slice(1);
+
+        if (this.state.playlist.queue.length === 0) {
+            copyOfState.nowPlaying = {}
+            copyOfState.upNext = {}
+            window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'});
+        }
+        if (this.state.playlist.queue.length >= 0) {
+            copyOfState.nowPlaying = this.state.playlist.queue[0]
+            copyOfState.upNext = {}
+        }
+        if (this.state.playlist.queue.length > 1) {
+            copyOfState.upNext = this.state.playlist.queue[1]
+        }
+        this.setState(copyOfState, () => {
+            this.playSong()
+        })
     }
+
+    // playNextSong = () => {
+    //     // Remove first song from queue
+    //     const copyOfPlaylist = {...this.state.playlist};
+    //     copyOfPlaylist.queue.shift();
+    //     this.setState({
+    //         playlist: copyOfPlaylist,
+    //         progress: 0,
+    //     }, () => {
+    //         if (this.state.playlist.queue.length === 0) {
+    //             this.setState({
+    //                 nowPlaying: {},
+    //                 upNext: {}
+    //             });
+    //             return window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'});
+    //         }
+    //         if (this.state.playlist.queue.length > 1) {
+    //             this.populateUpNext();
+    //         } else {        
+    //             this.setState({ upNext: {} });
+    //         }
+    //         if (this.state.playlist.queue.length > 0) {
+    //             this.populateNowPlaying(true);
+    //         }
+    //     });
+    // }
 
     componentWillUpdate = (stuff) => {
         // TODO - FOR TESTING. CHECK HOW MANY TIMES `componentWillUpdate` runs
-        if (this.state.playing && this.state.playlist.queue.length === 0) {
+        if (this.state.playing && isEmpty(this.state.playlist.queue)) {
             this.setState({ playing: false });
         }
     }
 
-    populateNowPlaying = (play) => {
+    populateNowPlaying = () => {
         let nowPlaying = {...this.state.nowPlaying};
         nowPlaying = this.state.playlist.queue[0];
-        const playBool = (play) ? this.playSong : null;
-        this.setState({nowPlaying}, playBool);
+        this.setState({nowPlaying});
     }
 
     populateUpNext = () => {
@@ -214,7 +294,7 @@ class QuppListPage extends Component {
 
         this.setState({ playlist }, () => {
             if (type === 'queue') {
-                this.populateNowPlaying(false);
+                this.populateNowPlaying();
                 console.log('populateNowPlaying')
                 if (this.state.playlist.queue.length > 1) {
                     console.log('populateUpNext')
