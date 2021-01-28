@@ -12,7 +12,7 @@ import SearchForm from '../../components/playlist/SearchForm';
 import Header from '../../components/playlist/Header';
 import SongList from './SongList';
 
-import { populateNowPlaying } from './services/player'
+import { populateNowPlaying, getUpNextSong, getNowPlayingSong } from './services/player'
 
 class QuppListPage extends Component {
     state = { 
@@ -50,10 +50,10 @@ class QuppListPage extends Component {
     }
 
     componentDidUpdate = () => {
-        const havePlaylistsAndFirebaseIsSynced = (
+        const playlistsAreThereAndFirebaseIsSynced = (
             !isEmpty(this.props.playlists.playlist) && this.state.firebaseSyncFlag === true
         )
-        if (havePlaylistsAndFirebaseIsSynced) {
+        if (playlistsAreThereAndFirebaseIsSynced) {
             // sync to users speicific playlist 
             // TODO move syncState into `firebaseApp.initializedApp` then()
             base.syncState(`playlists/${this.props.playlists.playlist[0]._id}`, {
@@ -147,7 +147,7 @@ class QuppListPage extends Component {
             if (percent >= 100) {
                 clearInterval(this.progress);
                 // this.removeFirstSongFromQueue()
-                if (this.state.playlist.queue) {
+                if (!isEmpty(this.state.playlist.queue)) {
                     this.playNextSong();
                 }
             }
@@ -185,7 +185,9 @@ class QuppListPage extends Component {
             copyOfState.upNext = this.state.playlist.queue[1]
         }
         this.setState(copyOfState, () => {
-            this.playSong()
+            if (!isEmpty(this.state.playlist.queue)) {
+                this.playSong()
+            }
         })
     }
 
@@ -223,17 +225,13 @@ class QuppListPage extends Component {
     }
 
     populateNowPlaying = () => {
-        let nowPlaying = {...this.state.nowPlaying};
-        nowPlaying = this.state.playlist.queue[0];
-        this.setState({nowPlaying});
+        const nowPlaying = getNowPlayingSong(this.state)
+        this.setState({ nowPlaying });
     }
 
     populateUpNext = () => {
-        console.log('populating upNext')    
-        let upNext = {...this.state.upNext};
-        console.log('this.state.playlist.queue[1]: ', this.state.playlist.queue[1])
-        upNext = this.state.playlist.queue[1];
-        this.setState({upNext});
+        const upNext = getUpNextSong(this.state)
+        this.setState({ upNext });
     }
 
     addSearchResultsToState = (results) => {

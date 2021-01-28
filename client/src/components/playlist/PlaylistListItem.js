@@ -1,30 +1,29 @@
-import React, { Component } from 'react';
-import { Row, Col, Button, Icon } from 'react-materialize';
-import { connect } from 'react-redux';
-import { withRouter, Link } from "react-router-dom";
-import { deletePlaylist } from '../../actions/playlistActions';
-import PropTypes from 'prop-types';
-import copyToClipboard from '../../utils/copyToClipboard';
+import React, { Component } from 'react'
+import { Row, Col, Button, Icon } from 'react-materialize'
+import { connect } from 'react-redux'
+import { withRouter, Link } from "react-router-dom"
+import { deletePlaylist } from '../../actions/playlistActions'
+import PropTypes from 'prop-types'
 
-require('dotenv').config();
+require('dotenv').config()
 
 const { 
   REACT_APP_ENV
-} = process.env;
+} = process.env
 
 class PlaylistListItem extends Component {
     componentWillMount = () => {
-        this.share_link = `${REACT_APP_ENV}/playlist/${this.props.slug}`;
+        this.share_link = `${REACT_APP_ENV}/playlist/${this.props.slug}`
     }
+
     handleDeleteClick = () => { 
-        this.props.deletePlaylist(this.props.id);
+        this.props.deletePlaylist(this.props.id)
     }
+
     handleCopyToClipboardClick = () => {
-        // const share_link = `https://qupp.2112staging.com/playlist/${this.props.slug}`;
-        copyToClipboard(this.share_link);
-        navigator.clipboard.readText()
+        navigator.clipboard.writeText(this.share_link)
             .then(() => window.M.toast({html: `Copied to clipboard`, classes: 'green lighten-2'}))
-            .catch(() => window.M.toast({html: `Error copy link, please try again`, classes: 'red lighten-2'}));
+            .catch(() => window.M.toast({html: `Error copy link, please try again`, classes: 'red lighten-2'}))
     }
     render() {
         return (
@@ -51,4 +50,4 @@ PlaylistListItem.propTypes = {
 }
 
 
-export default connect(null, { deletePlaylist })(withRouter(PlaylistListItem));
+export default connect(null, { deletePlaylist })(withRouter(PlaylistListItem))
