@@ -12,7 +12,13 @@ import SearchForm from '../../components/playlist/SearchForm';
 import Header from '../../components/playlist/Header';
 import SongList from './SongList';
 
-import { populateNowPlaying, getUpNextSong, getNowPlayingSong } from './services/player'
+import {
+    getUpNextSong,
+    getNowPlayingSong,
+} from './services/player'
+
+import { remove, view } from 'ramda'
+import * as R from 'ramda'
 
 class QuppListPage extends Component {
     state = { 
@@ -123,7 +129,7 @@ class QuppListPage extends Component {
                 this.setState({progress: percent});
                 if (percent >= 100) {
                     clearInterval(this.progress);
-                    // this.removeFirstSongFromQueue()
+                    // this.removeFirstSongFromQueueHandler()
                     if (this.state.playlist.queue) {
                         // this.playNextSong();
                         resolve('resolved');
@@ -146,24 +152,13 @@ class QuppListPage extends Component {
             this.setState({progress: percent});
             if (percent >= 100) {
                 clearInterval(this.progress);
-                // this.removeFirstSongFromQueue()
+                // this.removeFirstSongFromQueueHandler()
                 if (!isEmpty(this.state.playlist.queue)) {
                     this.playNextSong();
                 }
             }
             secondsPassed ++;
         }, 10);
-    }
-
-    removeFirstSongFromQueue = () => {
-        const copyOfState = {...this.state}
-        console.log('removeFirstSongFromQueue state', this.state.playlist);
-        if (copyOfState.playlist.queue.length > 0) {
-            const { queue } = copyOfState.playlist
-            console.log('removeFirstSongFromQueue > 0', this.state.playlist.queue.length);
-            copyOfState.playlist.queue = queue.slice(1);
-            this.setState(copyOfState)
-        }
     }
 
     playNextSong = () => {
@@ -222,6 +217,16 @@ class QuppListPage extends Component {
         if (this.state.playing && isEmpty(this.state.playlist.queue)) {
             this.setState({ playing: false });
         }
+    }
+
+    removeFirstSongFromQueueHandler = () => {
+        const removeFirstSong = remove(1, 1)
+
+        this.setState({
+            playlist: {
+                queue: removeFirstSong(this.state.playlist.queue)
+            }
+        })
     }
 
     populateNowPlaying = () => {
@@ -306,25 +311,22 @@ class QuppListPage extends Component {
                 window.M.toast({html: `${songPayload.name}, ${songPayload.album} added`, classes: 'green lighten-2'});
             }
         });
-
     }
 
-    removeSongFromQueueOrPlaylist = (songIdToRemove, type) => {
+    removeSongFromQueueOrPlaylist = (index, type) => {
+        const playlistLens = R.lensPath([
+            ['state'],
+            ['playlist'],
+            type
+        ])
+        const chosenPlaylist = view(playlistLens, this)
+        const removeSongAtIndex = remove(index, 1)
 
-        const copyOfPlaylist = {...this.state.playlist};
-        const index = copyOfPlaylist[type].findIndex(x => x.spotId === songIdToRemove);
-        copyOfPlaylist[type].splice(index, 1);
-
-        if (type === 'queue') {
-            if (this.state.playlist.queue.length < 2) {
-                copyOfPlaylist.upNext = {};
-                if (isEmpty(this.state.playlist.queue)) {
-                    copyOfPlaylist.nowPlaying = {};
-                }
+        this.setState({
+            playlist: {
+                [type]: removeSongAtIndex(chosenPlaylist),
             }
-        }
-
-        this.setState({ playlist: copyOfPlaylist });
+        });
     }
 
   render() {

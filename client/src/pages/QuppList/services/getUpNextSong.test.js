@@ -8,9 +8,6 @@ const state = {
 }
 
 describe('Testing getUpNextSong function', () => {
-    beforeEach(() => {
-        return ''
-    })
 
     it('Gets song at second index', () => {
         const nextSong = getUpNextSong(state)

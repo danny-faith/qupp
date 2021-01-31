@@ -13,6 +13,7 @@ class SongList extends Component {
                 removeSongFromQueueOrPlaylist={removeSongFromQueueOrPlaylist}
                 type={type}
                 data={song} 
+                index={i}
                 key={`${i}${song.spotId}`}
             />)
         )

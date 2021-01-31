@@ -22,7 +22,7 @@ export default class Song extends Component {
     this.props.addSongToQueueOrPlaylist(songToAdd, e.currentTarget.dataset.type);
   }
   handleRemoveSong = (e) => {
-    this.props.removeSongFromQueueOrPlaylist(this.props.data.spotId, e.currentTarget.dataset.type);
+    this.props.removeSongFromQueueOrPlaylist(this.props.index, e.currentTarget.dataset.type);
   }
   render () {
     let songButtons = '';

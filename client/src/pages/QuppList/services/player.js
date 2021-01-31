@@ -1,10 +1,9 @@
-import { lensPath, view, equals, always, ifElse, has, hasPath, tap, length, gt, is, propSatisfies } from 'ramda'
+import { lensPath, view, equals, remove, propEq, findIndex, slice, always, ifElse, has, hasPath, tap, length, gt, is, propSatisfies, set, over } from 'ramda'
+import isEmpty from '../../../utils/isEmpty'
 
-function populateNowPlaying(play) {
-    let nowPlaying = {...this.state.nowPlaying};
-    nowPlaying = this.state.playlist.queue[0];
-    const playBool = (play) ? this.playSong : null;
-    this.setState({nowPlaying}, playBool);
+function removeFirstSongFromQueue(queue) {
+    const newQueue = slice(1, Infinity)
+    return newQueue(queue)
 }
 
 function getNowPlayingSong(state) {
@@ -37,8 +36,7 @@ function getUpNextSong(state) {
 
 export {
     // playNextSong,
-    populateNowPlaying,
-    // populateNowPlaying2,
+    removeFirstSongFromQueue,
     getNowPlayingSong,
     getUpNextSong,
 }
