@@ -15,6 +15,8 @@ import SongList from './SongList';
 import {
     getUpNextSong,
     getNowPlayingSong,
+    addSongToQupplist,
+    addToQueue,
 } from './services/player'
 
 import { remove, view } from 'ramda'
@@ -244,58 +246,40 @@ class QuppListPage extends Component {
     }
 
     addAllToQueueHandler = () => {
-        this.addSongToQueueOrPlaylist(this.state.playlist.qupplist, 'queue');
+        this.addSongToQueueOrPlaylistHandler(this.state.playlist.qupplist, 'queue');
     }
 
-    addSongToQueueOrPlaylist = (songPayload, type) => {
-        const errors = {};
-        let playlist = {...this.state.playlist};
+    addSongToQueueOrPlaylistHandler = (songPayload, type) => {
+        const {
+            qupplist = [],
+            queue = [],
+        } = this.state.playlist
+        const isQupplistAndNotEmpty = type === 'qupplist' && !isEmpty(this.state.playlist.qupplist)
 
-        // Check to see if song being added to qupplist is already there
-        if (type === 'qupplist' && !isEmpty(playlist.qupplist)) {
-            const found = playlist.qupplist.find((x) => x.spotId === songPayload.spotId)
+        // put this checking of qupplist in an error handling file
+        // also add any error handling to this file. See below
+        if (isQupplistAndNotEmpty) {
+            const found = qupplist.find((x) => x.spotId === songPayload.spotId)
             if (found) {
-                errors.addSong = `"${songPayload.name}" is a duplicate, cannot add`;
+                return window.M.toast({
+                    html: `"${songPayload.name}" is a duplicate, cannot add`,
+                    classes: 'red lighten-2'
+                })
             }
         }
 
-        if(!isEmpty(errors)) {
-            return window.M.toast({html: errors.addSong, classes: 'red lighten-2'})
+        let newPlaylist
+        if (type === 'qupplist') {
+            newPlaylist = addSongToQupplist(songPayload, qupplist)
+        } else if (type === 'queue') {
+            newPlaylist = addToQueue(songPayload, queue)
         }
 
-        // Firebase removes empty arrays
-        // so if playlist.queue || playlist.qupplist exists, add to it
-        // else(because Firebase removed it) create an empty array of either `song` or `queue` (type) then add to it
-
-        // if songPayload > 1 then we're adding all in qupplist to the queue
-        if (songPayload.length > 1) {
-            // if playlist.qupplist is empty due to Firebase then create empty array
-            if (isEmpty(playlist.qupplist)) {
-                playlist.qupplist = [];
-            }
-            if (isEmpty(playlist.queue)) {
-                playlist.queue = [];
-            }
-            const newQueue = [...songPayload, ...playlist.queue];
-            playlist.queue = newQueue;
-        } else {
-            console.log('type:', type);
-            // check where we're adding song to exists, if it doesn't then ...
-            if (this.state.playlist.hasOwnProperty(type)) {
-                // if queue has more than one entry, add songPayload to second([1]) place in 
-                if (type === 'queue' && this.state.playlist.queue.length > 0) {
-                    playlist.queue.splice(1, 0, songPayload);
-                } else {
-                    playlist[type].unshift(songPayload);
-                }
-            } else {
-                //  ... create empty array there then add song to it
-                playlist[type] = [];
-                playlist[type].unshift(songPayload);
-            }
-        }
-
-        this.setState({ playlist }, () => {
+        this.setState({
+            playlist: {
+                [type]: newPlaylist
+            },
+        }, () => {
             if (type === 'queue') {
                 this.populateNowPlaying();
                 console.log('populateNowPlaying')
@@ -372,7 +356,7 @@ class QuppListPage extends Component {
                     songs={qupplist}
                     type="qupplist"
                     removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
-                    addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
+                    addSongToQueueOrPlaylistHandler={this.addSongToQueueOrPlaylistHandler}
                     colour="grey"
                 />
               </Col>
@@ -383,7 +367,7 @@ class QuppListPage extends Component {
                 <SongList
                     songs={searchResults}
                     type="search"
-                    addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
+                    addSongToQueueOrPlaylistHandler={this.addSongToQueueOrPlaylistHandler}
                 />
                 <h1 className="text-yellow darken-1">queue</h1>
                 <div className="queue-list">
@@ -391,7 +375,7 @@ class QuppListPage extends Component {
                         songs={queue}
                         type="queue"
                         removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
-                        addSongToQueueOrPlaylist={this.addSongToQueueOrPlaylist}
+                        addSongToQueueOrPlaylistHandler={this.addSongToQueueOrPlaylistHandler}
                         colour="grey"
                     />
                 </div>

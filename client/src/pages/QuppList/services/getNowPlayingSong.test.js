@@ -1,9 +1,9 @@
 import { getNowPlayingSong } from './player'
-import dummyQueue from './dummyQueue'
+import arrayOf11Songs from './arrayOf11Songs'
 
 const state = {
     playlist:{ 
-        queue: [...dummyQueue],
+        queue: [...arrayOf11Songs],
     }
 }
 

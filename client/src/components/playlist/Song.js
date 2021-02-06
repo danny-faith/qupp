@@ -19,7 +19,7 @@ export default class Song extends Component {
         duration_ms: data.duration_ms,
         uri: data.uri
     }
-    this.props.addSongToQueueOrPlaylist(songToAdd, e.currentTarget.dataset.type);
+    this.props.addSongToQueueOrPlaylistHandler(songToAdd, e.currentTarget.dataset.type);
   }
   handleRemoveSong = (e) => {
     this.props.removeSongFromQueueOrPlaylist(this.props.index, e.currentTarget.dataset.type);

@@ -1,5 +1,7 @@
-import { lensPath, view, equals, remove, propEq, findIndex, slice, always, ifElse, has, hasPath, tap, length, gt, is, propSatisfies, set, over } from 'ramda'
+import { append, lensPath, view, equals, remove, propEq, findIndex, slice, always, ifElse, has, hasPath, tap, length, gt, is, propSatisfies, set, over } from 'ramda'
+import * as R from 'ramda'
 import isEmpty from '../../../utils/isEmpty'
+import { cloneDeep } from 'lodash'
 
 function removeFirstSongFromQueue(queue) {
     const newQueue = slice(1, Infinity)
@@ -34,8 +36,70 @@ function getUpNextSong(state) {
     return songUpNext(state)
 }
 
+function addToQueue(payload, queue) {
+    const addingMultipleSongs = Array.isArray(payload) && R.gt(R.length(payload), 1)
+    const addingOneSong = !Array.isArray(payload)
+    
+    const createNewQueue = R.cond([
+        [R.isEmpty(), R.append(payload)],
+        [() => addingMultipleSongs, R.insertAll(1, payload)],
+        [() => addingOneSong, R.insert(1, payload)]
+    ])
+
+    const newQueue = createNewQueue(queue)
+
+    return newQueue
+}
+
+function addSongToQupplist(song, qupplist) {
+    const copyOfQupplist = append(song)
+    return copyOfQupplist(qupplist)
+}
+
+function addSongToQueueOrQupplist(playlist, songPayload) {
+    let newPlaylist = cloneDeep(playlist);
+
+    // Firebase removes empty arrays
+    // so if playlist.queue || playlist.qupplist exists, add to it
+    // else(because Firebase removed it) create an empty array of either `song` or `queue` (type) then add to it
+
+    // if songPayload > 1 then we're adding all in qupplist to the queue
+    if (songPayload.length > 1) {
+        // if playlist.qupplist is empty due to Firebase then create empty array
+        if (isEmpty(newPlaylist)) {
+            newPlaylist = [];
+        }
+        // if (isEmpty(playlist.queue)) {
+        //     playlist.queue = [];
+        // }
+        newPlaylist.push(...songPayload)
+        // const newQueue = [...songPayload, ...playlist.queue];
+        // playlist.queue = newQueue;
+    } else {
+        // console.log('type:', type);
+        // // check where we're adding song to exists, if it doesn't then ...
+        // if (this.state.playlist.hasOwnProperty(type)) {
+        //     // if queue has more than one entry, add songPayload to second([1]) place in 
+        //     if (type === 'queue' && this.state.playlist.queue.length > 0) {
+        //         playlist.queue.splice(1, 0, songPayload);
+        //     } else {
+        //         playlist[type].unshift(songPayload);
+        //     }
+        // } else {
+        //     //  ... create empty array there then add song to it
+        //     playlist[type] = [];
+        //     playlist[type].unshift(songPayload);
+        // }
+    }
+
+    
+}
+
 export {
     // playNextSong,
+    addSongToQupplist,
+    addToQueue,
+    addSongToQueueOrQupplist,
     removeFirstSongFromQueue,
     getNowPlayingSong,
     getUpNextSong,
