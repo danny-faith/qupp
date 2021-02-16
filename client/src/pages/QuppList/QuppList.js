@@ -1,16 +1,16 @@
 import React, { Component, Fragment } from 'react'
-import { connect } from 'react-redux';
-import base from '../../base';
-import firebaseApp from '../../base';
-import PropTypes from 'prop-types';
-import { getPlaylist, clearPlaylists } from '../../actions/playlistActions';
-import isEmpty from '../../utils/isEmpty';
+import { connect } from 'react-redux'
+import base from '../../base'
+import firebaseApp from '../../base'
+import PropTypes from 'prop-types'
+import { getPlaylist, clearPlaylists } from '../../actions/playlistActions'
+import isEmpty from '../../utils/isEmpty'
 
-import { Row, Col, Button } from 'react-materialize';
+import { Row, Col, Button } from 'react-materialize'
 
-import SearchForm from '../../components/playlist/SearchForm';
-import Header from '../../components/playlist/Header';
-import SongList from './SongList';
+import SearchForm from '../../components/playlist/SearchForm'
+import Header from '../../components/playlist/Header'
+import SongList from './SongList'
 
 import {
     getUpNextSong,
@@ -45,12 +45,12 @@ class QuppListPage extends Component {
             .then((user) => {
             })
             .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
+                var errorCode = error.code
+                var errorMessage = error.message
         })
 
-        this.props.clearPlaylists();
-        this.props.getPlaylist(this.props.match.params.slug);    
+        this.props.clearPlaylists()
+        this.props.getPlaylist(this.props.match.params.slug)    
     }
 
     syncToFirebase = () => {
@@ -68,25 +68,25 @@ class QuppListPage extends Component {
                 context: this,
                 state: 'playlist',
                 then() {
-                    if (!isEmpty(this.state.playlist.queue)) {
-                        this.populateNowPlaying();
-                    }
-                    if (this.state.playlist.hasOwnProperty('queue')) {
-                        if (this.state.playlist.queue.length > 1) {
-                            this.populateUpNext();
-                        }
-                    }
+                    // if (!isEmpty(this.state.playlist.queue)) {
+                    //     this.populateNowPlaying()
+                    // }
+                    // if (this.state.playlist.hasOwnProperty('queue')) {
+                    //     if (this.state.playlist.queue.length > 1) {
+                    //         this.populateUpNext()
+                    //     }
+                    // }
                 }
-            });
-            let firebaseSyncFlag = {...this.state.firebaseSyncFlag};
-            firebaseSyncFlag = false;
-            this.setState({firebaseSyncFlag});
+            })
+            let firebaseSyncFlag = {...this.state.firebaseSyncFlag}
+            firebaseSyncFlag = false
+            this.setState({firebaseSyncFlag})
         }
     }
 
     componentWillUnmount = () => {
         // prevent memeory leak from setInterval()
-        clearInterval(this.progress);
+        clearInterval(this.progress)
     }
 
     playClickHandler = () => {
@@ -110,69 +110,69 @@ class QuppListPage extends Component {
         }), () => {
             if (this.state.playing === false) {
                 // If player has just been stopped, stop / clear timeout
-                clearInterval(this.progress);
+                clearInterval(this.progress)
             } else {
-                this.playSong();
-                if (this.state.playlist.queue.length > 1) {
-                    this.populateUpNext();
-                }
+                this.playSong()
+                // if (this.state.playlist.queue.length > 1) {
+                //     this.populateUpNext()
+                // }
             }
-        });    
+        })    
     }
   
     playSong2 = async () => {
-        const { duration_ms } = this.state.nowPlaying;
-        const duration_secs = duration_ms / 1000;
+        const { duration_ms } = this.state.nowPlaying
+        const duration_secs = duration_ms / 1000
 
-        let secondsPassed = Math.round((duration_secs / 100)  * this.state.progress);
+        let secondsPassed = Math.round((duration_secs / 100)  * this.state.progress)
         return new Promise(resolve => {
             this.progress = setInterval(() => {
-                const percent = Math.round((secondsPassed / duration_secs) * 100);
-                this.setState({progress: percent});
+                const percent = Math.round((secondsPassed / duration_secs) * 100)
+                this.setState({progress: percent})
                 if (percent >= 100) {
-                    clearInterval(this.progress);
+                    clearInterval(this.progress)
                     // this.removeFirstSongFromQueueHandler()
                     if (this.state.playlist.queue) {
-                        // this.playNextSong();
-                        resolve('resolved');
+                        // this.playNextSong()
+                        resolve('resolved')
                     }
                 }
-                secondsPassed ++;
-            }, 10);
-          });
+                secondsPassed ++
+            }, 10)
+          })
     }
 
     playSong = () => {
-        const { duration_ms } = this.state.nowPlaying;
-        const duration_secs = duration_ms / 1000;
+        const { duration_ms } = this.state.nowPlaying
+        const duration_secs = duration_ms / 1000
 
-        let secondsPassed = Math.round((duration_secs / 100)  * this.state.progress);
+        let secondsPassed = Math.round((duration_secs / 100)  * this.state.progress)
         // to stop, just set secondsPassed back to 0
         //  NOTE: not a great way of calucationg when a song is finished and percentage of song passed due to setInterval not being accurate (event loop)
         this.progress = setInterval(() => {
-            const percent = Math.round((secondsPassed / duration_secs) * 100);
-            this.setState({progress: percent});
+            const percent = Math.round((secondsPassed / duration_secs) * 100)
+            this.setState({progress: percent})
             if (percent >= 100) {
-                clearInterval(this.progress);
+                clearInterval(this.progress)
                 // this.removeFirstSongFromQueueHandler()
                 if (!isEmpty(this.state.playlist.queue)) {
-                    this.playNextSong();
+                    this.playNextSong()
                 }
             }
-            secondsPassed ++;
-        }, 10);
+            secondsPassed ++
+        }, 10)
     }
 
     playNextSong = () => {
-        const copyOfState = {...this.state};
+        const copyOfState = {...this.state}
         const { queue } = copyOfState.playlist
         copyOfState.progress = 0
-        copyOfState.playlist.queue = queue.slice(1);
+        copyOfState.playlist.queue = queue.slice(1)
 
         if (this.state.playlist.queue.length === 0) {
             copyOfState.nowPlaying = {}
             copyOfState.upNext = {}
-            window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'});
+            window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'})
         }
         if (this.state.playlist.queue.length >= 0) {
             copyOfState.nowPlaying = this.state.playlist.queue[0]
@@ -190,8 +190,8 @@ class QuppListPage extends Component {
 
     // playNextSong = () => {
     //     // Remove first song from queue
-    //     const copyOfPlaylist = {...this.state.playlist};
-    //     copyOfPlaylist.queue.shift();
+    //     const copyOfPlaylist = {...this.state.playlist}
+    //     copyOfPlaylist.queue.shift()
     //     this.setState({
     //         playlist: copyOfPlaylist,
     //         progress: 0,
@@ -200,24 +200,24 @@ class QuppListPage extends Component {
     //             this.setState({
     //                 nowPlaying: {},
     //                 upNext: {}
-    //             });
-    //             return window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'});
+    //             })
+    //             return window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'})
     //         }
     //         if (this.state.playlist.queue.length > 1) {
-    //             this.populateUpNext();
+    //             this.populateUpNext()
     //         } else {        
-    //             this.setState({ upNext: {} });
+    //             this.setState({ upNext: {} })
     //         }
     //         if (this.state.playlist.queue.length > 0) {
-    //             this.populateNowPlaying(true);
+    //             this.populateNowPlaying(true)
     //         }
-    //     });
+    //     })
     // }
 
     componentWillUpdate = (stuff) => {
         // TODO - FOR TESTING. CHECK HOW MANY TIMES `componentWillUpdate` runs
         if (this.state.playing && isEmpty(this.state.playlist.queue)) {
-            this.setState({ playing: false });
+            this.setState({ playing: false })
         }
     }
 
@@ -231,22 +231,22 @@ class QuppListPage extends Component {
         })
     }
 
-    populateNowPlaying = () => {
-        const nowPlaying = getNowPlayingSong(this.state)
-        this.setState({ nowPlaying });
-    }
+    // populateNowPlaying = () => {
+    //     const nowPlaying = getNowPlayingSong(this.state)
+    //     this.setState({ nowPlaying })
+    // }
 
-    populateUpNext = () => {
-        const upNext = getUpNextSong(this.state)
-        this.setState({ upNext });
-    }
+    // populateUpNext = () => {
+    //     const upNext = getUpNextSong(this.state)
+    //     this.setState({ upNext })
+    // }
 
     addSearchResultsToState = (results) => {
-        this.setState(() => ({ searchResults: results }));
+        this.setState(() => ({ searchResults: results }))
     }
 
     addAllToQueueHandler = () => {
-        this.addSongToQueueOrPlaylistHandler(this.state.playlist.qupplist, 'queue');
+        this.addSongToQueueOrPlaylistHandler(this.state.playlist.qupplist, 'queue')
     }
 
     addSongToQueueOrPlaylistHandler = (songPayload, type) => {
@@ -269,32 +269,33 @@ class QuppListPage extends Component {
         }
 
         let newPlaylist
+        const copyOfState = R.clone(this.state)
+        
         if (type === 'qupplist') {
             newPlaylist = addSongToQupplist(songPayload, qupplist)
         } else if (type === 'queue') {
             newPlaylist = addToQueue(songPayload, queue)
         }
+        copyOfState.playlist[type] = newPlaylist
 
-        this.setState({
-            playlist: {
-                [type]: newPlaylist
-            },
-        }, () => {
-            if (type === 'queue') {
-                this.populateNowPlaying();
-                console.log('populateNowPlaying')
-                if (this.state.playlist.queue.length > 1) {
-                    console.log('populateUpNext')
-                    this.populateUpNext();
-                }
+        
+        if (type === 'queue') {
+            if (copyOfState.playlist.queue.length <= 1) {
+                copyOfState.nowPlaying = getNowPlayingSong(copyOfState)
             }
+            if (copyOfState.playlist.queue.length > 1) {
+                copyOfState.upNext = getUpNextSong(copyOfState)
+            }
+        }
+
+        this.setState(copyOfState, () => {
             // if array then multple songs have been added to queue
             if (Array.isArray(songPayload)) {
-                songPayload.map(item => window.M.toast({html: `${item.name}, ${item.album} added`, classes: 'green lighten-2'}));
+                songPayload.map(item => window.M.toast({html: `${item.name}, ${item.album} added`, classes: 'green lighten-2'}))
             } else {
-                window.M.toast({html: `${songPayload.name}, ${songPayload.album} added`, classes: 'green lighten-2'});
+                window.M.toast({html: `${songPayload.name}, ${songPayload.album} added`, classes: 'green lighten-2'})
             }
-        });
+        })
     }
 
     removeSongFromQueueOrPlaylist = (index, type) => {
@@ -310,11 +311,18 @@ class QuppListPage extends Component {
             playlist: {
                 [type]: removeSongAtIndex(chosenPlaylist),
             }
-        });
+        })
+    }
+
+    clearSearchResults = () => {
+        this.setState({
+            searchResults: [],
+        })
     }
 
   render() {
-    let playlistName = '';
+    console.log('QuppList render');
+    let playlistName = ''
     const {
         searchResults,
         playlist: {
@@ -324,24 +332,25 @@ class QuppListPage extends Component {
     } = this.state
 
     if (!isEmpty(this.props.playlists.playlist)) {
-      playlistName = this.props.playlists.playlist[0].name;;
+      playlistName = this.props.playlists.playlist[0].name
     }
-    // const nowPlaying = this.state.nowPlaying;
-    // const upNext = this.state.upNext;
+    // const nowPlaying = this.state.nowPlaying
+    // const upNext = this.state.upNext
     // why not add checks to make sure nowPlaying and upNext both had sufficient values before passing them to context
-    const playDisabled = (isEmpty(this.state.playlist.queue)) ? true : false;
+    const playDisabled = (isEmpty(this.state.playlist.queue)) ? true : false
     const playButton = (this.state.playing) 
       ? <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2 red">Stop ■</Button>
-      : <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2">Play ►</Button>;
-
+      : <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2">Play ►</Button>
+    const nowPlaying = (this.state.playlist.queue) ? this.state.playlist.queue[0] : {}
+    const upNext = (this.state.playlist.queue) ? this.state.playlist.queue[1] : {}
     return (
         <Fragment>
           <Header 
             numberOfSongsInQupplist={(this.state.playlist.qupplist === undefined) ? 0 : this.state.playlist.qupplist.length} 
             username={this.props.auth.user.name} 
             playlistname={playlistName} 
-            nowPlaying={this.state.nowPlaying} 
-            upNext={this.state.upNext} 
+            nowPlaying={nowPlaying} 
+            upNext={upNext} 
             progressValue={this.state.progress}
           />
 
@@ -363,7 +372,12 @@ class QuppListPage extends Component {
               <Col s={12} m={10} l={6} xl={4} offset="m1">
                 <h1>search</h1>
                 <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
-                <Button className="white darken-1 text-black font-bold" onClick={() => {this.setState({searchResults: []})}}>Clear search results</Button>
+                <Button
+                    className="white darken-1 text-black font-bold"
+                    onClick={this.clearSearchResults}
+                >
+                        Clear search results
+                </Button>
                 <SongList
                     songs={searchResults}
                     type="search"
@@ -397,6 +411,6 @@ QuppListPage.propTypes = {
 const mapStateToProps = (state) => ({
 	auth: state.auth,
 	playlists: state.playlist
-});
+})
 
-export default connect(mapStateToProps, { getPlaylist, clearPlaylists })(QuppListPage);
+export default connect(mapStateToProps, { getPlaylist, clearPlaylists })(QuppListPage)
