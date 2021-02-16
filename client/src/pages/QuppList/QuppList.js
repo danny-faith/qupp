@@ -39,6 +39,13 @@ class QuppListPage extends Component {
     componentDidMount = () => {
         const firebaseToken = localStorage.getItem('firebaseToken')
 
+        if (firebaseToken === null) {
+            return window.M.toast({
+                html: 'There was an error loading the page, please refresh',
+                classes: 'red lighten-2'
+            }) 
+        }
+
         firebaseApp.initializedApp
             .auth()
             .signInWithCustomToken(firebaseToken)
@@ -47,14 +54,11 @@ class QuppListPage extends Component {
             .catch((error) => {
                 var errorCode = error.code
                 var errorMessage = error.message
+                console.log(`Error: ${errorCode} ${errorMessage}`)
         })
 
         this.props.clearPlaylists()
         this.props.getPlaylist(this.props.match.params.slug)    
-    }
-
-    syncToFirebase = () => {
-        
     }
 
     componentDidUpdate = () => {
