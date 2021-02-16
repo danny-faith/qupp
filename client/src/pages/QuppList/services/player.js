@@ -37,18 +37,19 @@ function getUpNextSong(state) {
 }
 
 function addToQueue(payload, queue) {
-    const addingMultipleSongs = Array.isArray(payload) && R.gt(R.length(payload), 1)
-    const addingOneSong = !Array.isArray(payload)
+    const addingMultipleSongsToPopulatedQueue = () => Array.isArray(payload) && R.gt(R.length(payload), 1)
+    const addingOneSongToPopulatedQueue = () => !Array.isArray(payload)
+    const emptyQueueAndAddingMultipleSongs = () => R.isEmpty(queue) && Array.isArray(payload)
+    const addingSingleSongsToEmptyQueue = () => R.isEmpty(queue) && R.is(Object)
     
-    const createNewQueue = R.cond([
-        [R.isEmpty(), R.append(payload)],
-        [() => addingMultipleSongs, R.insertAll(1, payload)],
-        [() => addingOneSong, R.insert(1, payload)]
+    const newQueue = R.cond([
+        [emptyQueueAndAddingMultipleSongs, R.always(payload)],
+        [addingSingleSongsToEmptyQueue, R.always([payload])],
+        [addingMultipleSongsToPopulatedQueue, R.insertAll(1, payload)],
+        [addingOneSongToPopulatedQueue, R.insert(1, payload)]
     ])
 
-    const newQueue = createNewQueue(queue)
-
-    return newQueue
+    return newQueue(queue)
 }
 
 function addSongToQupplist(song, qupplist) {
