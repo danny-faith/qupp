@@ -246,10 +246,10 @@ class QuppListPage extends Component {
     }
 
     addAllToQueueHandler = () => {
-        this.addSongToQueueOrPlaylistHandler(this.state.playlist.qupplist, 'queue')
+        this.addSongToQueueOrQupplistHandler(this.state.playlist.qupplist, 'queue')
     }
 
-    addSongToQueueOrPlaylistHandler = (songPayload, type) => {
+    addSongToQueueOrQupplistHandler = (songPayload, type) => {
         const {
             qupplist = [],
             queue = [],
@@ -320,85 +320,86 @@ class QuppListPage extends Component {
         })
     }
 
-  render() {
-    console.log('QuppList render');
-    let playlistName = ''
-    const {
-        searchResults,
-        playlist: {
-            qupplist = [],
-            queue = [],
-        },
-    } = this.state
+    render() {
+        console.log('QuppList render');
+        let playlistName = ''
+        const {
+            searchResults,
+            playlist: {
+                qupplist = [],
+                queue = [],
+            },
+        } = this.state
 
-    if (!isEmpty(this.props.playlists.playlist)) {
-      playlistName = this.props.playlists.playlist[0].name
-    }
-    // const nowPlaying = this.state.nowPlaying
-    // const upNext = this.state.upNext
-    // why not add checks to make sure nowPlaying and upNext both had sufficient values before passing them to context
-    const playDisabled = (isEmpty(this.state.playlist.queue)) ? true : false
-    const playButton = (this.state.playing) 
-      ? <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2 red">Stop ■</Button>
-      : <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2">Play ►</Button>
-    const nowPlaying = (this.state.playlist.queue) ? this.state.playlist.queue[0] : {}
-    const upNext = (this.state.playlist.queue) ? this.state.playlist.queue[1] : {}
-    return (
-        <Fragment>
-          <Header 
-            numberOfSongsInQupplist={(this.state.playlist.qupplist === undefined) ? 0 : this.state.playlist.qupplist.length} 
-            username={this.props.auth.user.name} 
-            playlistname={playlistName} 
-            nowPlaying={nowPlaying} 
-            upNext={upNext} 
-            progressValue={this.state.progress}
-          />
+        if (!isEmpty(this.props.playlists.playlist)) {
+            playlistName = this.props.playlists.playlist[0].name
+        }
+        const playDisabled = (isEmpty(this.state.playlist.queue)) ? true : false
+        const playButton = (this.state.playing) 
+            ? <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2 red">Stop ■</Button>
+            : <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2">Play ►</Button>
+        const nowPlaying = (this.state.playlist.queue) ? this.state.playlist.queue[0] : {}
+        const upNext = (this.state.playlist.queue) ? this.state.playlist.queue[1] : {}
 
-          <div className="container">
-            {playButton}
-            <Row className="flex flex-wrap md:block flex-col-reverse">
-              <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
-                <h1 className="text-blue darken-1">qupplist
-                  <Button onClick={this.addAllToQueueHandler} className="yellow text-black font-bold ml-4">Add all to queue</Button>
-                </h1>
-                <SongList
-                    songs={qupplist}
-                    type="qupplist"
-                    removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
-                    addSongToQueueOrPlaylistHandler={this.addSongToQueueOrPlaylistHandler}
-                    colour="grey"
+        return (
+            <Fragment>
+                <Header 
+                    numberOfSongsInQupplist={(this.state.playlist.qupplist === undefined) ? 0 : this.state.playlist.qupplist.length} 
+                    username={this.props.auth.user.name} 
+                    playlistname={playlistName} 
+                    nowPlaying={nowPlaying} 
+                    upNext={upNext} 
+                    progressValue={this.state.progress}
                 />
-              </Col>
-              <Col s={12} m={10} l={6} xl={4} offset="m1">
-                <h1>search</h1>
-                <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
-                <Button
-                    className="white darken-1 text-black font-bold"
-                    onClick={this.clearSearchResults}
-                >
-                        Clear search results
-                </Button>
-                <SongList
-                    songs={searchResults}
-                    type="search"
-                    addSongToQueueOrPlaylistHandler={this.addSongToQueueOrPlaylistHandler}
-                />
-                <h1 className="text-yellow darken-1">queue</h1>
-                <div className="queue-list">
-                    <SongList
-                        songs={queue}
-                        type="queue"
-                        removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
-                        addSongToQueueOrPlaylistHandler={this.addSongToQueueOrPlaylistHandler}
-                        colour="grey"
-                    />
+
+                <div className="container">
+                    {playButton}
+                    <Row className="flex flex-wrap md:block flex-col-reverse">
+
+                        <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
+                            <h1 className="text-blue darken-1">qupplist
+                                <Button onClick={this.addAllToQueueHandler} className="yellow text-black font-bold ml-4">Add all to queue</Button>
+                            </h1>
+                            <SongList
+                                songs={qupplist}
+                                type="qupplist"
+                                removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
+                                addSongToQueueOrQupplistHandler={this.addSongToQueueOrQupplistHandler}
+                                colour="grey"
+                            />
+                        </Col>
+
+                        <Col s={12} m={10} l={6} xl={4} offset="m1">
+                            <h1>search</h1>
+                            <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
+                            <Button
+                                className="white darken-1 text-black font-bold"
+                                onClick={this.clearSearchResults}
+                            >
+                                Clear search results
+                            </Button>
+                            <SongList
+                                songs={searchResults}
+                                type="search"
+                                addSongToQueueOrQupplistHandler={this.addSongToQueueOrQupplistHandler}
+                            />
+                            <h1 className="text-yellow darken-1">queue</h1>
+                            <div className="queue-list">
+                                <SongList
+                                    songs={queue}
+                                    type="queue"
+                                    removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
+                                    addSongToQueueOrQupplistHandler={this.addSongToQueueOrQupplistHandler}
+                                    colour="grey"
+                                />
+                            </div>
+                        </Col>
+
+                    </Row>
                 </div>
-              </Col>
-            </Row>
-          </div>
-        </Fragment>
-    )
-  }
+            </Fragment>
+        )
+    }
 }
 
 QuppListPage.propTypes = {

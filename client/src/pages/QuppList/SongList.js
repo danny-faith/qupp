@@ -6,10 +6,10 @@ class SongList extends Component {
         <p>No songs to show</p>
     )
 
-    songComponents = ({ songs, type, addSongToQueueOrPlaylistHandler, removeSongFromQueueOrPlaylist }) => (
+    songComponents = ({ songs, type, addSongToQueueOrQupplistHandler, removeSongFromQueueOrPlaylist }) => (
         songs.map((song, i) => (
             <Song
-                addSongToQueueOrPlaylistHandler={addSongToQueueOrPlaylistHandler}
+                addSongToQueueOrQupplistHandler={addSongToQueueOrQupplistHandler}
                 removeSongFromQueueOrPlaylist={removeSongFromQueueOrPlaylist}
                 type={type}
                 data={song} 
@@ -20,10 +20,10 @@ class SongList extends Component {
     )
 
     songListContent = () => {
-        const { songs, addSongToQueueOrPlaylistHandler, type, removeSongFromQueueOrPlaylist } = this.props
+        const { songs, addSongToQueueOrQupplistHandler, type, removeSongFromQueueOrPlaylist } = this.props
         const params = {
             songs,
-            addSongToQueueOrPlaylistHandler,
+            addSongToQueueOrQupplistHandler,
             removeSongFromQueueOrPlaylist,
             type,
         }
