@@ -40,9 +40,9 @@ class EditPlaylist extends Component {
         if(playlistsHaveLoaded) {
             return (
                 <CreatePlaylist
-                    name={this.state.playlist[0].name}
+                    name={this.state.playlist.name}
                     slug={this.props.match.params.slug}
-                    id={this.state.playlist[0]._id}
+                    id={this.state.playlist._id}
                     title="Edit playlist"
                     buttonText="Edit playlist"
                 />

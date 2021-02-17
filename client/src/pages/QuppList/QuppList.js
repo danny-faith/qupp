@@ -57,18 +57,22 @@ class QuppListPage extends Component {
                 console.log(`Error: ${errorCode} ${errorMessage}`)
         })
 
+        console.log('didMount', JSON.parse(JSON.stringify(this.props.playlists.playlist)));
+
         this.props.clearPlaylists()
         this.props.getPlaylist(this.props.match.params.slug)    
     }
 
     componentDidUpdate = () => {
+        console.log('didUpdate', JSON.parse(JSON.stringify(this.props)));
+
         const playlistsAreThereAndFirebaseIsSynced = (
             !isEmpty(this.props.playlists.playlist) && this.state.firebaseSyncFlag === true
         )
         if (playlistsAreThereAndFirebaseIsSynced) {
             // sync to users speicific playlist 
             // TODO move syncState into `firebaseApp.initializedApp` then()
-            base.syncState(`playlists/${this.props.playlists.playlist[0]._id}`, {
+            base.syncState(`playlists/${this.props.playlists.playlist._id}`, {
                 context: this,
                 state: 'playlist',
                 then() {
@@ -336,7 +340,7 @@ class QuppListPage extends Component {
         } = this.state
 
         if (!isEmpty(this.props.playlists.playlist)) {
-            playlistName = this.props.playlists.playlist[0].name
+            playlistName = this.props.playlists.playlist.name
         }
         const playDisabled = (isEmpty(this.state.playlist.queue)) ? true : false
         const playButton = (this.state.playing) 
