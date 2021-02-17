@@ -23,12 +23,16 @@ import { remove, view } from 'ramda'
 import * as R from 'ramda'
 
 class QuppListPage extends Component {
+    constructor(props) {
+        super(props)
+        this.firebaseSyncFlag = true
+    }
+
     state = { 
         playlist: {
             qupplist: [],
             queue: [],
         },
-        firebaseSyncFlag: true,
         playing: false,
         progress: 0,
         nowPlaying: {},
@@ -57,38 +61,22 @@ class QuppListPage extends Component {
                 console.log(`Error: ${errorCode} ${errorMessage}`)
         })
 
-        console.log('didMount', JSON.parse(JSON.stringify(this.props.playlists.playlist)));
-
         this.props.clearPlaylists()
         this.props.getPlaylist(this.props.match.params.slug)    
     }
 
     componentDidUpdate = () => {
-        console.log('didUpdate', JSON.parse(JSON.stringify(this.props)));
-
         const playlistsAreThereAndFirebaseIsSynced = (
-            !isEmpty(this.props.playlists.playlist) && this.state.firebaseSyncFlag === true
+            !isEmpty(this.props.playlists.playlist) && this.firebaseSyncFlag === true
         )
+
         if (playlistsAreThereAndFirebaseIsSynced) {
-            // sync to users speicific playlist 
-            // TODO move syncState into `firebaseApp.initializedApp` then()
-            base.syncState(`playlists/${this.props.playlists.playlist._id}`, {
+            const { _id: id } = this.props.playlists.playlist
+            base.syncState(`playlists/${id}`, {
                 context: this,
                 state: 'playlist',
-                then() {
-                    // if (!isEmpty(this.state.playlist.queue)) {
-                    //     this.populateNowPlaying()
-                    // }
-                    // if (this.state.playlist.hasOwnProperty('queue')) {
-                    //     if (this.state.playlist.queue.length > 1) {
-                    //         this.populateUpNext()
-                    //     }
-                    // }
-                }
             })
-            let firebaseSyncFlag = {...this.state.firebaseSyncFlag}
-            firebaseSyncFlag = false
-            this.setState({firebaseSyncFlag})
+            this.firebaseSyncFlag = false
         }
     }
 
@@ -411,10 +399,10 @@ class QuppListPage extends Component {
 }
 
 QuppListPage.propTypes = {
-  getPlaylist: PropTypes.func.isRequired,
-  clearPlaylists: PropTypes.func.isRequired,
-	playlist: PropTypes.object,
-	auth: PropTypes.object.isRequired
+    getPlaylist: PropTypes.func.isRequired,
+    clearPlaylists: PropTypes.func.isRequired,
+    playlist: PropTypes.object,
+    auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
