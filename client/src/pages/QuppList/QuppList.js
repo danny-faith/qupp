@@ -25,7 +25,7 @@ import * as R from 'ramda'
 class QuppListPage extends Component {
     constructor(props) {
         super(props)
-        this.firebaseSyncFlag = true
+        this.firebaseSyncFlag = false
     }
 
     state = { 
@@ -67,16 +67,19 @@ class QuppListPage extends Component {
 
     componentDidUpdate = () => {
         const playlistsAreThereAndFirebaseIsSynced = (
-            !isEmpty(this.props.playlists.playlist) && this.firebaseSyncFlag === true
+            !isEmpty(this.props.playlists.playlist) && this.firebaseSyncFlag === false
         )
 
         if (playlistsAreThereAndFirebaseIsSynced) {
             const { _id: id } = this.props.playlists.playlist
+
             base.syncState(`playlists/${id}`, {
                 context: this,
                 state: 'playlist',
+                then() {
+                    this.firebaseSyncFlag = true
+                }
             })
-            this.firebaseSyncFlag = false
         }
     }
 
