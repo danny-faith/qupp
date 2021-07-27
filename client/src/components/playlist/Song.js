@@ -3,7 +3,7 @@ import { Row, Col, Button } from 'react-materialize';
 
 export default class Song extends Component {
     componentDidMount = () => {
-        const elems = document.querySelectorAll('.fixed-action-btn');
+        const elems = document.querySelectorAll('.fixed-action-btn')
         window.M.FloatingActionButton.init(elems, {
             direction: 'left'
         });
@@ -20,43 +20,57 @@ export default class Song extends Component {
             duration_ms: data.duration_ms,
             uri: data.uri
         }
-        this.props.addSongToQueueOrQupplistHandler(songToAdd, e.currentTarget.dataset.type);
+        this.props.addSongToQueueOrQupplistHandler(songToAdd, e.currentTarget.dataset.type)
     }
 
     handleRemoveSong = (e) => {
-        this.props.removeSongFromQueueOrPlaylist(this.props.index, e.currentTarget.dataset.type);
+        this.props.removeSongFromQueueOrPlaylist(this.props.index, e.currentTarget.dataset.type)
     }
 
-    render () {
-        let songButtons = '';
-        
-        if (this.props.type === 'search') {
-            songButtons = (
+    createActionButton = ({ dataType, classNames, icon, action }) => (
+        <Button
+            onClick={action}
+            data-type={dataType}
+            floating icon={icon}
+            className={classNames}
+        />
+    )
+
+    buttonDecider = (type) => {
+        switch (type) {
+            case 'search':
+                return (
+                    <Button ref={this.myRef} floating fab='horizontal' icon='more_horiz' className='pink' large style={{bottom: '0px', right: '0px'}}>
+                        {this.createActionButton({ dataType: 'qupplist', icon: 'playlist_add', classNames: 'blue', action: this.handleAddSong })}
+                        {this.createActionButton({ dataType: 'queue', icon: 'playlist_add', classNames: 'yellow darken-1', action: this.handleAddSong })}
+                    </Button>
+                )
+            case 'qupplist':
+                return (
                 <Button ref={this.myRef} floating fab='horizontal' icon='more_horiz' className='pink' large style={{bottom: '0px', right: '0px'}}>
-                    <Button onClick={this.handleAddSong} data-type="qupplist" floating icon='playlist_add' className='blue'/>
-                    <Button onClick={this.handleAddSong} data-type="queue" floating icon='playlist_add' className='yellow darken-1' />
+                    {this.createActionButton({ dataType: 'qupplist', icon: 'delete', classNames: 'red darken-1', action: this.handleRemoveSong })}
+                    {this.createActionButton({ dataType: 'queue', icon: 'playlist_add', classNames: 'yellow darken-1', action: this.handleAddSong })}
                 </Button>
-            );
-        } else if (this.props.type === 'qupplist') {
-            songButtons = (
+            )
+            case 'queue':
+                return (
                 <Button ref={this.myRef} floating fab='horizontal' icon='more_horiz' className='pink' large style={{bottom: '0px', right: '0px'}}>
-                    <Button onClick={this.handleRemoveSong} data-type="qupplist" floating icon='delete' className='red darken-1'/>
-                    <Button onClick={this.handleAddSong} data-type="queue" floating icon='playlist_add' className='yellow darken-1'/>
+                    {this.createActionButton({ dataType: 'queue', icon: 'delete', classNames: 'red darken-1', action: this.handleRemoveSong })}
+                    {this.createActionButton({ dataType: 'qupplist', icon: 'playlist_add', classNames: 'blue darken-1', action: this.handleAddSong })}
                 </Button>
-            );
-        } else if (this.props.type === 'queue') {
-            songButtons = (
-                <Button ref={this.myRef} floating fab='horizontal' icon='more_horiz' className='pink' large style={{bottom: '0px', right: '0px'}}>
-                    <Button onClick={this.handleRemoveSong} data-type="queue" floating icon='delete' className='red darken-1'/>
-                    <Button onClick={this.handleAddSong} data-type="qupplist" floating icon='playlist_add' className='blue darken-1'/>
-                </Button>
-            );
+            )
+            default:
+                break
         }
-        const classes = `${this.props.colour} py-3 darken-2 mb-0`
-        const { data } = this.props
+    }
+            
+            
+    render () {
+        const { type, colour, data } = this.props
+        const songButtons = this.buttonDecider(type)
 
         return (
-            <Row className={classes}>
+            <Row className={`${colour} py-3 darken-2 mb-0`}>
                 <Col s={2} className="">
                     <img alt="Song cover" src={data.image} className="w-full block" />
                 </Col>
