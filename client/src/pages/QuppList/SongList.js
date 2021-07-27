@@ -1,12 +1,12 @@
-import React, { Fragment, Component } from 'react'
+import React from 'react';
 import Song from '../../components/playlist/Song'
 
-class SongList extends Component {
-    showNoSongsMessage = () => (
+function SongList(props) {
+    const showNoSongsMessage = () => (
         <p>No songs to show</p>
     )
 
-    songComponents = ({ songs, type, addSongToQueueOrQupplistHandler, removeSongFromQueueOrPlaylist }) => (
+    const songComponents = ({ songs, type, addSongToQueueOrQupplistHandler, removeSongFromQueueOrPlaylist }) => (
         songs.map((song, i) => (
             <Song
                 addSongToQueueOrQupplistHandler={addSongToQueueOrQupplistHandler}
@@ -19,8 +19,8 @@ class SongList extends Component {
         )
     )
 
-    songListContent = () => {
-        const { songs, addSongToQueueOrQupplistHandler, type, removeSongFromQueueOrPlaylist } = this.props
+    const songListContent = () => {
+        const { songs, addSongToQueueOrQupplistHandler, type, removeSongFromQueueOrPlaylist } = props
         const params = {
             songs,
             addSongToQueueOrQupplistHandler,
@@ -29,18 +29,16 @@ class SongList extends Component {
         }
 
         if (songs.length > 0) {
-            return this.songComponents(params)
+            return songComponents(params)
         }
-        return this.showNoSongsMessage()
+        return showNoSongsMessage()
     }
 
-    render() {
-        return (
-            <Fragment>
-                {this.songListContent()}
-            </Fragment>
-        )
-    }
+    return (
+        <div>
+            {songListContent()}
+        </div>
+    );
 }
 
 export default SongList
