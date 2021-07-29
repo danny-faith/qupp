@@ -64,18 +64,18 @@ function Song(props) {
     const songButtons = buttonDecider(type)
 
     return (
-        <Row className={`${colour} py-3 darken-2 mb-0`}>
+        <Row className={`${colour} py-3 darken-2 mb-0 flex`}>
             <Col s={2}>
                 <img alt="Song cover" src={data.image} className="w-full block" />
             </Col>
-            <Col s={8} className="pl-0">
+            <Col s={7} className="pl-0 flex items-center">
                 <p className="my-0">{data.name}, {data.album}, Artists: 
                     {data.artists.map(key => (
                         <span key={key.name}> {key.name}</span>
                     ))}
                 </p>
             </Col>
-            <Col s={2} className="pl-0 relative">
+            <Col s={2} className="offset-s1 pl-0 relative flex items-center justify-around">
                 {songButtons}
             </Col>
         </Row>
