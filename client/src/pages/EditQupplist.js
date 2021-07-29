@@ -7,7 +7,6 @@ import isEmpty from '../utils/isEmpty'
 
 function EditPlaylist(props) {
     const [playlist, setPlaylist] = useState({})
-    const [errors, setErrors] = useState([])
 
     useEffect(() => {
         const { isAuthenticated } = props.auth
@@ -26,9 +25,6 @@ function EditPlaylist(props) {
 
         if (!isAuthenticated) {
             props.history.push('/login')
-        }
-        if (props.errors) {
-            setErrors(props.errors)
         }
         if (props.playlist) {
             setPlaylist(props.playlist)
@@ -54,7 +50,7 @@ function EditPlaylist(props) {
     return (
         <div>
             <h1>Edit playlist</h1>
-            {errors}
+
             {editQupplistContent()}
         </div>
     )
