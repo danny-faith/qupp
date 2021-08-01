@@ -49,22 +49,22 @@ if (localStorage.jwtToken) {
 setInterval(() => {
 	// if localStorage.jwtToken exists then user must be logged in
 	if (localStorage.jwtToken) {
-		const decoded = jwt_decode(localStorage.jwtToken);
-		const exp = new Date(decoded.exp * 1000);
-		const iat = new Date(decoded.iat * 1000);
-		// TODO use exp and iat to tell whether user will have been auto logged out and therefore when to clear the interval and update userOnline to false
-		// console.log('exp: ', exp);
-		// console.log('iat: ', iat);
-		// console.log(decoded);
+		// const decoded = jwt_decode(localStorage.jwtToken);
+		// const exp = new Date(decoded.exp * 1000);
+		// const iat = new Date(decoded.iat * 1000);
+		// // TODO use exp and iat to tell whether user will have been auto logged out and therefore when to clear the interval and update userOnline to false
+		// // console.log('exp: ', exp);
+		// // console.log('iat: ', iat);
+		// // console.log(decoded);
 
-		// below accounts for timezones
-		const date = new Date();
-		date.setTime( date.getTime() - new Date().getTimezoneOffset()*60*1000 )
-		const payload = {
-			userId: decoded.id,
-			lastOnline: date
-		}
-		store.dispatch(updateUserLastOnlineOrEmail(payload));
+		// // below accounts for timezones
+		// const date = new Date();
+		// date.setTime( date.getTime() - new Date().getTimezoneOffset()*60*1000 )
+		// const payload = {
+		// 	userId: decoded.id,
+		// 	lastOnline: date
+		// }
+		// store.dispatch(updateUserLastOnlineOrEmail(payload));
 	}
 }, 2000);
 

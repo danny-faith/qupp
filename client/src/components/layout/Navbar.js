@@ -1,86 +1,84 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Modal } from 'react-materialize';
-import Messenger from '../messenger/Messenger';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { logoutUser } from '../../actions/authActions';
-import { clearPlaylists } from '../../actions/playlistActions';
-import { withRouter } from 'react-router-dom';
+import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { Modal } from 'react-materialize'
+import Messenger from '../messenger/Messenger'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { logoutUser } from '../../actions/authActions'
+import { clearPlaylists } from '../../actions/playlistActions'
+import { withRouter } from 'react-router-dom'
 
-import logo from '../../logo-v2.svg';
+import logo from '../../logo-v2.svg'
 
-export class Navbar extends Component {
-    dropdownTriggerRef = React.createRef();
-    messengerRef = React.createRef();
-    usersRef = React.createRef();
+export function Navbar(props) {
+    const dropdownTriggerRef = React.createRef()
+    const messengerRef = React.createRef()
+    const usersRef = React.createRef()
+    const navRef = React.createRef()
+    const { isAuthenticated, user } = props.auth
 
-    shouldDropdownInit = () => {
-        if (this.props.auth.isAuthenticated) {
-            window.M.Dropdown.init(this.dropdownTriggerRef.current);
+    useEffect(() => {
+        shouldDropdownInit()
+    }, [props.auth])
+
+    const shouldDropdownInit = () => {
+        if (props.auth.isAuthenticated) {
+            window.M.Dropdown.init(dropdownTriggerRef.current)
         }
     }
-    onLogoutClick = (e) => {
-		e.preventDefault();
-		this.props.clearPlaylists();
-		this.props.logoutUser(this.props.history);
-    }
-    componentDidMount = () => {
-        this.shouldDropdownInit();
-    }
-    componentDidUpdate = () => {
-        this.shouldDropdownInit();
-    }
-    render() {        
-        const { isAuthenticated, user } = this.props.auth;
-            
-        const authLinks = (
-            <ul id="nav-mobile" className="right hide-on-med-and-down">
-                <li>
-                    <a href="!#" onClick={this.onLogoutClick}>Logout</a>
-                </li>
-                <li>
-                    <Modal id="messengerUsers" className="bg-grey-darkest" header="Messenger" ref={this.usersRef} trigger={<a ref={this.messengerRef} href="!#" onClick={this.messengerClick}>Messenger</a>}>
-                       <Messenger />
-                    </Modal>
-                </li>
-                <li className="avatar">
-                    <a href="#" ref={this.dropdownTriggerRef} data-target="dropdown1" className="dropdown-trigger">
-                        <div className="avatar" style={{ backgroundImage: `url(${user.avatar})`}}>
-                        </div>
-                        {user.username}
-                    </a>
-                    <ul id="dropdown1" className="dropdown-content">
-                        <li><Link to="/dashboard">Dashboard</Link></li>
-                        <li><Link to="/my-account">Account</Link></li>
-                        <li className="divider"></li>
-                        <li><a href="!#" onClick={this.onLogoutClick}>Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
-        );
 
-        const guestLinks = (
-            <ul id="nav-mobile" className="right hide-on-med-and-down">
-                <li><Link to="/login">Login</Link></li>
-                <li><Link to="/register">Register</Link></li>
-            </ul>
-        );
+    const onLogoutClick = (e) => {
+		e.preventDefault()
+		props.clearPlaylists()
+		props.logoutUser(props.history)
+    }
+        
+    const authorisedLinks = (
+        <ul id="nav-mobile" className="right hide-on-med-and-down">
+            <li>
+                <a href="!#" onClick={onLogoutClick}>Logout</a>
+            </li>
+            <li>
+                <Modal id="messengerUsers" className="bg-grey-darkest" header="Messenger" ref={usersRef} trigger={<a ref={messengerRef} href="!#">Messenger</a>}>
+                    <Messenger />
+                </Modal>
+            </li>
+            <li className="avatar">
+                <a href="!#" ref={dropdownTriggerRef} data-target="dropdown1" className="dropdown-trigger">
+                    <div className="avatar" style={{ backgroundImage: `url(${user.avatar})`}}>
+                    </div>
+                    {user.username}
+                </a>
+                <ul id="dropdown1" className="dropdown-content">
+                    <li><Link to="/dashboard">Dashboard</Link></li>
+                    <li><Link to="/my-account">Account</Link></li>
+                    <li className="divider"></li>
+                    <li><a href="!#" onClick={onLogoutClick}>Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    )
 
-        return (
-            <nav ref={this.navRef}>
-                <div className="nav-wrapper">
+    const guestLinks = (
+        <ul id="nav-mobile" className="right hide-on-med-and-down">
+            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/register">Register</Link></li>
+        </ul>
+    )
+
+    return (
+        <nav ref={navRef}>
+            <div className="nav-wrapper">
                 <Link to="/" className="brand-logo">
                     <img width="90" alt="qupp logo" src={logo} className="ml-1" />
                 </Link>
                 <a href="!#" data-target="sidenav" className="sidenav-trigger">
                     <i className="material-icons">menu</i>
                 </a>
-                {isAuthenticated ? authLinks : guestLinks}
-                </div>
-            </nav>
-        )
-    }
+                {isAuthenticated ? authorisedLinks : guestLinks}
+            </div>
+        </nav>
+    )
 }
 
 Navbar.propTypes = {
@@ -91,6 +89,6 @@ Navbar.propTypes = {
 
 const mapStateToProps = (state) => ({
     auth: state.auth
-});
+})
 
-export default connect(mapStateToProps, { logoutUser, clearPlaylists })(withRouter(Navbar));
+export default connect(mapStateToProps, { logoutUser, clearPlaylists })(withRouter(Navbar))

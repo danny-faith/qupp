@@ -3,8 +3,8 @@ import { Row, Col } from 'react-materialize'
 import NowPlaying from '../common/NowPlaying'
 import UpNext from '../common/UpNext'
 import ProgressBar from '../playlist/ProgressBar'
-function Header(props) {
 
+function Header(props) {
     const {
         playlistname,
         username,
