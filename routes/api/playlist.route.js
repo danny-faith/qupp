@@ -90,7 +90,7 @@ router.get('/user/:user_id', (req, res) => {
 router.get('/:slug', (req, res) => {
     const errors = {};    
 
-    Playlist.find({ slug: req.params.slug })
+    Playlist.findOne({ slug: req.params.slug })
         .then(playlist => res.json(playlist))
         .catch(() => {
             errors.playlist = 'No playlists found via slug';

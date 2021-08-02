@@ -1,62 +1,47 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import PlaylistListItem from '../components/playlist/PlaylistListItem';
-import isEmpty from '../utils/isEmpty';
-import CreatePlaylist from '../components/playlist/CreatePlaylist';
-import { getPlaylists, clearPlaylist } from '../actions/playlistActions';
-import Spinner from '../components/common/Spinner';
+import React, { useState, useEffect, useMemo } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import isEmpty from '../utils/isEmpty'
+import arrayOfPlaylistComps from '../utils/arrayOfPlaylistComps'
+import CreatePlaylist from '../components/playlist/CreatePlaylist'
+import { getPlaylists, clearPlaylist } from '../actions/playlistActions'
+import Spinner from '../components/common/Spinner'
 
-class Dashboard extends Component {
-	state = {
-		data: {},
-	}
+function Dashboard(props) {
+	const [data, setData] = useState({})
 
-	componentDidMount = () => {
-		this.props.clearPlaylist();
-		this.props.getPlaylists(this.props.auth.user);
-	}
-
-	componentWillReceiveProps = (nextProps) => {
-		if (nextProps.playlists) {
-			this.setState({
-				data: nextProps.playlists
-			})
+	useMemo(() => {
+		if (props.playlists) {
+			setData(props.playlists)
 		}
-	}
+	},[props.playlists])
 
-	playListContent = () => {
-		const loading = this.props.playlists.loading;
-		const playlists = this.props.playlists.playlists;
+	useEffect(() => {
+		props.clearPlaylist()
+		props.getPlaylists(props.auth.user)
+	}, []);
+
+	const playlistContent = () => {
+		const { loading } = props.playlists
+		const { playlists } = props.playlists
 	
 		if (loading) {
-			return <Spinner />;
+			return <Spinner />
 		} else if (isEmpty(playlists)) {
-			return 'No playlists';
+			return 'No playlists'
 		} else {
-			return playlists
-			.map((item) => (
-				<PlaylistListItem 
-					key={item._id}
-					id={item._id}
-					name={item.name} 
-					slug={item.slug} 
-					shareLink={item.share_link}
-				/>
-			));
+			return arrayOfPlaylistComps(playlists)
 		}
 	}
 
-	render() {
-		return (
-			<div>
-				<h1>Dashboard</h1>
-				<CreatePlaylist title="Create a qupplist"/>
-				<h2>qupplists</h2>
-				{this.playlistContent}
-			</div>
-		)
-	}
+	return (
+		<div>
+			<h1>Dashboard</h1>
+			<CreatePlaylist title="Create a qupplist"/>
+			<h2>qupplists</h2>
+			{playlistContent()}
+		</div>
+	)
 }
 
 Dashboard.propTypes = {
@@ -69,6 +54,6 @@ Dashboard.propTypes = {
 const mapStateToProps = (state) => ({
 	auth: state.auth,
 	playlists: state.playlist
-});
+})
 
-export default connect(mapStateToProps, { getPlaylists, clearPlaylist })(Dashboard);
+export default connect(mapStateToProps, { getPlaylists, clearPlaylist })(Dashboard)

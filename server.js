@@ -66,7 +66,7 @@ if (NODE_ENV === "development") {
 
 // check messenger users online status
 // cron job
-messengerUserStatusCheck.start();
+// messengerUserStatusCheck.start();
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));

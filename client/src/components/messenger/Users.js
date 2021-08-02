@@ -1,30 +1,30 @@
-import React, { Component, useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { getAllUsers, clearAllUsers, getMessageRoom } from '../../actions/messengerActions';
-import { Button, Row, Col } from 'react-materialize';
-import isEmpty from '../../validation/is-empty';
-import Spinner from '../common/Spinner';
-import classNames from 'classnames';
+import React, {  useEffect } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { getAllUsers, clearAllUsers, getMessageRoom } from '../../actions/messengerActions'
+import { Button, Row, Col } from 'react-materialize'
+import isEmpty from '../../validation/is-empty'
+import Spinner from '../common/Spinner'
+import classNames from 'classnames'
 
 const Users = (props) => {
     useEffect(() => {
-        props.getAllUsers();
-    }, []);
+        props.getAllUsers()
+    }, [])
 
     const userClick = (e) => {
-        e.preventDefault();
-        props.getMessageRoom(e.target.dataset.secondaryUserId);
+        e.preventDefault()
+        props.getMessageRoom(e.target.dataset.secondaryUserId)
     }
-    const loading = props.messenger.loading;
-    const users = props.messenger.users;
+    const loading = props.messenger.loading
+    const users = props.messenger.users
     
-    let userContent;
+    let userContent
 
     if (loading) {
-        userContent = <Spinner />;
+        userContent = <Spinner />
     } else if (isEmpty(users)) {
-        userContent = 'No users to talk to :(';
+        userContent = 'No users to talk to :('
     } else {  
         userContent = users.filter(user => props.auth.user.id !== user._id).map(user => (
             <Row key={user._id}>
@@ -40,8 +40,9 @@ const Users = (props) => {
                         waves="light">{user.username}</Button>
                 </Col>
             </Row>
-        ));
+        ))
     }
+    
     return (
         <div>
             {userContent}
@@ -60,6 +61,6 @@ Users.propTypes = {
 const mapStateToProps = (state) => ({
 	auth: state.auth,
 	messenger: state.messenger
-});
+})
 
-export default connect(mapStateToProps, { getAllUsers, clearAllUsers, getMessageRoom })(Users);
+export default connect(mapStateToProps, { getAllUsers, clearAllUsers, getMessageRoom })(Users)

@@ -1,0 +1,129 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreatePlaylist component should fully render(Full DOM) correctly 1`] = `
+<CreatePlaylist
+  auth={
+    Object {
+      "isAuthenticated": true,
+    }
+  }
+  buttonText="Create playlist"
+  createPlaylist={[MockFunction]}
+  errors={Object {}}
+>
+  <Row>
+    <div
+      className="row"
+    >
+      <Col
+        s={12}
+      >
+        <div
+          className="col s12"
+        >
+          <h5 />
+          <form
+            onSubmit={[Function]}
+          >
+            <TextFieldGroup
+              label="Name"
+              name="name"
+              onChange={[Function]}
+              type="text"
+              value=""
+            >
+              <Input
+                checked={false}
+                className="form-control form-control-lg"
+                id="name"
+                label="Name"
+                name="name"
+                onChange={[Function]}
+                s={12}
+                type="text"
+                value=""
+              >
+                <div
+                  className="col input-field s12"
+                >
+                  <input
+                    checked={false}
+                    className="form-control form-control-lg"
+                    id="name"
+                    name="name"
+                    onChange={[Function]}
+                    type="text"
+                    value=""
+                  />
+                  <label
+                    className=""
+                    htmlFor="name"
+                  >
+                    Name
+                  </label>
+                </div>
+              </Input>
+            </TextFieldGroup>
+            <TextFieldGroup
+              info="Please supply an easy to read URL for your playlist. No spaces, special characters or uppercase. Use underscores for spaces. E.g. daniels_party_jan"
+              label="Slug"
+              name="slug"
+              onChange={[Function]}
+              type="text"
+              value=""
+            >
+              <Input
+                checked={false}
+                className="form-control form-control-lg"
+                id="slug"
+                label="Slug"
+                name="slug"
+                onChange={[Function]}
+                s={12}
+                type="text"
+                value=""
+              >
+                <div
+                  className="col input-field s12"
+                >
+                  <input
+                    checked={false}
+                    className="form-control form-control-lg"
+                    id="slug"
+                    name="slug"
+                    onChange={[Function]}
+                    type="text"
+                    value=""
+                  />
+                  <label
+                    className=""
+                    htmlFor="slug"
+                  >
+                    Slug
+                  </label>
+                </div>
+              </Input>
+              <p
+                className="helper-text col s12"
+              >
+                Please supply an easy to read URL for your playlist. No spaces, special characters or uppercase. Use underscores for spaces. E.g. daniels_party_jan
+              </p>
+            </TextFieldGroup>
+            <Button
+              className="right"
+              node="button"
+            >
+              <button
+                className="btn right"
+                disabled={false}
+              >
+                Create playlist
+              </button>
+            </Button>
+          </form>
+        </div>
+      </Col>
+    </div>
+  </Row>
+</CreatePlaylist>
+`;

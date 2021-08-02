@@ -1,15 +1,28 @@
-import React from 'react';
+import React from 'react'
 
-function NowPlaying(props) {    
+function NowPlaying(props) {
+    const {
+        name,
+        album,
+        artists = [],
+    } = props.nowPlaying
+    
     return (
-        <p className="m-0">Now playing: <span className="text-pink">{props.nowPlayingName} - {props.nowPlayingAlbum} - {props.nowPlayingArtists.map(artist => <span key={artist.id}>{artist.name} </span>)}</span></p>
+        <p className="m-0">
+            <span>Now playing: </span>
+            <span className="text-pink">
+                {name} - {album} - {artists.map(artist => <span key={artist.id}>{artist.name} </span>)}
+            </span>
+        </p>
     )
 }
 
 NowPlaying.defaultProps = {
-    nowPlayingName: '',
-    nowPlayingAlbum: '',
-    nowPlayingArtists: []
+    nowPlaying: {
+        name: '',
+        album: '',
+        artists: []
+    },
 }
 
 export default NowPlaying;

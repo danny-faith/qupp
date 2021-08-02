@@ -1,12 +1,15 @@
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
-import { GET_ERRORS, SET_CURRENT_USER } from './types';
+import { GET_ERRORS, SET_CURRENT_USER, PASSWORD_UPDATE_SUCCESS } from './types';
 
 // Register User
 export const registerUser = (userData, history) => (dispatch) => {
     axios.post('/api/users/register', userData)
-      .then(() => history.push('/login'))
+      .then(() => {
+          window.M.toast({ html: 'Account successfully created', classes: 'green lighten-2' });
+          history.push('/login')
+        })
       .catch(err => {
         dispatch({
             type: GET_ERRORS,
@@ -114,6 +117,12 @@ export const changePassword = (payload) => (dispatch) => {
             // Clear form fields and clear errors
             // console.log(res.data);
             // console.log('dispatch', dispatch);
+            dispatch({
+                type: PASSWORD_UPDATE_SUCCESS,
+                payload: {
+                    status: 'success',
+                }
+            });
             window.M.toast({html: `Password succesfully reset`, classes: 'green lighten-2'});            
         })
         .catch(err => {

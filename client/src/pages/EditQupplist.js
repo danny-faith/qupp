@@ -1,56 +1,70 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import CreatePlaylist from '../components/playlist/CreatePlaylist';
-import { getPlaylist } from '../actions/playlistActions';
-import isEmpty from '../utils/isEmpty';
+import React, { useEffect, useState, useMemo, useLayoutEffect } from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import CreatePlaylist from '../components/playlist/CreatePlaylist'
+import { getPlaylist } from '../actions/playlistActions'
+import isEmpty from '../utils/isEmpty'
 
-class EditPlaylist extends Component {
+function EditPlaylist(props) {
+    const [playlist, setPlaylist] = useState({})
 
-  componentDidMount = () => {
-    if (!this.props.auth.isAuthenticated) {
-        this.props.history.push('/login');
-    }
-  }
-  componentWillMount = () => {
-    this.props.getPlaylist(this.props.match.params.slug);
-  }
-  componentWillReceiveProps = (nextProps) => {
-    if (!nextProps.auth.isAuthenticated) {
-        this.props.history.push('/login');
-    }
-    if (nextProps.errors) {
-        this.setState({errors: nextProps.errors});
-    }
-    if (nextProps.playlist) {
-      this.setState(nextProps.playlist);
-    }
-  }
-  render() {
-    if(!isEmpty(this.state)) {      
-      this.PostPlaylistComp = <CreatePlaylist name={this.state.playlist[0].name} slug={this.props.match.params.slug} id={this.state.playlist[0]._id} title="Edit playlist" buttonText="Edit playlist"/>
+    useEffect(() => {
+        const { isAuthenticated } = props.auth
+    
+        if (!isAuthenticated) {
+            props.history.push('/login')
+        }
+    }, [])
+
+    useLayoutEffect(() => {
+        props.getPlaylist(props.match.params.slug)
+    }, [])
+
+    useMemo(() => {
+        const { isAuthenticated } = props.auth
+
+        if (!isAuthenticated) {
+            props.history.push('/login')
+        }
+        if (props.playlist) {
+            setPlaylist(props.playlist)
+        }
+    }, [props.errors, props.playlist, props.auth])
+
+    const editQupplistContent = () => {
+        const playlistsHaveLoaded = !isEmpty(playlist.playlist)
+
+        if (playlistsHaveLoaded) {
+            return (
+                <CreatePlaylist
+                    name={playlist.playlist.name}
+                    slug={playlist.playlist.slug}
+                    id={playlist.playlist._id}
+                    title="Edit playlist"
+                    buttonText="Edit playlist"
+                />
+            )
+        }
     }
 
     return (
-      <div>
-        <h1>Edit playlist</h1>
-        {this.PostPlaylistComp}
-      </div>
-    )
-  }
-}
+        <div>
+            <h1>Edit playlist</h1>
 
-// Bring in the playlists state
+            {editQupplistContent()}
+        </div>
+    )
+}
 
 EditPlaylist.propTypes = {
   getPlaylist: PropTypes.func.isRequired,
-	playlist: PropTypes.object,
-	auth: PropTypes.object.isRequired
+  playlist: PropTypes.object,
+  auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({
-	auth: state.auth,
-	playlist: state.playlist
-});
+  auth: state.auth,
+  playlist: state.playlist
+})
 
-export default connect(mapStateToProps, { getPlaylist })(EditPlaylist);
+export default connect(mapStateToProps, { getPlaylist })(EditPlaylist)
