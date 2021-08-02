@@ -1,4 +1,5 @@
 const express = require('express');
+const admin = require('firebase-admin');
 const User = require('../../models/User');
 const router = express.Router();
 const gravatar = require('gravatar');
@@ -24,8 +25,16 @@ const {
     SMTP_PORT, 
     SMTP_AUTH_USER, 
     SMTP_AUTH_PASS,
-    ENV
+    ENV,
+    // GOOGLE_APPLICATION_CREDENTIALS,
+    FIREBASE_DB_URL,
 } = process.env;
+  
+// Create custom Firebase token
+admin.initializeApp({
+    credential: admin.credential.applicationDefault(),
+    databaseURL: FIREBASE_DB_URL
+});
 
 //  @route GET api/users/register
 //  @description Register user
@@ -34,6 +43,26 @@ router.post('/register', (req, res) => {
     const { errors } = validateRegisterInput(req.body);
 
     // Todo: could refactor this to two promises and use promise.all([emailPromise, usernamePromise]); to check for usernames and emails
+
+    function createFirebaseUser(uid, email, password, username) {
+        admin
+            .auth()
+            .createUser({
+                uid,
+                email,
+                emailVerified: false,
+                password: password,
+                displayName: username,
+                disabled: false,
+            })
+            .then((userRecord) => {
+                // See the UserRecord reference doc for the contents of userRecord.
+                console.log('Successfully created new user:', userRecord.uid);
+            })
+            .catch((error) => {
+                console.log('Error creating new user:', error);
+            });
+    }
 
     async function doesUsernameExist() {
         let promise = new Promise((resolve, reject) => {
@@ -93,7 +122,15 @@ router.post('/register', (req, res) => {
                     newUser.password = hash;
                     newUser
                         .save()
-                        .then(user => res.json(user))
+                        .then(user => {
+                            createFirebaseUser(
+                                user.id,
+                                req.body.email,
+                                req.body.password,
+                                req.body.username,
+                            )
+                            res.json(user)
+                        })
                         .catch(err => console.log(err));
                 });
             });
@@ -110,6 +147,7 @@ router.post('/register', (req, res) => {
 //  @description Login User / Returning JWT Token
 //  @access Public
 router.post('/login', (req, res) => {
+
     const { errors, isValid } = validateLoginInput(req.body);
     
     if (!isValid) {
@@ -137,10 +175,28 @@ router.post('/login', (req, res) => {
                     if (isMatch) {
                         // User matched
                         const payload = { id: user.id, username: user.username, avatar:user.avatar } // create payload
-                        
+
+                        let customToken
+                        console.log('user', user);
+                    
+                        admin
+                            .auth()
+                            .createCustomToken(user.id)
+                            .then((res) => {
+                                // Send token back to client
+                                customToken = res
+                            })
+                            .catch((error) => {
+                                console.log('Error creating custom token:', error);
+                            });
+
                         // Sign token
                         jwt.sign(payload, SECRET, { expiresIn: 3600}, (err, token) => {
-                            res.json({success: true, token: 'Bearer ' + token});
+                            res.json({
+                                success: true,
+                                token: 'Bearer ' + token,
+                                firebaseToken: customToken
+                            });
                         });
                         
                     } else {

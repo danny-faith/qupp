@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-// import { Link, withRouter } from 'react-router-dom';
 import PlaylistListItem from '../components/playlist/PlaylistListItem';
 import isEmpty from '../utils/isEmpty';
 import CreatePlaylist from '../components/playlist/CreatePlaylist';
@@ -9,39 +8,34 @@ import { getPlaylists, clearPlaylist } from '../actions/playlistActions';
 import Spinner from '../components/common/Spinner';
 
 class Dashboard extends Component {
-  // looks like I don't actually need state.data
-  // update componentWillReceiveProps setState
 	state = {
-		data: []
+		data: {},
 	}
+
 	componentDidMount = () => {
 		this.props.clearPlaylist();
 		this.props.getPlaylists(this.props.auth.user);
 	}
-	componentWillMount = () => {
 
-	}
 	componentWillReceiveProps = (nextProps) => {
-
 		if (nextProps.playlists) {
 			this.setState({
 				data: nextProps.playlists
 			})
 		}
 	}
-	render() {
+
+	playListContent = () => {
 		const loading = this.props.playlists.loading;
 		const playlists = this.props.playlists.playlists;
-
-		let playlistContent;
-
+	
 		if (loading) {
-			playlistContent = <Spinner />;
+			return <Spinner />;
 		} else if (isEmpty(playlists)) {
-			playlistContent = 'No playlists';
+			return 'No playlists';
 		} else {
-			playlistContent = playlists
-			.map(item => 
+			return playlists
+			.map((item) => (
 				<PlaylistListItem 
 					key={item._id}
 					id={item._id}
@@ -49,15 +43,17 @@ class Dashboard extends Component {
 					slug={item.slug} 
 					shareLink={item.share_link}
 				/>
-			);
+			));
 		}
-    
+	}
+
+	render() {
 		return (
 			<div>
 				<h1>Dashboard</h1>
 				<CreatePlaylist title="Create a qupplist"/>
 				<h2>qupplists</h2>
-				{playlistContent}
+				{this.playlistContent}
 			</div>
 		)
 	}

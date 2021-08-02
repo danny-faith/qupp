@@ -47,7 +47,7 @@ app.use(require('express-session')({
     secret: 'keyboard cat',
     resave: true,
     saveUninitialized: true
-  }));
+}));
 
 // Passport middleware
 app.use(passport.initialize());

@@ -21,7 +21,7 @@ class Landing extends Component {
                 <img className="logo" alt="qupp logo" src={logo} />
                 <Row>
                   <Col s={8} offset="s2" className="links">
-                    <Link className="btn" to="/login">Loginn</Link>
+                    <Link className="btn" to="/login">Login</Link>
                     <Link className="btn" to="/register">Register</Link>
                   </Col>
                 </Row>

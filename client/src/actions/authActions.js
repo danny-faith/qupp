@@ -19,10 +19,11 @@ export const registerUser = (userData, history) => (dispatch) => {
 export const loginUser = (userData) => (dispatch) => {
     axios.post('/api/users/login', userData)
         .then(res => {
-            const { token } = res.data;
+            const { token, firebaseToken } = res.data;
             
-            // Set token to localstorage
+            // Set tokens to localstorage
             localStorage.setItem('jwtToken', token);
+            localStorage.setItem('firebaseToken', firebaseToken);
             // Set auth token to header
             setAuthToken(token);
             // Decode token to get user data
