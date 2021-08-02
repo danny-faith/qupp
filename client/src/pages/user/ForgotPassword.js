@@ -1,38 +1,35 @@
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import ForgotPassword from '../../components/auth/ForgotPassword';
+import React, { Fragment, useEffect, useMemo } from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import ForgotPassword from '../../components/auth/ForgotPassword'
 
-class ForgotPasswordPage extends Component {
-  componentDidMount = () => {
-    if (this.props.auth.isAuthenticated) {
-            this.props.history.push('/dashboard');
-    }
-  }
-  componentWillReceiveProps = (nextProps) => {
-      if (nextProps.auth.isAuthenticated) {
-          this.props.history.push('/dashboard');
-      }
-      if (nextProps.errors) {
-          this.setState({errors: nextProps.errors});
-      }
-  }
-  render() {
+function ForgotPasswordPage(props) {
+    useEffect(() => {
+        if (props.auth.isAuthenticated) {
+            props.history.push('/dashboard')
+        }
+    })
+
+    useMemo(() => {
+        if (props.auth.isAuthenticated) {
+            props.history.push('/dashboard')
+        }
+    }, [props.auth, props.errors])
+
     return (
-      <Fragment>
-				<h2 className="center">Forgot password?</h2>
-        <ForgotPassword />        
-      </Fragment>
+        <Fragment>
+            <h2 className="center">Forgot password?</h2>
+            <ForgotPassword />
+        </Fragment>
     )
-  }
 }
 
 ForgotPasswordPage.propTypes = {
-    auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({
-    auth: state.auth
-});
+    auth: state.auth,
+})
 
-export default connect(mapStateToProps)(ForgotPasswordPage);
+export default connect(mapStateToProps)(ForgotPasswordPage)

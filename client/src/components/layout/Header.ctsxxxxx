@@ -9,12 +9,16 @@ interface IProps {
 	username: string;
 	numberOfSongsInQupplist: number;
 	progressValue?: number;
-	nowPlayingName?: string;
-	nowPlayingAlbum?: string;
-	nowPlayingArtists?: string;
+	nowPlaying?: INowPlaying;
 	upNextName?: string;
 	upNextAlbum?: string;
 	upNextArtists?: string;
+}
+
+interface INowPlaying {
+	name: string;
+	album: string;
+	artists: Array<string>;
 }
 
 const Header: React.FC<IProps> = ({
@@ -22,9 +26,7 @@ const Header: React.FC<IProps> = ({
 	username,
 	numberOfSongsInQupplist,
 	progressValue,
-	nowPlayingName,
-	nowPlayingAlbum,
-	nowPlayingArtists,
+	nowPlaying = {},
 	upNextName,
 	upNextAlbum,
 	upNextArtists
@@ -41,9 +43,9 @@ const Header: React.FC<IProps> = ({
 				<Col s={6} offset="s3">
 					<ProgressBar progress={progressValue} />
 					<NowPlaying
-						nowPlayingName={nowPlayingName}
-						nowPlayingAlbum={nowPlayingAlbum}
-						nowPlayingArtists={nowPlayingArtists}
+						nowPlayingName={nowPlaying.name}
+						nowPlayingAlbum={nowPlaying.album}
+						nowPlayingArtists={nowPlaying.artists}
 					/>
 					<UpNext
 						upNextName={upNextName}

@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login component should shallow render correctly 1`] = `
+<Row>
+  <Col
+    className="offset-m3"
+    m={6}
+    s={12}
+  >
+    <h2
+      className="center"
+    >
+      Login
+    </h2>
+    <form
+      noValidate={true}
+      onSubmit={[Function]}
+    >
+      <Row>
+        <TextFieldGroup
+          label="Username or email"
+          name="usernameOrEmail"
+          onChange={[Function]}
+          type="text"
+          value=""
+        />
+        <TextFieldGroup
+          label="Password"
+          name="password"
+          onChange={[Function]}
+          type="password"
+          value=""
+        />
+        <Col
+          s={12}
+        >
+          <Link
+            className="col s12"
+            replace={false}
+            to="/forgotten-password"
+          >
+            Forgotten password?
+          </Link>
+          <Button
+            className="btn-small right"
+            node="button"
+            waves="light"
+          >
+            Login
+          </Button>
+        </Col>
+      </Row>
+    </form>
+  </Col>
+</Row>
+`;
