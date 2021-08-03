@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import base from '../../base'
-import firebaseApp from '../../base'
+// import base from '../../base'
+// import { firebase } from '../../base'
 import PropTypes from 'prop-types'
 import { getPlaylist, clearPlaylists } from '../../actions/playlistActions'
 import isEmpty from '../../utils/isEmpty'
@@ -50,16 +50,16 @@ class QuppListPage extends Component {
             }) 
         }
 
-        firebaseApp.initializedApp
-            .auth()
-            .signInWithCustomToken(firebaseToken)
-            .then((user) => {
-            })
-            .catch((error) => {
-                var errorCode = error.code
-                var errorMessage = error.message
-                console.log(`Error: ${errorCode} ${errorMessage}`)
-        })
+        // firebase.initializedApp
+        //     .auth()
+        //     .signInWithCustomToken(firebaseToken)
+        //     .then((user) => {
+        //     })
+        //     .catch((error) => {
+        //         var errorCode = error.code
+        //         var errorMessage = error.message
+        //         console.log(`Error: ${errorCode} ${errorMessage}`)
+        // })
 
         this.props.clearPlaylists()
         this.props.getPlaylist(this.props.match.params.slug)    
@@ -73,13 +73,13 @@ class QuppListPage extends Component {
         if (playlistsAreThereAndFirebaseIsSynced) {
             const { _id: id } = this.props.playlists.playlist
 
-            base.syncState(`playlists/${id}`, {
-                context: this,
-                state: 'playlist',
-                then() {
-                    this.firebaseSyncFlag = true
-                }
-            })
+            // base.syncState(`playlists/${id}`, {
+            //     context: this,
+            //     state: 'playlist',
+            //     then() {
+            //         this.firebaseSyncFlag = true
+            //     }
+            // })
         }
     }
 
