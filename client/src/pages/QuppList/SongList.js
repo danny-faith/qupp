@@ -27,8 +27,7 @@ function SongList(props) {
             removeSongFromQueueOrPlaylist,
             type,
         }
-
-        if (songs.length > 0) {
+        if (songs) {
             return songComponents(params)
         }
         return showNoSongsMessage()

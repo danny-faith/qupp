@@ -16,7 +16,7 @@ export function Messages(props) {
     // todo: enter key to submit new message
 
     useEffect(() => {
-        const messengerRef = db.ref(`messenger/${props.messenger.messageRoom._id}`);
+        const messengerRef = db.ref(`messenger/${props.messenger.messageRoom._id}`)
 
         messengerRef.on("value", (snapshot) => {
             const snapShot = snapshot.val()
@@ -31,7 +31,7 @@ export function Messages(props) {
             }
 
             setMessages(toAdd)
-        });
+        })
             
         return () => messengerRef.off()
     }, [props.messenger])
