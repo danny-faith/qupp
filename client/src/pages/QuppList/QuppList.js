@@ -51,10 +51,18 @@ export function QuppListPage(props) {
 
             playlistRef.on("value", (snapshot) => {
                 const snapShot = snapshot.val()
+                let newData
 
                 if (snapShot) {
-                    setPlaylist(snapShot)
+                    newData = snapShot
+                } else {
+                    newData = {
+                        qupplist: [],
+                        queue: [],
+                    }
                 }
+                
+                setPlaylist(newData)
             })
                 
             return () => playlistRef.off()
@@ -78,8 +86,9 @@ export function QuppListPage(props) {
 
     useEffect(() => {
         if (!isEmpty(playlist.queue)) {
-            setLoadingPlaylists({status: false})
+            setLoadingPlaylists({ status: false })
         }
+        console.log('playlist check', playlist.queue, playlist.qupplist);
     }, [playlist])
     
     useEffect(() => {
@@ -224,6 +233,10 @@ export function QuppListPage(props) {
         }
 
         db.ref(`playlists/${props.playlists.playlist._id}/${type}`).set(removeSongAtIndex(chosenPlaylist))
+            .then(() => {
+                console.log('item removed', playlist.qupplist);
+
+            })
     }
 
     const clearSearchResults = () => {
