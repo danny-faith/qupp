@@ -39,6 +39,7 @@ function getUpNextSong(state) {
 function addToQueue(payload, queue) {
     const addingMultipleSongsToPopulatedQueue = () => Array.isArray(payload) && R.gt(R.length(payload), 1)
     const addingOneSongToPopulatedQueue = () => !Array.isArray(payload)
+    const addingOneSongInArrayToPopulatedQueue = () => Array.isArray(payload) && payload.length === 1
     const emptyQueueAndAddingMultipleSongs = () => R.isEmpty(queue) && Array.isArray(payload)
     const addingSingleSongsToEmptyQueue = () => R.isEmpty(queue) && R.is(Object)
     
@@ -46,7 +47,8 @@ function addToQueue(payload, queue) {
         [emptyQueueAndAddingMultipleSongs, R.always(payload)],
         [addingSingleSongsToEmptyQueue, R.always([payload])],
         [addingMultipleSongsToPopulatedQueue, R.insertAll(1, payload)],
-        [addingOneSongToPopulatedQueue, R.insert(1, payload)]
+        [addingOneSongToPopulatedQueue, R.insert(1, payload)],
+        [addingOneSongInArrayToPopulatedQueue, R.insertAll(1, payload)]
     ])
 
     return newQueue(queue)
