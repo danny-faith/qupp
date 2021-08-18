@@ -61,7 +61,7 @@ export function QuppListPage(props) {
                         queue: [],
                     }
                 }
-                
+
                 setPlaylist(newData)
             })
                 
@@ -126,24 +126,26 @@ export function QuppListPage(props) {
     const previousQupplist = usePrevious(playlist.qupplist)
 
     const manageSongNotifications = (previousQueue, nextQueue) => {
-        const moreThanOneSongAdded = (
-            (nextQueue?.length || 0) - 
-                (previousQueue?.length || 0)) > 1
-        const songRemoved = (nextQueue?.length - previousQueue?.length) < 0
         const { type } = payload.current
         const { name, album } = payload.current.song
 
-        if (!isEmpty(previousQueue) && !isEmpty(nextQueue) && R.not(R.equals(previousQueue, nextQueue))) {
-            if (type === 'queue' && moreThanOneSongAdded) {
-                const numberOfNewSongsAdded = nextQueue.length - previousQueue.length
-                const songsAdded = R.slice(1, numberOfNewSongsAdded + 1, nextQueue)
+        const moreThanOneSongAdded = (
+            (nextQueue?.length) - 
+                (previousQueue?.length)) > 1
+        const oneSongAdded = (
+            nextQueue?.length - previousQueue?.length === 1
+        )
+        const songRemoved = (nextQueue?.length - previousQueue?.length) < 0
 
-                songsAdded.map(({ name, album }) => window.M.toast({html: `${name}, ${album} added to ${type}`, classes: 'green lighten-2'}))
-            } else if (songRemoved) {
-                window.M.toast({html: `${name}, ${album} deleted from ${type}`, classes: 'red lighten-2'})
-            } else {
-                window.M.toast({html: `${name}, ${album} added to ${type}`, classes: 'green lighten-2'})
-            }
+        if (oneSongAdded) {
+            window.M.toast({html: `${name}, ${album} added to ${type}`, classes: 'green lighten-2'})
+        } else if (type === 'queue' && moreThanOneSongAdded) {
+            const numberOfNewSongsAdded = nextQueue.length - previousQueue.length
+            const songsAdded = R.slice(1, numberOfNewSongsAdded + 1, nextQueue)
+            
+            songsAdded.map(({ name, album }) => window.M.toast({html: `${name}, ${album} added to ${type}`, classes: 'green lighten-2'}))
+        } else if (songRemoved) {
+            window.M.toast({html: `${name}, ${album} deleted from ${type}`, classes: 'red lighten-2'})
         }
     }
 
@@ -191,14 +193,15 @@ export function QuppListPage(props) {
             qupplist = [],
             queue = [],
         } = playlist
-        
+        console.log('addAllToQ', songPayload, type);
+
         payload.current = R.clone({
             type,
             song: songPayload,
         })
 
-        const isQupplistAndNotEmpty = type === 'qupplist' && !isEmpty(playlist.qupplist)
-        if (isQupplistAndNotEmpty) {
+        const qupplistExistsAndIsNotEmpty = type === 'qupplist' && !isEmpty(playlist.qupplist)
+        if (qupplistExistsAndIsNotEmpty) {
             const found = qupplist.find((x) => x.spotId === songPayload.spotId)
             if (found) {
                 return window.M.toast({
@@ -215,7 +218,8 @@ export function QuppListPage(props) {
         } else if (type === 'queue') {
             newPlaylist = addToQueue(songPayload, queue)
         }
-
+        
+        console.log('addAllToQ newPlaylist', newPlaylist, type);
         db.ref(`playlists/${props.playlists.playlist._id}/${type}`).set(newPlaylist)
     }
 
