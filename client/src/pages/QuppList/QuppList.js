@@ -127,8 +127,7 @@ export function QuppListPage(props) {
 
     const manageSongNotifications = (previousQueue, nextQueue) => {
         const { type } = payload.current
-        const { name, album } = payload.current.song
-
+        console.log('manage', {previousQueue}, {nextQueue}, nextQueue?.length - previousQueue?.length);
         const moreThanOneSongAdded = (
             (nextQueue?.length) - 
                 (previousQueue?.length)) > 1
@@ -138,6 +137,10 @@ export function QuppListPage(props) {
         const songRemoved = (nextQueue?.length - previousQueue?.length) < 0
 
         if (oneSongAdded) {
+            const { name, album } = (Array.isArray(payload.current.song))
+                ? payload.current.song[0]
+                : payload.current.song
+                
             window.M.toast({html: `${name}, ${album} added to ${type}`, classes: 'green lighten-2'})
         } else if (type === 'queue' && moreThanOneSongAdded) {
             const numberOfNewSongsAdded = nextQueue.length - previousQueue.length
@@ -145,6 +148,7 @@ export function QuppListPage(props) {
             
             songsAdded.map(({ name, album }) => window.M.toast({html: `${name}, ${album} added to ${type}`, classes: 'green lighten-2'}))
         } else if (songRemoved) {
+            const { name, album } = payload.current.song
             window.M.toast({html: `${name}, ${album} deleted from ${type}`, classes: 'red lighten-2'})
         }
     }
@@ -160,6 +164,7 @@ export function QuppListPage(props) {
 
 
     useEffect(() => {
+        console.log('payload manage useeffect', payload.current);
         if (payload.current) {
             switch (payload.current.type) {
                 case 'queue':
@@ -185,6 +190,7 @@ export function QuppListPage(props) {
     }
 
     const addAllToQueueHandler = () => {
+
         addSongToQueueOrQupplistHandler(playlist.qupplist, 'queue')
     }
 
@@ -193,13 +199,13 @@ export function QuppListPage(props) {
             qupplist = [],
             queue = [],
         } = playlist
-        console.log('addAllToQ', songPayload, type);
-
+        
         payload.current = R.clone({
             type,
             song: songPayload,
         })
-
+        console.log('addAllToQ', payload.current, type);
+        
         const qupplistExistsAndIsNotEmpty = type === 'qupplist' && !isEmpty(playlist.qupplist)
         if (qupplistExistsAndIsNotEmpty) {
             const found = qupplist.find((x) => x.spotId === songPayload.spotId)
