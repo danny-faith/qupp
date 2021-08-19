@@ -7,7 +7,7 @@ import isEmpty from '../../validation/is-empty'
 import Spinner from '../common/Spinner'
 import classNames from 'classnames'
 
-const Users = (props) => {
+export function Users(props) {
     useEffect(() => {
         props.getAllUsers()
     }, [])

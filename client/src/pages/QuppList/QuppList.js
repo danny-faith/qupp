@@ -1,20 +1,20 @@
-import React, { Component, Fragment } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { connect } from 'react-redux'
-import base from '../../base'
-import firebaseApp from '../../base'
+
+import { firebase } from '../../base'
 import PropTypes from 'prop-types'
 import { getPlaylist, clearPlaylists } from '../../actions/playlistActions'
 import isEmpty from '../../utils/isEmpty'
+import useInterval from '../../utils/useInterval'
 
 import { Row, Col, Button } from 'react-materialize'
 
 import SearchForm from '../../components/playlist/SearchForm'
 import Header from '../../components/playlist/Header'
+import PlayButton from '../../components/player/PlayButton'
 import SongList from './SongList'
 
 import {
-    getUpNextSong,
-    getNowPlayingSong,
     addSongToQupplist,
     addToQueue,
 } from './services/player'
@@ -22,242 +22,195 @@ import {
 import { remove, view } from 'ramda'
 import * as R from 'ramda'
 
-class QuppListPage extends Component {
-    constructor(props) {
-        super(props)
-        this.firebaseSyncFlag = false
+export function QuppListPage(props) {
+    const db = firebase.database()
+    const [playlist, setPlaylist] = useState({
+        qupplist: [],
+        queue: [],
+    })
+    let payload = React.useRef()
+    const [loadingPlaylists, setLoadingPlaylists] = useState({ status: true })
+    const [playing, setPlaying] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const [nowPlaying, setNowPlaying] = useState({})
+    const [upNext, setUpNext] = useState({})
+    const [searchResults, setSearchResults] = useState([])
+
+    useEffect(() => {
+        props.clearPlaylists()
+        props.getPlaylist(props.match.params.slug)    
+    }, [])
+
+    const playClickHandler = () => {
+        setPlaying((prevState) => !prevState)
     }
 
-    state = { 
-        playlist: {
-            qupplist: [],
-            queue: [],
-        },
-        playing: false,
-        progress: 0,
-        nowPlaying: {},
-        upNext: {},
-        searchResults: [],
-    }
+    useEffect(() => {
+        if (props.playlists && props.playlists.playlist) {
+            const playlistRef = db.ref(`playlists/${props.playlists.playlist._id}`)
 
-    componentDidMount = () => {
-        const firebaseToken = localStorage.getItem('firebaseToken')
+            playlistRef.on("value", (snapshot) => {
+                const snapShot = snapshot.val()
+                let newData
 
-        if (firebaseToken === null) {
-            return window.M.toast({
-                html: 'There was an error loading the page, please refresh',
-                classes: 'red lighten-2'
-            }) 
-        }
-
-        firebaseApp.initializedApp
-            .auth()
-            .signInWithCustomToken(firebaseToken)
-            .then((user) => {
-            })
-            .catch((error) => {
-                var errorCode = error.code
-                var errorMessage = error.message
-                console.log(`Error: ${errorCode} ${errorMessage}`)
-        })
-
-        this.props.clearPlaylists()
-        this.props.getPlaylist(this.props.match.params.slug)    
-    }
-
-    componentDidUpdate = () => {
-        const playlistsAreThereAndFirebaseIsSynced = (
-            !isEmpty(this.props.playlists.playlist) && this.firebaseSyncFlag === false
-        )
-
-        if (playlistsAreThereAndFirebaseIsSynced) {
-            const { _id: id } = this.props.playlists.playlist
-
-            base.syncState(`playlists/${id}`, {
-                context: this,
-                state: 'playlist',
-                then() {
-                    this.firebaseSyncFlag = true
-                }
-            })
-        }
-    }
-
-    componentWillUnmount = () => {
-        // prevent memeory leak from setInterval()
-        clearInterval(this.progress)
-    }
-
-    playClickHandler = () => {
-        // already have data in list
-        /**
-         * 1. Play nowPlaying song
-         * 2. Once complete check for more songs
-         * 3. if more songs then play next song
-         * 4. if no more songs, stop playing
-         */
-
-        // const copyOfState = {...this.state}
-        // copyOfState.playing = !this.state.playing
-        // this.setState(copyOfState, async () => {
-        //     await this.playSong2()
-        //     if ()
-        // })
-
-        this.setState((prevState) => ({
-            playing: !prevState.playing
-        }), () => {
-            if (this.state.playing === false) {
-                // If player has just been stopped, stop / clear timeout
-                clearInterval(this.progress)
-            } else {
-                this.playSong()
-                // if (this.state.playlist.queue.length > 1) {
-                //     this.populateUpNext()
-                // }
-            }
-        })    
-    }
-  
-    playSong2 = async () => {
-        const { duration_ms } = this.state.nowPlaying
-        const duration_secs = duration_ms / 1000
-
-        let secondsPassed = Math.round((duration_secs / 100)  * this.state.progress)
-        return new Promise(resolve => {
-            this.progress = setInterval(() => {
-                const percent = Math.round((secondsPassed / duration_secs) * 100)
-                this.setState({progress: percent})
-                if (percent >= 100) {
-                    clearInterval(this.progress)
-                    // this.removeFirstSongFromQueueHandler()
-                    if (this.state.playlist.queue) {
-                        // this.playNextSong()
-                        resolve('resolved')
+                if (snapShot) {
+                    newData = snapShot
+                } else {
+                    newData = {
+                        qupplist: [],
+                        queue: [],
                     }
                 }
-                secondsPassed ++
-            }, 10)
-          })
-    }
 
-    playSong = () => {
-        const { duration_ms } = this.state.nowPlaying
-        const duration_secs = duration_ms / 1000
+                setPlaylist(newData)
+            })
+                
+            return () => playlistRef.off()
 
-        let secondsPassed = Math.round((duration_secs / 100)  * this.state.progress)
-        // to stop, just set secondsPassed back to 0
-        //  NOTE: not a great way of calucationg when a song is finished and percentage of song passed due to setInterval not being accurate (event loop)
-        this.progress = setInterval(() => {
-            const percent = Math.round((secondsPassed / duration_secs) * 100)
-            this.setState({progress: percent})
-            if (percent >= 100) {
-                clearInterval(this.progress)
-                // this.removeFirstSongFromQueueHandler()
-                if (!isEmpty(this.state.playlist.queue)) {
-                    this.playNextSong()
-                }
-            }
-            secondsPassed ++
-        }, 10)
-    }
+        }
+    }, [db, props.playlists])
 
-    playNextSong = () => {
-        const copyOfState = {...this.state}
-        const { queue } = copyOfState.playlist
-        copyOfState.progress = 0
-        copyOfState.playlist.queue = queue.slice(1)
+    const duration_ms = (playlist.queue?.length > 0) ? playlist.queue[0].duration_ms : 0
+    const duration_secs = duration_ms / 1000
+    let secondsPassed = Math.round((duration_secs / 100)  * progress)
 
-        if (this.state.playlist.queue.length === 0) {
-            copyOfState.nowPlaying = {}
-            copyOfState.upNext = {}
+    useInterval(() => {    
+        const percent = Math.round((secondsPassed / duration_secs) * 100)
+        setProgress(percent)
+        if (percent >= 100) {
+            setProgress(0)
+            playNextSong()
+        }
+        secondsPassed ++
+    }, playing ? 30 : null)
+
+    useEffect(() => {
+        if (!isEmpty(playlist.queue)) {
+            setLoadingPlaylists({ status: false })
+        }
+        console.log('playlist check', playlist.queue, playlist.qupplist);
+    }, [playlist])
+    
+    useEffect(() => {
+        if (loadingPlaylists.status === false && isEmpty(playlist.queue)) {
+            setNowPlaying({})
+            setUpNext({})
             window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'})
         }
-        if (this.state.playlist.queue.length >= 0) {
-            copyOfState.nowPlaying = this.state.playlist.queue[0]
-            copyOfState.upNext = {}
+        if (playlist.queue?.length === 1) {
+            setNowPlaying(playlist.queue[0])
+            setUpNext({})
         }
-        if (this.state.playlist.queue.length > 1) {
-            copyOfState.upNext = this.state.playlist.queue[1]
+        if (playlist.queue?.length > 1) {
+            setNowPlaying(playlist.queue[0])
+            setUpNext(playlist.queue[1])
         }
-        this.setState(copyOfState, () => {
-            if (!isEmpty(this.state.playlist.queue)) {
-                this.playSong()
-            }
+    }, [playlist, loadingPlaylists])
+    
+    const playNextSong = () => {
+        const cloneOfQueue = R.clone(playlist.queue)
+        const slicedQueue = R.remove(0, 1, cloneOfQueue)
+        setProgress(0)
+        db.ref(`playlists/${props.playlists.playlist._id}/queue`).set(slicedQueue)
+    }
+
+    function usePrevious(value) {
+        const ref = React.useRef()
+        useEffect(() => {
+            ref.current = value
         })
+        return ref.current
     }
 
-    // playNextSong = () => {
-    //     // Remove first song from queue
-    //     const copyOfPlaylist = {...this.state.playlist}
-    //     copyOfPlaylist.queue.shift()
-    //     this.setState({
-    //         playlist: copyOfPlaylist,
-    //         progress: 0,
-    //     }, () => {
-    //         if (this.state.playlist.queue.length === 0) {
-    //             this.setState({
-    //                 nowPlaying: {},
-    //                 upNext: {}
-    //             })
-    //             return window.M.toast({html: 'No more songs to play, please queue some', classes: 'red lighten-2'})
-    //         }
-    //         if (this.state.playlist.queue.length > 1) {
-    //             this.populateUpNext()
-    //         } else {        
-    //             this.setState({ upNext: {} })
-    //         }
-    //         if (this.state.playlist.queue.length > 0) {
-    //             this.populateNowPlaying(true)
-    //         }
-    //     })
-    // }
+    const previousQueue = usePrevious(playlist.queue)
+    const previousQupplist = usePrevious(playlist.qupplist)
 
-    componentWillUpdate = (stuff) => {
-        // TODO - FOR TESTING. CHECK HOW MANY TIMES `componentWillUpdate` runs
-        if (this.state.playing && isEmpty(this.state.playlist.queue)) {
-            this.setState({ playing: false })
+    const manageSongNotifications = (previousQueue = [], nextQueue = []) => {
+        const { type } = payload.current
+        console.log('manage', {previousQueue}, {nextQueue}, nextQueue?.length - previousQueue?.length);
+        const moreThanOneSongAdded = (
+            (nextQueue?.length) - 
+                (previousQueue?.length)) > 1
+        const oneSongAdded = (
+            nextQueue?.length - previousQueue?.length === 1
+        )
+        const songRemoved = (nextQueue?.length - previousQueue?.length) < 0
+        console.log('manage', (nextQueue?.length - previousQueue?.length));
+
+        if (oneSongAdded) {
+            const { name, album } = (Array.isArray(payload.current.song))
+                ? payload.current.song[0]
+                : payload.current.song
+
+            window.M.toast({html: `${name}, ${album} added to ${type}`, classes: 'green lighten-2'})
+        } else if (type === 'queue' && moreThanOneSongAdded) {
+            const numberOfNewSongsAdded = nextQueue.length - previousQueue.length
+            const songsAdded = R.slice(1, numberOfNewSongsAdded + 1, nextQueue)
+            
+            songsAdded.map(({ name, album }) => window.M.toast({html: `${name}, ${album} added to ${type}`, classes: 'green lighten-2'}))
+        } else if (songRemoved) {
+            const { name, album } = payload.current.song
+            window.M.toast({html: `${name}, ${album} deleted from ${type}`, classes: 'red lighten-2'})
         }
     }
 
-    removeFirstSongFromQueueHandler = () => {
-        const removeFirstSong = remove(1, 1)
-
-        this.setState({
-            playlist: {
-                queue: removeFirstSong(this.state.playlist.queue)
+    useEffect(() => {
+        if (playlist.queue && playlist.queue?.length > 0) {
+            if (playlist.queue?.length > 1) {
+                setUpNext(playlist.queue[1])
             }
-        })
+            setNowPlaying(playlist.queue[0])
+        }
+    }, [playlist, previousQueue, previousQupplist])
+
+
+    useEffect(() => {
+        console.log('payload manage useeffect', payload.current);
+        if (payload.current) {
+            switch (payload.current.type) {
+                case 'queue':
+                    manageSongNotifications(previousQueue, playlist.queue)
+                    break
+                case 'qupplist':
+                    manageSongNotifications(previousQupplist, playlist.qupplist)
+                    break
+                default:
+                    break
+            }
+        }
+    }, [playlist.queue, playlist.qupplist, previousQueue, previousQupplist])
+
+    useEffect(() => {
+        if (playing && isEmpty(playlist.queue)) {
+            setPlaying(false)
+        }
+    }, [playing, playlist.queue])
+
+    const addSearchResultsToState = (results) => {
+        setSearchResults(results)
     }
 
-    // populateNowPlaying = () => {
-    //     const nowPlaying = getNowPlayingSong(this.state)
-    //     this.setState({ nowPlaying })
-    // }
-
-    // populateUpNext = () => {
-    //     const upNext = getUpNextSong(this.state)
-    //     this.setState({ upNext })
-    // }
-
-    addSearchResultsToState = (results) => {
-        this.setState(() => ({ searchResults: results }))
+    const addAllToQueueHandler = () => {
+        if (isEmpty(playlist.qupplist)) {
+            return window.M.toast({html: `No songs to add`, classes: 'red lighten-2'})
+        }
+        addSongToQueueOrQupplistHandler(playlist.qupplist, 'queue')
     }
 
-    addAllToQueueHandler = () => {
-        this.addSongToQueueOrQupplistHandler(this.state.playlist.qupplist, 'queue')
-    }
-
-    addSongToQueueOrQupplistHandler = (songPayload, type) => {
+    const addSongToQueueOrQupplistHandler = (songPayload, type) => {
         const {
             qupplist = [],
             queue = [],
-        } = this.state.playlist
-        const isQupplistAndNotEmpty = type === 'qupplist' && !isEmpty(this.state.playlist.qupplist)
-
-        // put this checking of qupplist in an error handling file
-        // also add any error handling to this file. See below
-        if (isQupplistAndNotEmpty) {
+        } = playlist
+        
+        payload.current = R.clone({
+            type,
+            song: songPayload,
+        })
+        console.log('addAllToQ', payload.current, type);
+        
+        const qupplistExistsAndIsNotEmpty = type === 'qupplist' && !isEmpty(playlist.qupplist)
+        if (qupplistExistsAndIsNotEmpty) {
             const found = qupplist.find((x) => x.spotId === songPayload.spotId)
             if (found) {
                 return window.M.toast({
@@ -268,137 +221,107 @@ class QuppListPage extends Component {
         }
 
         let newPlaylist
-        const copyOfState = R.clone(this.state)
         
         if (type === 'qupplist') {
             newPlaylist = addSongToQupplist(songPayload, qupplist)
         } else if (type === 'queue') {
             newPlaylist = addToQueue(songPayload, queue)
         }
-        copyOfState.playlist[type] = newPlaylist
-
         
-        if (type === 'queue') {
-            if (copyOfState.playlist.queue.length <= 1) {
-                copyOfState.nowPlaying = getNowPlayingSong(copyOfState)
-            }
-            if (copyOfState.playlist.queue.length > 1) {
-                copyOfState.upNext = getUpNextSong(copyOfState)
-            }
-        }
-
-        this.setState(copyOfState, () => {
-            // if array then multple songs have been added to queue
-            if (Array.isArray(songPayload)) {
-                songPayload.map(item => window.M.toast({html: `${item.name}, ${item.album} added`, classes: 'green lighten-2'}))
-            } else {
-                window.M.toast({html: `${songPayload.name}, ${songPayload.album} added`, classes: 'green lighten-2'})
-            }
-        })
+        console.log('addAllToQ newPlaylist', newPlaylist, type);
+        db.ref(`playlists/${props.playlists.playlist._id}/${type}`).set(newPlaylist)
     }
 
-    removeSongFromQueueOrPlaylist = (index, type) => {
+    const removeSongFromQueueOrPlaylist = (index, type) => {
         const playlistLens = R.lensPath([
-            ['state'],
-            ['playlist'],
             type
         ])
-        const chosenPlaylist = view(playlistLens, this)
+        const chosenPlaylist = view(playlistLens, playlist)
         const removeSongAtIndex = remove(index, 1)
+        const song = R.slice(index, index + 1, chosenPlaylist)[0]
 
-        this.setState({
-            playlist: {
-                [type]: removeSongAtIndex(chosenPlaylist),
-            }
-        })
-    }
-
-    clearSearchResults = () => {
-        this.setState({
-            searchResults: [],
-        })
-    }
-
-    render() {
-        console.log('QuppList render');
-        let playlistName = ''
-        const {
-            searchResults,
-            playlist: {
-                qupplist = [],
-                queue = [],
-            },
-        } = this.state
-
-        if (!isEmpty(this.props.playlists.playlist)) {
-            playlistName = this.props.playlists.playlist.name
+        payload.current = {
+            type,
+            song: song,
         }
-        const playDisabled = (isEmpty(this.state.playlist.queue)) ? true : false
-        const playButton = (this.state.playing) 
-            ? <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2 red">Stop ■</Button>
-            : <Button onClick={this.playClickHandler} disabled={playDisabled} className="m-2">Play ►</Button>
-        const nowPlaying = (this.state.playlist.queue) ? this.state.playlist.queue[0] : {}
-        const upNext = (this.state.playlist.queue) ? this.state.playlist.queue[1] : {}
 
-        return (
-            <Fragment>
-                <Header 
-                    numberOfSongsInQupplist={(this.state.playlist.qupplist === undefined) ? 0 : this.state.playlist.qupplist.length} 
-                    username={this.props.auth.user.name} 
-                    playlistname={playlistName} 
-                    nowPlaying={nowPlaying} 
-                    upNext={upNext} 
-                    progressValue={this.state.progress}
-                />
+        db.ref(`playlists/${props.playlists.playlist._id}/${type}`).set(removeSongAtIndex(chosenPlaylist))
+            .then(() => {
+                console.log('item removed', playlist.qupplist);
 
-                <div className="container">
-                    {playButton}
-                    <Row className="flex flex-wrap md:block flex-col-reverse">
+            })
+    }
 
-                        <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
-                            <h1 className="text-blue darken-1">qupplist
-                                <Button onClick={this.addAllToQueueHandler} className="yellow text-black font-bold ml-4">Add all to queue</Button>
-                            </h1>
+    const clearSearchResults = () => {
+        setSearchResults([])
+    }
+
+    const playlistName = props.playlists?.playlist?.name
+    const playDisabled = (isEmpty(playlist.queue)) ? true : false
+
+    return (
+        <Fragment>
+            <Header 
+                numberOfSongsInQueue={(playlist.queue === undefined) ? 0 : playlist.queue?.length} 
+                username={props.auth.user.name} 
+                playlistname={playlistName} 
+                nowPlaying={nowPlaying} 
+                upNext={upNext} 
+                progressValue={progress}
+            />
+
+            <div className="container">
+                <PlayButton
+                    onClick={playClickHandler}
+                    disabled={playDisabled}
+                    playing={playing}
+                >
+                </PlayButton>
+                <Row className="flex flex-wrap md:block flex-col-reverse">
+
+                    <Col s={12} m={10} l={6} xl={4} offset="m1 xl2">
+                        <h1 className="text-blue darken-1">qupplist
+                            <Button onClick={addAllToQueueHandler} className="yellow text-black font-bold ml-4">Add all to queue</Button>
+                        </h1>
+                        <SongList
+                            songs={playlist.qupplist}
+                            type="qupplist"
+                            removeSongFromQueueOrPlaylist={removeSongFromQueueOrPlaylist}
+                            addSongToQueueOrQupplistHandler={addSongToQueueOrQupplistHandler}
+                            colour="grey"
+                        />
+                    </Col>
+
+                    <Col s={12} m={10} l={6} xl={4} offset="m1">
+                        <h1>search</h1>
+                        <SearchForm addSearchResultsToState={addSearchResultsToState} />
+                        <Button
+                            className="white darken-1 text-black font-bold"
+                            onClick={clearSearchResults}
+                        >
+                            Clear search results
+                        </Button>
+                        <SongList
+                            songs={searchResults}
+                            type="search"
+                            addSongToQueueOrQupplistHandler={addSongToQueueOrQupplistHandler}
+                        />
+                        <h1 className="text-yellow darken-1">queue</h1>
+                        <div className="queue-list">
                             <SongList
-                                songs={qupplist}
-                                type="qupplist"
-                                removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
-                                addSongToQueueOrQupplistHandler={this.addSongToQueueOrQupplistHandler}
+                                songs={playlist.queue}
+                                type="queue"
+                                removeSongFromQueueOrPlaylist={removeSongFromQueueOrPlaylist}
+                                addSongToQueueOrQupplistHandler={addSongToQueueOrQupplistHandler}
                                 colour="grey"
                             />
-                        </Col>
+                        </div>
+                    </Col>
 
-                        <Col s={12} m={10} l={6} xl={4} offset="m1">
-                            <h1>search</h1>
-                            <SearchForm addSearchResultsToState={this.addSearchResultsToState} />
-                            <Button
-                                className="white darken-1 text-black font-bold"
-                                onClick={this.clearSearchResults}
-                            >
-                                Clear search results
-                            </Button>
-                            <SongList
-                                songs={searchResults}
-                                type="search"
-                                addSongToQueueOrQupplistHandler={this.addSongToQueueOrQupplistHandler}
-                            />
-                            <h1 className="text-yellow darken-1">queue</h1>
-                            <div className="queue-list">
-                                <SongList
-                                    songs={queue}
-                                    type="queue"
-                                    removeSongFromQueueOrPlaylist={this.removeSongFromQueueOrPlaylist}
-                                    addSongToQueueOrQupplistHandler={this.addSongToQueueOrQupplistHandler}
-                                    colour="grey"
-                                />
-                            </div>
-                        </Col>
-
-                    </Row>
-                </div>
-            </Fragment>
-        )
-    }
+                </Row>
+            </div>
+        </Fragment>
+    )
 }
 
 QuppListPage.propTypes = {
