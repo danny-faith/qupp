@@ -8,7 +8,7 @@ function Header(props) {
     const {
         playlistname,
         username,
-        numberOfSongsInQupplist,
+        numberOfSongsInQueue,
         progressValue,
         nowPlaying,
         upNext,
@@ -19,8 +19,8 @@ function Header(props) {
             <h1 className="text-5xl my-0">{playlistname}</h1>
             <p className="text-1xl mt-2 mb-0">{username}</p>
             <p className="text-1xl mt-0">
-                {numberOfSongsInQupplist}{' '}
-                {numberOfSongsInQupplist === 1 ? 'song' : 'songs'} in qupplist
+                {numberOfSongsInQueue}{' '}
+                {numberOfSongsInQueue === 1 ? 'song' : 'songs'} in queue
             </p>
             <Row>
                 <Col s={6} offset="s3">
