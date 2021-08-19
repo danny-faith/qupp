@@ -191,7 +191,9 @@ export function QuppListPage(props) {
     }
 
     const addAllToQueueHandler = () => {
-
+        if (isEmpty(playlist.qupplist)) {
+            return window.M.toast({html: `No songs to add`, classes: 'red lighten-2'})
+        }
         addSongToQueueOrQupplistHandler(playlist.qupplist, 'queue')
     }
 
