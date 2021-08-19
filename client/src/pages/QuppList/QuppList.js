@@ -125,7 +125,7 @@ export function QuppListPage(props) {
     const previousQueue = usePrevious(playlist.queue)
     const previousQupplist = usePrevious(playlist.qupplist)
 
-    const manageSongNotifications = (previousQueue, nextQueue) => {
+    const manageSongNotifications = (previousQueue = [], nextQueue = []) => {
         const { type } = payload.current
         console.log('manage', {previousQueue}, {nextQueue}, nextQueue?.length - previousQueue?.length);
         const moreThanOneSongAdded = (
@@ -135,12 +135,13 @@ export function QuppListPage(props) {
             nextQueue?.length - previousQueue?.length === 1
         )
         const songRemoved = (nextQueue?.length - previousQueue?.length) < 0
+        console.log('manage', (nextQueue?.length - previousQueue?.length));
 
         if (oneSongAdded) {
             const { name, album } = (Array.isArray(payload.current.song))
                 ? payload.current.song[0]
                 : payload.current.song
-                
+
             window.M.toast({html: `${name}, ${album} added to ${type}`, classes: 'green lighten-2'})
         } else if (type === 'queue' && moreThanOneSongAdded) {
             const numberOfNewSongsAdded = nextQueue.length - previousQueue.length
