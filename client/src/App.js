@@ -8,7 +8,6 @@ import store from './store'
 import PrivateRoute from './components/common/PrivateRoute'
 
 import Navbar from './components/layout/Navbar'
-import Sidenav from './components/layout/Sidenav'
 import Register from './pages/auth/Register'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/Dashboard'
@@ -74,7 +73,6 @@ function App(props) {
 			<Router>
 				<div className="App">
 					<Navbar />
-					<Sidenav />
 					<Route exact path="/" component={Landing} />
 					<Route exact path="/playlist/:slug" component={QuppListPage} />
 					<div className="container">
