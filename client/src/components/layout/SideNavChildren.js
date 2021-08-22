@@ -9,9 +9,7 @@ import { clearPlaylists } from '../../actions/playlistActions'
 import { withRouter } from 'react-router-dom'
 
 export function SideNavChildren(props) {
-    // const messengerRef = React.createRef()
-    // const usersRef = React.createRef()
-
+    
     const onLogoutClick = (e) => {
         e.preventDefault()
         props.clearPlaylists()
@@ -25,7 +23,6 @@ export function SideNavChildren(props) {
             <SideNavItem
                 user={{
                     background: 'img/office.jpg',
-                    // email: user.email,
                     image: user.avatar,
                     name: user.username,
                 }}
@@ -50,40 +47,6 @@ export function SideNavChildren(props) {
                 Logout
             </SideNavItem>
         </React.Fragment>
-        // <ul className="sidenav" id="sidenav">
-        //     <li>
-        //         <div className="user-view">
-        //             <div className="background">
-        //                 <img alt="background for user" src="img/office.jpg" />
-        //             </div>
-        //             <a href="#user">
-        //                 <div className="avatar" style={{ backgroundImage: `url(${user.avatar})`}}>
-        //                 </div>
-        //             </a>
-        //             <a href="#name"><span className="white-text name pb-4">{user.username}</span></a>
-        //         </div>
-        //     </li>
-
-        //     <li><Link to="/dashboard">Dashboard</Link></li>
-        //     <li><Link to="/my-account">Account</Link></li>
-        //     <li>
-        //         <Modal
-        //             id="messengerUsers"
-        //             className="bg-grey-darkest"
-        //             header="Messenger"
-        //             ref={usersRef}
-        //             trigger={
-        //                 <a ref={messengerRef} href="!#">
-        //                     Messenger
-        //                 </a>
-        //             }
-        //         >
-        //             <Messenger />
-        //         </Modal>
-        //     </li>
-        //     <li className="divider"></li>
-        //     <li><button onClick={onLogoutClick}>Logout</button></li>
-        // </ul>
     )
 
     const guestLinks = (
