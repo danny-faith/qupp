@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Modal } from 'react-materialize'
+import { Modal, SideNav, Button } from 'react-materialize'
 import Messenger from '../messenger/Messenger'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -9,11 +9,12 @@ import { clearPlaylists } from '../../actions/playlistActions'
 import { withRouter } from 'react-router-dom'
 
 import logo from '../../logo-v2.svg'
+import { SideNavChildren } from '../layout/SideNavChildren'
 
 export function Navbar(props) {
     const dropdownTriggerRef = React.createRef()
     const messengerRef = React.createRef()
-    const usersRef = React.createRef()
+    // const usersRef = React.createRef()
     const navRef = React.createRef()
     const { isAuthenticated, user } = props.auth
 
@@ -39,7 +40,7 @@ export function Navbar(props) {
                 <a href="!#" onClick={onLogoutClick}>Logout</a>
             </li>
             <li>
-                <Modal id="messengerUsers" className="bg-grey-darkest" header="Messenger" ref={usersRef} trigger={<a ref={messengerRef} href="!#">Messenger</a>}>
+                <Modal id="messengerUsers" className="bg-grey-darkest" header="Messenger" trigger={<a ref={messengerRef} href="!#">Messenger</a>}>
                     <Messenger />
                 </Modal>
             </li>
@@ -72,9 +73,20 @@ export function Navbar(props) {
                 <Link to="/" className="brand-logo">
                     <img width="90" alt="qupp logo" src={logo} className="ml-1" />
                 </Link>
-                <a href="!#" data-target="sidenav" className="sidenav-trigger">
-                    <i className="material-icons">menu</i>
-                </a>
+                <SideNav
+                    options={{
+                        draggable: true
+                    }}
+                    trigger={<i className="material-icons">menu</i>}
+                    children={
+                        <SideNavChildren
+                            {...props}
+                            // auth={props.auth}
+                            // clearPlaylists={props.clearPlaylists}
+                            // logoutUser={props.logoutUser}
+                        />
+                    }
+                />
                 {isAuthenticated ? authorisedLinks : guestLinks}
             </div>
         </nav>
