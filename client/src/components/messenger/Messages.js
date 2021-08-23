@@ -55,9 +55,11 @@ export function Messages(props) {
         if (!isEmpty(e)) {
             e.preventDefault()
         }
+        
         if (message === '') {
             return
         }
+        
         const newMessage = {
             text: message,
             user: props.auth.user.id,
@@ -98,6 +100,18 @@ export function Messages(props) {
             return <p>No messages</p>
         }
     }
+
+    const handleInputKeyDown = (e) => {
+        const { keyCode } = e
+
+        if (e.shiftKey && keyCode === 13) {
+            return
+        }
+
+        if (keyCode === 13) {
+            handleFormSubmit()
+        }
+    }
     
     return (
         <div>
@@ -106,7 +120,7 @@ export function Messages(props) {
                 <div className="clearfix"></div>
             </div>
             <form onSubmit={handleFormSubmit}>
-                <Textarea name="message" onChange={handleOnChange} placeholder="Message" value={message} />
+                <Textarea onKeyDown={handleInputKeyDown} name="message" onChange={handleOnChange} placeholder="Message" value={message} />
                 <Button>Send</Button>
             </form>
         </div>
