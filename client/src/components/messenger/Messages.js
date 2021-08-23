@@ -52,14 +52,12 @@ export function Messages(props) {
     }
 
     const handleFormSubmit = (e) => {
-        if (!isEmpty(e)) {
-            e.preventDefault()
-        }
+        e.preventDefault()
         
         if (message === '') {
             return
         }
-        
+
         const newMessage = {
             text: message,
             user: props.auth.user.id,
@@ -109,7 +107,7 @@ export function Messages(props) {
         }
 
         if (keyCode === 13) {
-            handleFormSubmit()
+            handleFormSubmit(e)
         }
     }
     
