@@ -10,8 +10,9 @@ import {
 
 const initialState = {
     users: null,
-    loading: false,
-    messageRoom: null
+    loadingRoom: false,
+    loadingUsers: false,
+    messageRoom: {}
 }
 
 export default function(state = initialState, action) {
@@ -19,19 +20,19 @@ export default function(state = initialState, action) {
         case LOADING_MESSAGE_ROOM:
             return {
                 ...state,
-                loading: true
+                loadingRoom: true
             }
         case GET_MESSAGE_ROOM:
             return {
                 ...state,
                 messageRoom: action.payload,
-                loading: false
+                loadingRoom: false
             }
         case CREATE_MESSAGE_ROOM:
             return {
                 ...state,
                 messageRoom: action.payload,
-                loading: false
+                loadingRoom: false
             }
         case CLEAR_MESSAGE_ROOM:
             return {
@@ -41,13 +42,13 @@ export default function(state = initialState, action) {
         case LOADING_ALL_USERS:
             return {
                 ...state,
-                loading: true
+                loadingUsers: true
             }
         case GET_ALL_USERS:
             return {
                 ...state,
                 users: action.payload,
-                loading: false
+                loadingUsers: false
             }
         case CLEAR_ALL_USERS:
             return {
