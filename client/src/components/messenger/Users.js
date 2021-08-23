@@ -16,12 +16,12 @@ export function Users(props) {
         e.preventDefault()
         props.getMessageRoom(e.target.dataset.secondaryUserId)
     }
-    const loading = props.messenger.loading
+    const loadingUsers = props.messenger.loadingUsers
     const users = props.messenger.users
     
     let userContent
 
-    if (loading) {
+    if (loadingUsers) {
         userContent = <Spinner />
     } else if (isEmpty(users)) {
         userContent = 'No users to talk to :('
