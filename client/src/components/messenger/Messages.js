@@ -9,6 +9,7 @@ import isEmpty from '../../validation/is-empty'
 export function Messages(props) {
     const db = firebase.database()
     const chatTextStream = React.createRef()
+    const [loadingMessages, setLoadingMessages] = useState(true)
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState([])
 
@@ -26,10 +27,11 @@ export function Messages(props) {
                 toAdd = []
             } else {
                 toAdd = (Array.isArray(snapShot))
-                    ? snapShot
-                    : [snapShot]
+                ? snapShot
+                : [snapShot]
             }
-
+            
+            setLoadingMessages(false)
             setMessages(toAdd)
         })
             
@@ -40,11 +42,7 @@ export function Messages(props) {
         if (messages && messages.length > 0) {
             scrollMessagesToBottom()
         }
-    })
-
-    if (!messages) {
-        return <div>No messages</div>
-    }
+    }, [messages])
 
     const handleOnChange = (e) => {
         setMessage(e.target.value)
@@ -54,12 +52,12 @@ export function Messages(props) {
     }
 
     const handleFormSubmit = (e) => {
-        if (!isEmpty(e)) {
-            e.preventDefault()
-        }
+        e.preventDefault()
+        
         if (message === '') {
             return
         }
+
         const newMessage = {
             text: message,
             user: props.auth.user.id,
@@ -75,37 +73,52 @@ export function Messages(props) {
         scrollMessagesToBottom()
     }
 
-    let messagesMarkup = ''
-    if (messages && messages.length > 0) {
-        messagesMarkup = messages.map((message, index) =>
-            <Row className="m-0" key={index}>
-                <Col s={12}>
-                    <p 
-                        className={
-                            classNames('message message--recipient p-3 rounded-sm m-1', {
-                                    'text-right bg-blue-dark float-right': message.user === props.auth.user.id,
-                                    'bg-grey-dark float-left': message.user !== props.auth.user.id
-                                }
-                            )
-                        }
-                    >
-                        {message.text}
-                    </p>
-                </Col>
-            </Row>
-        )
-    } else {
-        messagesMarkup = 'Loading messages'
+    const messagesMarkup = () => {
+        if (loadingMessages) {
+            return <p>Loading messages</p>
+        } else if (messages?.length > 0) {
+            return messages.map((message, index) =>
+                <Row className="m-0" key={index}>
+                    <Col s={12}>
+                        <p 
+                            className={
+                                classNames('message message--recipient p-3 rounded-sm m-1', {
+                                        'text-right bg-blue-dark float-right': message.user === props.auth.user.id,
+                                        'bg-grey-dark float-left': message.user !== props.auth.user.id
+                                    }
+                                )
+                            }
+                        >
+                            {message.text}
+                        </p>
+                    </Col>
+                </Row>
+            )
+        } else {
+            return <p>No messages</p>
+        }
+    }
+
+    const handleInputKeyDown = (e) => {
+        const { keyCode } = e
+
+        if (e.shiftKey && keyCode === 13) {
+            return
+        }
+
+        if (keyCode === 13) {
+            handleFormSubmit(e)
+        }
     }
     
     return (
         <div>
             <div ref={chatTextStream} className="chat-textstream mt-4">
-                {messagesMarkup}
+                {messagesMarkup()}
                 <div className="clearfix"></div>
             </div>
             <form onSubmit={handleFormSubmit}>
-                <Textarea name="message" onChange={handleOnChange} placeholder="Message" value={message} />
+                <Textarea onKeyDown={handleInputKeyDown} name="message" onChange={handleOnChange} placeholder="Message" value={message} />
                 <Button>Send</Button>
             </form>
         </div>
