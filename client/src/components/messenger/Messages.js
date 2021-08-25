@@ -4,17 +4,18 @@ import PropTypes from 'prop-types'
 import { Textarea, Row, Col, Button } from 'react-materialize'
 import { firebase } from '../../base'
 import classNames from 'classnames'
-import isEmpty from '../../validation/is-empty'
+
+const db = firebase.database()
 
 export function Messages(props) {
-    const db = firebase.database()
     const chatTextStream = React.createRef()
     const [loadingMessages, setLoadingMessages] = useState(true)
     const [message, setMessage] = useState('')
     const [messages, setMessages] = useState([])
 
-    // TODO: Loadin and no messages
-    // todo: enter key to submit new message
+    const scrollMessagesToBottom = () => {
+        chatTextStream.current.scrollTop = chatTextStream.current.scrollHeight
+    }
 
     useEffect(() => {
         const messengerRef = db.ref(`messenger/${props.messenger.messageRoom._id}`)
@@ -42,13 +43,10 @@ export function Messages(props) {
         if (messages && messages.length > 0) {
             scrollMessagesToBottom()
         }
-    }, [messages])
+    }, [messages, scrollMessagesToBottom])
 
     const handleOnChange = (e) => {
         setMessage(e.target.value)
-    }
-    const scrollMessagesToBottom = () => {
-        chatTextStream.current.scrollTop = chatTextStream.current.scrollHeight
     }
 
     const handleFormSubmit = (e) => {
@@ -65,7 +63,7 @@ export function Messages(props) {
         }
 
         const copyOfMessages = {...messages}
-
+        console.log('msg', messages);
         messages.push(newMessage)
         setMessages(copyOfMessages)
         setMessage('')
