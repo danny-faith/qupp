@@ -42,6 +42,7 @@ export const loginUser = (userData) => (dispatch) => {
                     // ...
                 })
                 .catch((error) => {
+                    console.log('firebase user NOT signed in', error);
                     var errorCode = error.code;
                     var errorMessage = error.message;
                 });
