@@ -2,6 +2,8 @@ import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 import { GET_ERRORS, SET_CURRENT_USER, PASSWORD_UPDATE_SUCCESS } from './types';
+import firebase from 'firebase/app'
+
 
 // Register User
 export const registerUser = (userData, history) => (dispatch) => {
@@ -31,6 +33,18 @@ export const loginUser = (userData) => (dispatch) => {
             setAuthToken(token);
             // Decode token to get user data
             const decoded = jwt_decode(token);
+
+            firebase.auth().signInWithEmailAndPassword(userData.usernameOrEmail, userData.password)
+                .then((userCredential) => {
+                    // Signed in
+                    var user = userCredential.user;
+                    console.log('firebase user signed in', user, userData);
+                    // ...
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                });
             // Set current user
             dispatch(setCurrentUser(decoded));
         })
