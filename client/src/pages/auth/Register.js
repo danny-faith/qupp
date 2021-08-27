@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { registerUser } from '../../actions/authActions'
 import TextFieldGroup from '../../components/common/TextFieldGroup'
 
-export function Register(props) {
+export function Register({ auth, history, errors: errorProps, registerUser }) {
 	const [formValues, setFormValues] = useState({
 		username: '',
 		email: '',
@@ -28,21 +28,21 @@ export function Register(props) {
 			password: formValues.password,
 			password2: formValues.password2
 		}
-		props.registerUser(newUser, props.history)
+		registerUser(newUser, history)
 	}
 
 	useEffect(() => {
-		if (props.auth.isAuthenticated) {
-			props.history.push('/dashboard')
+		if (auth.isAuthenticated) {
+			history.push('/dashboard')
 		}
-	}, [])
+	}, [auth, history])
 
 	useMemo(() => {
-		if (props.auth.isAuthenticated) {
-			props.history.push('/dashboard')
+		if (auth.isAuthenticated) {
+			history.push('/dashboard')
 		}
-		setErrors(props.errors)
-	}, [props.errors])
+		setErrors(errorProps)
+	}, [errorProps])
 
 	return (
 		<Row>

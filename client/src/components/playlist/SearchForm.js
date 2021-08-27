@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col, Button } from 'react-materialize'
 import TextFieldGroup from '../common/TextFieldGroup'
-// import PropTypes from 'prop-types'
 import axios from 'axios'
 
 function SearchForm(props) {
@@ -10,28 +9,18 @@ function SearchForm(props) {
     const regex = /[`'#]/g
 
     const handleInputOnChange = (event) => {
-        /**
-         * Checking input value everytime time a new character is entered
-         * for special characters defined in above `regex`.
-         * IF special characters are found alert the user using Mat' Toast
-         */
         let search = event.target.value
         const found = search.match(regex) || []
         
         if (found.length === 0) {
             setSearch(search)
         } else {
+            setErrors({ characters: 'Please do not use special characters( ` \'# ) when searching'})
             window.M.toast({html: 'Please do not use special characters( ` \'# ) when searching', 'displayLength': 6000, classes: 'red lighten-1'})
         }
     }
 
     useEffect(() => {
-        /**
-         * When component mounts, make call to Spotify to get access token
-         * in order to perform the search.
-         * This is a terrible way to manage the access token and 
-         * will not be in the final version of this project
-         */
         axios.get('/api/authspotify')
             .then((res) => {
                 localStorage.setItem('SPOTIFY_ACCESS_TOKEN', res.data.access_token)
@@ -46,9 +35,6 @@ function SearchForm(props) {
             return window.M.toast({html: 'Please enter a search term', classes: 'red lighten-1'})
         }
 
-        /**
-         * Search Spotify using search term from Input
-         */
         axios.get(`https://api.spotify.com/v1/search?q=${search}&type=track&limit=20`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('SPOTIFY_ACCESS_TOKEN')}`
@@ -56,16 +42,8 @@ function SearchForm(props) {
         })
         .then(res => {
             if (res.data.tracks.items.length === 0) { 
-                /**
-                 * if no tracks found alert user with Mat' Toast
-                 * else create array of search results and add to state so they can be rendered
-                 */
                 window.M.toast({html: 'No tracks found!', classes: 'red lighten-1'})
             } else {
-                /**
-                 * map over the array of tracks returned by Spotify and create an array of objects
-                 * containing the properties needed from each track defined in the song schema.
-                 */
                 const searchResults = res.data.tracks.items.map(song => {
 
                     let image = ''
@@ -86,9 +64,6 @@ function SearchForm(props) {
                     }
                 })
 
-                /**
-                 * Send the array of search results back up to app.js to be added to state.searchResults and rendered
-                 */
                 props.addSearchResultsToState(searchResults)
             }            
         })
@@ -105,7 +80,7 @@ function SearchForm(props) {
                             label="What would you like to listen to?"
                             value={search}
                             onChange={handleInputOnChange}
-                            error={errors.name}
+                            error={errors.characters}
                         />
                     </Col>
                     <Col s={2}>

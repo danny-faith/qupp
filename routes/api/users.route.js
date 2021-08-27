@@ -19,6 +19,7 @@ const validateForgotPasswordInput = require('../../validation/forgotPassword.js'
 const validateSetPassword = require('../../validation/setPassword.js');
 
 require('dotenv').config();
+
 const { 
     SECRET,
     SMTP_HOST, 
@@ -183,7 +184,6 @@ router.post('/login', (req, res) => {
                             .auth()
                             .createCustomToken(user.id)
                             .then((res) => {
-                                // Send token back to client
                                 customToken = res
                             })
                             .catch((error) => {

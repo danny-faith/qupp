@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import jwt_decode from 'jwt-decode'
-import setAuthToken from './utils/setAuthToken'
+import setAxiosHeaderAuthToken from './utils/setAxiosHeaderAuthToken'
 import { setCurrentUser, logoutUser, updateUserLastOnlineOrEmail } from './actions/authActions'
 import store from './store'
 import PrivateRoute from './components/common/PrivateRoute'
@@ -27,7 +27,7 @@ import EditQupplistPage from './pages/EditQupplist'
 // TODO - move inside componentWillMount to see if it stops flash of comp before it logs you out
 if (localStorage.jwtToken) {
 	// Set auth token header auth
-	setAuthToken(localStorage.jwtToken)
+	setAxiosHeaderAuthToken(localStorage.jwtToken)
 	// Decode token and get user info and expiry date
 	const decoded = jwt_decode(localStorage.jwtToken)
 	// Set user and isAuthenticated

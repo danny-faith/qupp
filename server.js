@@ -15,7 +15,7 @@ console.log('Server running at port:', PORT);
 // const MONGODB_URI = 
 
 mongoose.Promise = global.Promise;
-var promise = mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+var promise = mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 promise.then(function(db) {
   console.log('DATABASE CONNECTED!!');

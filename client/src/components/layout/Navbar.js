@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Modal, SideNav, Button } from 'react-materialize'
+import { Modal, SideNav } from 'react-materialize'
 import Messenger from '../messenger/Messenger'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -20,7 +20,7 @@ export function Navbar(props) {
 
     useEffect(() => {
         shouldDropdownInit()
-    }, [props.auth])
+    }, [props.auth, shouldDropdownInit])
 
     const shouldDropdownInit = () => {
         if (props.auth.isAuthenticated) {
