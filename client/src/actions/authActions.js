@@ -1,5 +1,5 @@
 import axios from 'axios';
-import setAuthToken from '../utils/setAuthToken';
+import setAxiosHeaderAuthToken from '../utils/setAxiosHeaderAuthToken';
 import jwt_decode from 'jwt-decode';
 import { GET_ERRORS, SET_CURRENT_USER, PASSWORD_UPDATE_SUCCESS } from './types';
 import firebase from 'firebase/app'
@@ -26,27 +26,23 @@ export const loginUser = (userData) => (dispatch) => {
         .then(res => {
             const { token, firebaseToken } = res.data;
             
-            // Set tokens to localstorage
             localStorage.setItem('jwtToken', token);
             localStorage.setItem('firebaseToken', firebaseToken);
-            // Set auth token to header
-            setAuthToken(token);
-            // Decode token to get user data
+
+            setAxiosHeaderAuthToken(token);
+
             const decoded = jwt_decode(token);
 
             firebase.auth().signInWithEmailAndPassword(userData.usernameOrEmail, userData.password)
                 .then((userCredential) => {
-                    // Signed in
                     var user = userCredential.user;
-                    console.log('firebase user signed in', user, userData);
-                    // ...
                 })
                 .catch((error) => {
                     console.log('firebase user NOT signed in', error);
                     var errorCode = error.code;
                     var errorMessage = error.message;
                 });
-            // Set current user
+                
             dispatch(setCurrentUser(decoded));
         })
         .catch(err =>
@@ -85,7 +81,7 @@ export const resetJWT = (payload) => (dispatch) => {
             // Set token to localstorage
             localStorage.setItem('jwtToken', res.data.token);
             // Set auth token to header
-            setAuthToken(res.data.token);
+            setAxiosHeaderAuthToken(res.data.token);
             // Decode token to get user data
             const decoded = jwt_decode(res.data.token);
             // Set current user
@@ -99,7 +95,7 @@ export const logoutUser = () => (dispatch) => {
     // Remove token from localstorage
     localStorage.removeItem('jwtToken');
     // Remove authheader for future requests
-    setAuthToken(false);
+    setAxiosHeaderAuthToken(false);
     // Set the current user to empty object which will also set isAuthenticated
     dispatch(setCurrentUser({}));
 }
