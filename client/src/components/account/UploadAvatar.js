@@ -47,7 +47,7 @@ export function UploadAvatar(props) {
         return () => {
             URL.revokeObjectURL(avatarPreview)
         }
-    }, [])
+    }, [avatarPreview])
     
     return (
         <Fragment>
