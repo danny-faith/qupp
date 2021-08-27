@@ -18,7 +18,7 @@
     "dev": "concurrently --kill-others-on-fail \"npm run dev-server\" \"npm run client\""
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-preset-es2015-node6": "^0.4.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
