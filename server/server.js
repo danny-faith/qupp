@@ -58,10 +58,10 @@ require('./config/passport')(passport);
 // need if statement around this to switch to look for the react build folder once in production
 if (NODE_ENV === "development") {
     // console.log('were in dev mode');
-    app.use( express.static( `${__dirname}/client/public` ) );
+    app.use(express.static('index.html', { root: '../client/public' }))
 } else if (NODE_ENV === "production") {
     // console.log('were in prod mode');
-    app.use( express.static( `${__dirname}/client/build` ) );
+    app.use(express.static('index.html', { root: '../client/build' }) );
 }
 
 // check messenger users online status
@@ -93,7 +93,7 @@ app.use('/api/message', messageRouter);
 app.get('*', (req, res) => {
     // console.log('Catch all route');
     // res.json({stuff: 'HELLO WORLD'}); // comment
-    res.sendFile(`${__dirname}/client/build/index.html`);
+    res.sendFile(`index.html`, { root: '../client/build' });
     // res.redirect('https://google.com');
 });
 
