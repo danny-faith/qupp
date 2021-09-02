@@ -4,7 +4,7 @@
   "description": "App that allows users to create playlists using Spotify's API",
   "author": "Daniel Blythe",
   "license": "ISC",
-  "main": "server.js",
+  "main": "./server/server.js",
   "engines": {
     "node": "11.0.0"
   },
