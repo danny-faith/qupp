@@ -54,7 +54,7 @@ app.use(passport.initialize());
 
 // Passport config
 require('./config/passport')(passport);
-
+console.log('HELLO !!!');
 // need if statement around this to switch to look for the react build folder once in production
 if (NODE_ENV === "development") {
     // console.log('were in dev mode');
