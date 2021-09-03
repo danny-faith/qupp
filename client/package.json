@@ -23,7 +23,7 @@
 		"@types/react": "^16.9.1",
 		"@types/react-dom": "^16.8.5",
 		"autoprefixer": "^9.8.6",
-		"axios": "^0.18.0",
+		"axios": "^0.21.1",
 		"babel-preset-es2015-node6": "^0.4.0",
 		"classnames": "^2.2.6",
 		"dotenv": "^6.1.0",
