@@ -60,7 +60,8 @@ if (NODE_ENV === "development") {
   app.use(express.static('index.html', { root: '../client/public' }))
 } else if (NODE_ENV === "production") {
   // console.log('were in prod mode');
-  app.use(express.static('index.html', { root: '../client/build' }) );
+  // app.use(express.static('index.html', { root: '/app/client/build' }) );
+  app.use(express.static('/app/client/build'))
 }
 
 console.log('HELLO !!!', __dirname);
