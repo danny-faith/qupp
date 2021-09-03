@@ -1,0 +1,55 @@
+{
+  "name": "qupp",
+  "version": "1.0.0",
+  "description": "App that allows users to create playlists using Spotify's API",
+  "author": "Daniel Blythe",
+  "license": "ISC",
+  "main": "server.js",
+  "engines": {
+    "node": "11.0.0"
+  },
+  "scripts": {
+    "build": "cd client && npm run build",
+    "install-client": "cd client && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
+    "client": "npm start --prefix ../client",
+    "dev-server": "nodemon server.js",
+    "server": "node server.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run dev-server\" \"npm run client\""
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "babel-preset-es2015-node6": "^0.4.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "firebase": "^8.1.2",
+    "firebase-admin": "^9.4.1",
+    "gravatar": "^1.8.0",
+    "js-base64": "^2.4.9",
+    "jsonwebtoken": "^8.4.0",
+    "moment": "^2.24.0",
+    "mongoose": "^5.3.4",
+    "mongoose-unique-validator": "^2.0.2",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1",
+    "node-cron": "^2.0.3",
+    "node-sass": "^4.9.4",
+    "nodemailer": "^5.1.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
+    "query-string": "^6.2.0",
+    "source-map-support": "^0.5.9",
+    "spotify-web-api-node": "^4.0.0",
+    "validator": "^10.10.0"
+  },
+  "devDependencies": {
+    "concurrently": "^4.0.1",
+    "nodemon": "^2.0.12"
+  }
+}
