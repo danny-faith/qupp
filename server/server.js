@@ -54,16 +54,16 @@ app.use(passport.initialize());
 
 // Passport config
 require('./config/passport')(passport);
-console.log('HELLO !!!');
 // need if statement around this to switch to look for the react build folder once in production
 if (NODE_ENV === "development") {
-    // console.log('were in dev mode');
-    app.use(express.static('index.html', { root: '../client/public' }))
+  // console.log('were in dev mode');
+  app.use(express.static('index.html', { root: '../client/public' }))
 } else if (NODE_ENV === "production") {
-    // console.log('were in prod mode');
-    app.use(express.static('index.html', { root: '../client/build' }) );
+  // console.log('were in prod mode');
+  app.use(express.static('index.html', { root: '../client/build' }) );
 }
 
+console.log('HELLO !!!', __dirname);
 // check messenger users online status
 // cron job
 // messengerUserStatusCheck.start();
