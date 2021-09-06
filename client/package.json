@@ -11,7 +11,8 @@
 		"start": "npm run watch:css & PORT=3002 react-scripts start",
 		"build": "npm run build:css && react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"precommit": "pretty-quick --staged"
 	},
 	"proxy": "http://127.0.0.1:8082/",
 	"author": "Daniel Blythe",
@@ -59,8 +60,14 @@
 		"enzyme": "^3.9.0",
 		"enzyme-adapter-react-16": "^1.13.0",
 		"enzyme-to-json": "^3.3.5",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-prettier": "^3.4.1",
+		"husky": "^7.0.2",
 		"jest-dom": "^3.2.2",
+		"lint-staged": "^11.1.2",
 		"postcss-cli": "^6.1.2",
+		"prettier": "^2.3.2",
+		"pretty-quick": "^3.1.1",
 		"react-test-renderer": "^16.8.6",
 		"react-testing-library": "^7.0.0",
 		"tailwindcss": "^0.7.4"
@@ -69,9 +76,6 @@
 		"snapshotSerializers": [
 			"enzyme-to-json/serializer"
 		]
-	},
-	"eslintConfig": {
-		"extends": "react-app"
 	},
 	"browserslist": [
 		">0.2%",
