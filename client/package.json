@@ -11,8 +11,12 @@
 		"start": "npm run watch:css & PORT=3002 react-scripts start",
 		"build": "npm run build:css && react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject",
-		"precommit": "pretty-quick --staged"
+		"eject": "react-scripts eject"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "pretty-quick --staged"
+		}
 	},
 	"proxy": "http://127.0.0.1:8082/",
 	"author": "Daniel Blythe",
