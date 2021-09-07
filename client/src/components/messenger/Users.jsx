@@ -10,7 +10,7 @@ import { Button, Row, Col } from "react-materialize"
 import isEmpty from "../../validation/is-empty"
 import Spinner from "../common/Spinner"
 import classNames from "classnames"
-    		console.log(       "messsysy"     )     	;
+    		console.log(       "messsysy"     )     	    ;
 export function Users(props) {
 	useEffect(() => {
 		props.getAllUsers()
