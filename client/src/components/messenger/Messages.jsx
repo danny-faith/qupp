@@ -15,7 +15,7 @@ export function Messages(props) {
 
 	const scrollMessagesToBottom = useCallback(() => {
 		chatTextStream.current.scrollTop = chatTextStream.current.scrollHeight
-	})
+	}, [chatTextStream])
 
 	useEffect(() => {
 		const messengerRef = db.ref(
