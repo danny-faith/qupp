@@ -11,17 +11,17 @@ import isEmpty from "../../validation/is-empty"
 import Spinner from "../common/Spinner"
 import classNames from "classnames"
 
-export function Users(props) {
+export function Users({ getAllUsers, getMessageRoom, messenger, auth }) {
 	useEffect(() => {
-		props.getAllUsers()
-	}, [props])
+		getAllUsers()
+	}, [getAllUsers])
 
 	const userClick = (e) => {
 		e.preventDefault()
-		props.getMessageRoom(e.target.dataset.secondaryUserId)
+		getMessageRoom(e.target.dataset.secondaryUserId)
 	}
-	const loadingUsers = props.messenger.loadingUsers
-	const users = props.messenger.users
+	const loadingUsers = messenger.loadingUsers
+	const users = messenger.users
 
 	let userContent
 
@@ -31,7 +31,7 @@ export function Users(props) {
 		userContent = "No users to talk to :("
 	} else {
 		userContent = users
-			.filter((user) => props.auth.user.id !== user._id)
+			.filter((user) => auth.user.id !== user._id)
 			.map((user) => (
 				<Row key={user._id}>
 					<Col>
