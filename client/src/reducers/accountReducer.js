@@ -1,19 +1,17 @@
-import { 
-    SET_AVATAR_IMAGE,
-} from '../actions/types';
+import { SET_AVATAR_IMAGE } from "../actions/types"
 
 const initialState = {
-    avatar: null
+	avatar: null,
 }
 
-export default function(state = initialState, action) {
-    switch (action.type) {
-        case SET_AVATAR_IMAGE:
-            return {
-                ...state,
-                avatar: action.payload
-            }
-        default: 
-            return state;
-    }
+export default function (state = initialState, action) {
+	switch (action.type) {
+		case SET_AVATAR_IMAGE:
+			return {
+				...state,
+				avatar: action.payload,
+			}
+		default:
+			return state
+	}
 }

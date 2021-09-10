@@ -1,7 +1,7 @@
-import * as React from 'react';
+import * as React from "react"
 
 interface IProps {
-	progress?: number;
+	progress?: number
 }
 
 const ProgressBar: React.FC<IProps> = ({ progress }) => {
@@ -9,7 +9,7 @@ const ProgressBar: React.FC<IProps> = ({ progress }) => {
 		<div className="progress-bar">
 			<span style={{ width: `${progress}%` }} />
 		</div>
-	);
-};
+	)
+}
 
-export default ProgressBar;
+export default ProgressBar
