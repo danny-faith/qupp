@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react"
+import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import isEmpty from "../utils/isEmpty"
@@ -8,14 +8,6 @@ import { getPlaylists, clearPlaylist } from "../actions/playlistActions"
 import Spinner from "../components/common/Spinner"
 
 function Dashboard({ clearPlaylist, getPlaylists, playlists = [], auth }) {
-	const [data, setData] = useState({})
-
-	useMemo(() => {
-		if (playlists) {
-			setData(playlists)
-		}
-	}, [playlists])
-
 	useEffect(() => {
 		clearPlaylist()
 		getPlaylists(auth.user)
