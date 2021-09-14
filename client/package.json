@@ -8,9 +8,10 @@
 	"scripts": {
 		"build:css": "postcss src/App.scss -o src/index.css",
 		"watch:css": "postcss src/App.scss -o src/index.css -w",
-		"start": "npm run watch:css & PORT=3002 react-scripts start",
-		"build": "npm run build:css && react-scripts build",
-		"test": "react-scripts test",
+		"start_new": "PORT=3002 craco start",
+		"start": "npm run watch:css & PORT=3002 craco start",
+		"build": "npm run build:css && craco build",
+		"test": "craco test",
 		"eject": "react-scripts eject",
 		"prepare": "cd ../ && husky install ./client/.husky"
 	},
@@ -18,12 +19,12 @@
 	"author": "Daniel Blythe",
 	"license": "ISC",
 	"dependencies": {
+		"@craco/craco": "^6.3.0",
 		"@types/jest": "^24.0.17",
 		"@types/materialize-css": "^1.0.6",
 		"@types/node": "^12.7.1",
 		"@types/react": "^16.9.1",
 		"@types/react-dom": "^16.8.5",
-		"autoprefixer": "^9.8.6",
 		"axios": "^0.18.0",
 		"babel-preset-es2015-node6": "^0.4.0",
 		"classnames": "^2.2.6",
@@ -44,19 +45,19 @@
 		"react-materialize": "^3.3.3",
 		"react-redux": "^6.0.0",
 		"react-router-dom": "^4.3.1",
-		"react-scripts": "3.4.4",
+		"react-scripts": "4.0.3",
 		"react-spotify-player": "^1.0.4",
 		"react-transition-group": "^2.5.0",
 		"redux": "^4.0.1",
 		"redux-thunk": "^2.3.0",
 		"source-map-support": "^0.5.9",
-		"tailwindcss": "^0.7.4",
 		"typescript": "^3.5.3"
 	},
 	"devDependencies": {
 		"@types/classnames": "^2.2.9",
 		"@types/react-redux": "^7.1.2",
-		"autoprefixer": "^9.4.9",
+		"@welldone-software/why-did-you-render": "^6.2.1",
+		"autoprefixer": "^9.8.6",
 		"enzyme": "^3.9.0",
 		"enzyme-adapter-react-16": "^1.13.0",
 		"enzyme-to-json": "^3.3.5",
@@ -66,12 +67,13 @@
 		"husky": "^7.0.2",
 		"jest-dom": "^3.2.2",
 		"lint-staged": "^11.1.2",
+		"postcss": "^7.0.36",
 		"postcss-cli": "^6.1.2",
 		"prettier": "^2.3.2",
 		"pretty-quick": "^3.1.1",
 		"react-test-renderer": "^16.8.6",
 		"react-testing-library": "^7.0.0",
-		"tailwindcss": "^0.7.4"
+		"tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.14"
 	},
 	"jest": {
 		"snapshotSerializers": [
