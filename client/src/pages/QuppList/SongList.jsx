@@ -1,7 +1,7 @@
 import React from "react"
 import Song from "../../components/playlist/Song"
 
-function SongList(props) {
+const SongList = (props) => {
 	const showNoSongsMessage = () => <p>No songs to show</p>
 
 	const songComponents = ({
@@ -36,7 +36,7 @@ function SongList(props) {
 			removeSongFromQueueOrPlaylist,
 			type,
 		}
-		console.log("songs", songs)
+		console.log("SongList RENDER", songs)
 		if (songs?.length > 0) {
 			return songComponents(params)
 		}
@@ -46,4 +46,4 @@ function SongList(props) {
 	return <div>{songListContent()}</div>
 }
 
-export default SongList
+export default React.memo(SongList)

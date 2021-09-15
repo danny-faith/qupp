@@ -222,56 +222,65 @@ export function QuppListPage({
 		addSongToQueueOrQupplistHandler(playlist.qupplist, "queue")
 	}
 
-	const addSongToQueueOrQupplistHandler = (songPayload, type) => {
-		const { qupplist = [], queue = [] } = playlist
+	const addSongToQueueOrQupplistHandler = React.useCallback(
+		(songPayload, type) => {
+			const { qupplist = [], queue = [] } = playlist
 
-		payload.current = R.clone({
-			type,
-			song: songPayload,
-		})
-		console.log("addAllToQ", payload.current, type)
-
-		const qupplistExistsAndIsNotEmpty =
-			type === "qupplist" && !isEmpty(playlist.qupplist)
-		if (qupplistExistsAndIsNotEmpty) {
-			const found = qupplist.find((x) => x.spotId === songPayload.spotId)
-			if (found) {
-				return window.M.toast({
-					html: `"${songPayload.name}" is a duplicate, cannot add`,
-					classes: "red lighten-2",
-				})
-			}
-		}
-
-		let newPlaylist
-
-		if (type === "qupplist") {
-			newPlaylist = addSongToQupplist(songPayload, qupplist)
-		} else if (type === "queue") {
-			newPlaylist = addToQueue(songPayload, queue)
-		}
-
-		console.log("addAllToQ newPlaylist", newPlaylist, type)
-		db.ref(`playlists/${playlists.playlist._id}/${type}`).set(newPlaylist)
-	}
-
-	const removeSongFromQueueOrPlaylist = (index, type) => {
-		const playlistLens = R.lensPath([type])
-		const chosenPlaylist = view(playlistLens, playlist)
-		const removeSongAtIndex = remove(index, 1)
-		const song = R.slice(index, index + 1, chosenPlaylist)[0]
-
-		payload.current = {
-			type,
-			song: song,
-		}
-
-		db.ref(`playlists/${playlists.playlist._id}/${type}`)
-			.set(removeSongAtIndex(chosenPlaylist))
-			.then(() => {
-				console.log("item removed", playlist.qupplist)
+			payload.current = R.clone({
+				type,
+				song: songPayload,
 			})
-	}
+			console.log("addAllToQ", payload.current, type)
+
+			const qupplistExistsAndIsNotEmpty =
+				type === "qupplist" && !isEmpty(playlist.qupplist)
+			if (qupplistExistsAndIsNotEmpty) {
+				const found = qupplist.find(
+					(x) => x.spotId === songPayload.spotId
+				)
+				if (found) {
+					return window.M.toast({
+						html: `"${songPayload.name}" is a duplicate, cannot add`,
+						classes: "red lighten-2",
+					})
+				}
+			}
+
+			let newPlaylist
+
+			if (type === "qupplist") {
+				newPlaylist = addSongToQupplist(songPayload, qupplist)
+			} else if (type === "queue") {
+				newPlaylist = addToQueue(songPayload, queue)
+			}
+
+			console.log("addAllToQ newPlaylist", newPlaylist, type)
+			db.ref(`playlists/${playlists.playlist._id}/${type}`).set(
+				newPlaylist
+			)
+		},
+		[db, playlist, playlists.playlist._id]
+	)
+
+	const removeSongFromQueueOrPlaylist = React.useCallback(
+		(index, type) => {
+			const playlistLens = R.lensPath([type])
+			const chosenPlaylist = view(playlistLens, playlist)
+			const removeSongAtIndex = remove(index, 1)
+			const song = R.slice(index, index + 1, chosenPlaylist)[0]
+
+			payload.current = {
+				type,
+				song: song,
+			}
+			db.ref(`playlists/${playlists.playlist._id}/${type}`)
+				.set(removeSongAtIndex(chosenPlaylist))
+				.then(() => {
+					console.log("item removed", playlist.qupplist)
+				})
+		},
+		[db, playlist, playlists.playlist._id]
+	)
 
 	const clearSearchResults = () => {
 		setSearchResults([])
@@ -334,16 +343,16 @@ export function QuppListPage({
 						>
 							Clear search results
 						</Button>
-						<SongList
+						{/* <SongList
 							songs={searchResults}
 							type="search"
 							addSongToQueueOrQupplistHandler={
 								addSongToQueueOrQupplistHandler
 							}
-						/>
+						/> */}
 						<h1 className="text-yellow darken-1">queue</h1>
 						<div className="queue-list">
-							<SongList
+							{/* <SongList
 								songs={playlist.queue}
 								type="queue"
 								removeSongFromQueueOrPlaylist={
@@ -353,7 +362,7 @@ export function QuppListPage({
 									addSongToQueueOrQupplistHandler
 								}
 								colour="grey"
-							/>
+							/> */}
 						</div>
 					</Col>
 				</Row>

@@ -2,7 +2,7 @@
     "extends": ["react-app", "plugin:prettier/recommended"],
     "plugins": ["no-autofix"],
     "rules": {
-        "react-hooks/exhaustive-deps": "off",
-        "no-autofix/react-hooks/exhaustive-deps": "error"
+        "react-hooks/exhaustive-deps": "warn",
+        "no-autofix/react-hooks/exhaustive-deps": "warn"
     }
 }
