@@ -36,7 +36,6 @@ const SongList = (props) => {
 			removeSongFromQueueOrPlaylist,
 			type,
 		}
-		console.log("SongList RENDER", songs)
 		if (songs?.length > 0) {
 			return songComponents(params)
 		}

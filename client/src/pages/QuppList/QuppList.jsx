@@ -1,4 +1,10 @@
-import React, { useState, useEffect, Fragment } from "react"
+import React, {
+	useState,
+	useEffect,
+	Fragment,
+	useCallback,
+	useRef,
+} from "react"
 import { connect } from "react-redux"
 
 import { firebase } from "../../base"
@@ -31,7 +37,7 @@ export function QuppListPage({
 		qupplist: [],
 		queue: [],
 	})
-	let payload = React.useRef()
+	let payload = useRef()
 	const [loadingPlaylists, setLoadingPlaylists] = useState({ status: true })
 	const [playing, setPlaying] = useState(false)
 	const [progress, setProgress] = useState(0)
@@ -124,7 +130,7 @@ export function QuppListPage({
 	}
 
 	function usePrevious(value) {
-		const ref = React.useRef()
+		const ref = useRef()
 		useEffect(() => {
 			ref.current = value
 		})
@@ -208,9 +214,12 @@ export function QuppListPage({
 		}
 	}, [playing, playlist.queue])
 
-	const addSearchResultsToState = (results) => {
-		setSearchResults(results)
-	}
+	const addSearchResultsToState = useCallback(
+		(results) => {
+			setSearchResults(results)
+		},
+		[setSearchResults]
+	)
 
 	const addAllToQueueHandler = () => {
 		if (isEmpty(playlist.qupplist)) {
@@ -222,7 +231,7 @@ export function QuppListPage({
 		addSongToQueueOrQupplistHandler(playlist.qupplist, "queue")
 	}
 
-	const addSongToQueueOrQupplistHandler = React.useCallback(
+	const addSongToQueueOrQupplistHandler = useCallback(
 		(songPayload, type) => {
 			const { qupplist = [], queue = [] } = playlist
 
@@ -230,7 +239,6 @@ export function QuppListPage({
 				type,
 				song: songPayload,
 			})
-			console.log("addAllToQ", payload.current, type)
 
 			const qupplistExistsAndIsNotEmpty =
 				type === "qupplist" && !isEmpty(playlist.qupplist)
@@ -254,15 +262,14 @@ export function QuppListPage({
 				newPlaylist = addToQueue(songPayload, queue)
 			}
 
-			console.log("addAllToQ newPlaylist", newPlaylist, type)
-			db.ref(`playlists/${playlists.playlist._id}/${type}`).set(
+			db.ref(`playlists/${playlists?.playlist?._id}/${type}`).set(
 				newPlaylist
 			)
 		},
-		[db, playlist, playlists.playlist._id]
+		[db, playlist, playlists.playlist]
 	)
 
-	const removeSongFromQueueOrPlaylist = React.useCallback(
+	const removeSongFromQueueOrPlaylist = useCallback(
 		(index, type) => {
 			const playlistLens = R.lensPath([type])
 			const chosenPlaylist = view(playlistLens, playlist)
@@ -273,18 +280,18 @@ export function QuppListPage({
 				type,
 				song: song,
 			}
-			db.ref(`playlists/${playlists.playlist._id}/${type}`)
+			db.ref(`playlists/${playlists?.playlist?._id}/${type}`)
 				.set(removeSongAtIndex(chosenPlaylist))
 				.then(() => {
 					console.log("item removed", playlist.qupplist)
 				})
 		},
-		[db, playlist, playlists.playlist._id]
+		[db, playlist, playlists.playlist]
 	)
 
-	const clearSearchResults = () => {
+	const clearSearchResults = useCallback(() => {
 		setSearchResults([])
-	}
+	}, [setSearchResults])
 
 	const playlistName = playlists?.playlist?.name
 	const playDisabled = isEmpty(playlist.queue) ? true : false
@@ -343,16 +350,16 @@ export function QuppListPage({
 						>
 							Clear search results
 						</Button>
-						{/* <SongList
+						<SongList
 							songs={searchResults}
 							type="search"
 							addSongToQueueOrQupplistHandler={
 								addSongToQueueOrQupplistHandler
 							}
-						/> */}
+						/>
 						<h1 className="text-yellow darken-1">queue</h1>
 						<div className="queue-list">
-							{/* <SongList
+							<SongList
 								songs={playlist.queue}
 								type="queue"
 								removeSongFromQueueOrPlaylist={
@@ -362,7 +369,7 @@ export function QuppListPage({
 									addSongToQueueOrQupplistHandler
 								}
 								colour="grey"
-							/> */}
+							/>
 						</div>
 					</Col>
 				</Row>
