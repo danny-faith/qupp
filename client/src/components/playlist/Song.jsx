@@ -21,10 +21,7 @@ function Song(props) {
 	}
 
 	const handleRemoveSong = (e) => {
-		props.removeSongFromQueueOrPlaylist(
-			props.index,
-			e.currentTarget.dataset.type
-		)
+		props.removeSongFromSongList(props.index, e.currentTarget.dataset.type)
 	}
 
 	const createActionButton = ({ dataType, classNames, icon, action }) => (

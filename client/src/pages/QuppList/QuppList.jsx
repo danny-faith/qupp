@@ -22,9 +22,10 @@ import SongList from "./SongList"
 
 import { addSongToQupplist, addToQueue } from "./services/player"
 
-import { remove, view } from "ramda"
+import { remove } from "ramda"
 import * as R from "ramda"
 
+const db = firebase.database()
 const qupplistText = "qupplist"
 const greyText = "grey"
 export function QuppListPage({
@@ -34,11 +35,6 @@ export function QuppListPage({
 	playlists,
 	auth,
 }) {
-	const db = firebase.database()
-	// const [playlist, setPlaylist] = useState({
-	// 	qupplist: [],
-	// 	queue: [],
-	// })
 	const [qupplist, setQupplist] = useState([])
 	const [queue, setQueue] = useState([])
 	let payload = useRef()
@@ -58,31 +54,33 @@ export function QuppListPage({
 		setPlaying((prevState) => !prevState)
 	}
 
-	useEffect(() => {
-		if (playlists && playlists.playlist) {
-			const playlistRef = db.ref(`playlists/${playlists.playlist._id}`)
-
+	const syncSongListState = useCallback(
+		(target, setter) => {
+			const playlistRef = db.ref(
+				`playlists/${playlists.playlist._id}/${target}`
+			)
 			playlistRef.on("value", (snapshot) => {
 				const snapShot = snapshot.val()
-				let qupplist
-				let queue
-				// console.log("snapshot", snapShot)
-
 				if (snapShot) {
-					qupplist = snapShot.qupplist || []
-					queue = snapShot.queue || []
-				} else {
-					qupplist = []
-					queue = []
+					setter(snapShot)
 				}
-
-				setQupplist(qupplist)
-				setQueue(queue)
 			})
-
 			return () => playlistRef.off()
+		},
+		[playlists]
+	)
+
+	useEffect(() => {
+		if (playlists && playlists.playlist) {
+			syncSongListState("qupplist", setQupplist)
 		}
-	}, [db, playlists])
+	}, [playlists, syncSongListState])
+
+	useEffect(() => {
+		if (playlists && playlists.playlist) {
+			syncSongListState("queue", setQueue)
+		}
+	}, [playlists, syncSongListState])
 
 	const duration_ms = queue?.length > 0 ? queue[0].duration_ms : 0
 	const duration_secs = duration_ms / 1000
@@ -105,7 +103,6 @@ export function QuppListPage({
 		if (!isEmpty(queue)) {
 			setLoadingPlaylists({ status: false })
 		}
-		// console.log("playlist check", playlist.queue, playlist.qupplist)
 	}, [queue])
 
 	useEffect(() => {
@@ -130,7 +127,6 @@ export function QuppListPage({
 	const playNextSong = () => {
 		const cloneOfQueue = R.clone(queue)
 		const slicedQueue = R.remove(0, 1, cloneOfQueue)
-		setProgress(0)
 		db.ref(`playlists/${playlists.playlist._id}/queue`).set(slicedQueue)
 	}
 
@@ -147,17 +143,10 @@ export function QuppListPage({
 
 	const manageSongNotifications = (previousQueue = [], nextQueue = []) => {
 		const { type } = payload.current
-		// console.log(
-		// 	"manage",
-		// 	{ previousQueue },
-		// 	{ nextQueue },
-		// 	nextQueue?.length - previousQueue?.length
-		// )
 		const moreThanOneSongAdded =
 			nextQueue?.length - previousQueue?.length > 1
 		const oneSongAdded = nextQueue?.length - previousQueue?.length === 1
 		const songRemoved = nextQueue?.length - previousQueue?.length < 0
-		// console.log("manage", nextQueue?.length - previousQueue?.length)
 
 		if (oneSongAdded) {
 			const { name, album } = Array.isArray(payload.current.song)
@@ -198,7 +187,6 @@ export function QuppListPage({
 	}, [previousQueue, previousQupplist, queue])
 
 	useEffect(() => {
-		// console.log("payload manage useeffect", payload.current)
 		if (payload.current) {
 			switch (payload.current.type) {
 				case "queue":
@@ -236,23 +224,16 @@ export function QuppListPage({
 		addSongToQueueOrQupplistHandler(qupplist, "queue")
 	}
 
-	const addSongToQueueOrQupplistHandler = useCallback(
+	const checkIfSongExistsInQupplist = useCallback(
 		(songPayload, type) => {
-			console.log("daniel", queue)
-			// alert("ddaa")
-			// console.log("daniel", playlists.playlist._id)
-			// const { qupplist = [], queue = [] } = playlist
-			// TODO:
-			payload.current = R.clone({
-				type,
-				song: songPayload,
-			})
 			const qupplistExistsAndIsNotEmpty =
 				type === "qupplist" && !isEmpty(qupplist)
+
 			if (qupplistExistsAndIsNotEmpty) {
 				const found = qupplist.find(
 					(x) => x.spotId === songPayload.spotId
 				)
+
 				if (found) {
 					return window.M.toast({
 						html: `"${songPayload.name}" is a duplicate, cannot add`,
@@ -260,42 +241,73 @@ export function QuppListPage({
 					})
 				}
 			}
-			let newPlaylist
-			if (type === "qupplist") {
-				newPlaylist = addSongToQupplist(songPayload, qupplist)
-			} else if (type === "queue") {
-				newPlaylist = addToQueue(songPayload, queue)
-			}
-			// if (playlists && playlists.playlist) {
-			db.ref(`playlists/${playlists?.playlist?._id}/${type}`).set(
-				newPlaylist
-			)
-			console.log("hello", songPayload)
-			// }
 		},
-		[db, playlists, queue]
+		[qupplist]
 	)
 
-	const removeSongFromQueueOrPlaylist = useCallback(
-		(index, type) => {
-			// const playlistLens = R.lensPath([type])
-			// const chosenPlaylist = view(playlistLens, playlist)
-			const chosenPlaylist = type === "qupplist" ? qupplist : queue
-			const removeSongAtIndex = remove(index, 1)
-			const song = R.slice(index, index + 1, chosenPlaylist)[0]
-			payload.current = {
-				type,
-				song: song,
+	const addSongToQueueOrQupplistHandler = useCallback(
+		(songPayload, type) => {
+			if (checkIfSongExistsInQupplist(songPayload, type)) {
+				return
 			}
-			// if (playlists && playlists.playlist) {
-			db.ref(`playlists/${playlists?.playlist?._id}/${type}`)
-				.set(removeSongAtIndex(chosenPlaylist))
-				.then(() => {
-					console.log("item removed", qupplist)
+
+			setPayload(type, songPayload)
+
+			let newPlaylist
+			if (type === "qupplist") {
+				setQupplist((oldState) => {
+					newPlaylist = addSongToQupplist(songPayload, oldState)
+					db.ref(`playlists/${playlists?.playlist?._id}/${type}`).set(
+						newPlaylist
+					)
 				})
-			// }
+			} else if (type === "queue") {
+				setQueue((oldState) => {
+					newPlaylist = addToQueue(songPayload, oldState)
+					db.ref(`playlists/${playlists?.playlist?._id}/${type}`).set(
+						newPlaylist
+					)
+				})
+			}
 		},
-		[db, playlists, queue, qupplist]
+		[playlists, checkIfSongExistsInQupplist]
+	)
+
+	const setPayload = (type, song) => {
+		payload.current = {
+			type,
+			song: song,
+		}
+	}
+
+	const removeSongFromSongList = useCallback(
+		(type, index, state) => {
+			const removeSongAtIndex = remove(index, 1)
+			const song = R.slice(index, index + 1, state)[0]
+			setPayload("queue", song)
+			db.ref(`playlists/${playlists?.playlist?._id}/${type}`).set(
+				removeSongAtIndex(state)
+			)
+		},
+		[playlists.playlist]
+	)
+
+	const removeSongFromQueue = useCallback(
+		(index) => {
+			setQueue((oldState) => {
+				removeSongFromSongList("queue", index, oldState)
+			})
+		},
+		[removeSongFromSongList]
+	)
+
+	const removeSongFromQupplist = useCallback(
+		(index) => {
+			setQupplist((oldState) => {
+				removeSongFromSongList("qupplist", index, oldState)
+			})
+		},
+		[removeSongFromSongList]
 	)
 
 	const clearSearchResults = useCallback(() => {
@@ -304,13 +316,7 @@ export function QuppListPage({
 
 	const playlistName = playlists?.playlist?.name
 	const playDisabled = isEmpty(queue) ? true : false
-	// const qupplist = React.useMemo(() => playlist.qupplist, [playlist.qupplist])
-	// SongList's are all re-rendering unneccesarily when you click a button that doesn't affect the props of the SongList it was clicked in
-	// E.g click add to playlist button(yellow) from qupplist list and the qupplist will re-render
-	//  worry is that this is not fixable as WDYR isn't picking it up and loggin warnings
 
-	// SEPARATE qupplist and queue into their own state so you don't have to pass in a new object everytime you update them
-	// That's likely the cause of qupplist re-rendering when something is added to queue which is in it's state
 	return (
 		<Fragment>
 			<Header
@@ -340,12 +346,9 @@ export function QuppListPage({
 							</Button>
 						</h1>
 						<SongList
-							// songs={qupplist}
 							songs={qupplist}
 							type={qupplistText}
-							removeSongFromQueueOrPlaylist={
-								removeSongFromQueueOrPlaylist
-							}
+							removeSongFromSongList={removeSongFromQupplist}
 							addSongToQueueOrQupplistHandler={
 								addSongToQueueOrQupplistHandler
 							}
@@ -376,9 +379,7 @@ export function QuppListPage({
 							<SongList
 								songs={queue}
 								type="queue"
-								removeSongFromQueueOrPlaylist={
-									removeSongFromQueueOrPlaylist
-								}
+								removeSongFromSongList={removeSongFromQueue}
 								addSongToQueueOrQupplistHandler={
 									addSongToQueueOrQupplistHandler
 								}

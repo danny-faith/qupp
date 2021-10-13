@@ -8,14 +8,14 @@ const SongList = (props) => {
 		songs,
 		type,
 		addSongToQueueOrQupplistHandler,
-		removeSongFromQueueOrPlaylist,
+		removeSongFromSongList,
 	}) =>
 		songs.map((song, i) => (
 			<Song
 				addSongToQueueOrQupplistHandler={
 					addSongToQueueOrQupplistHandler
 				}
-				removeSongFromQueueOrPlaylist={removeSongFromQueueOrPlaylist}
+				removeSongFromSongList={removeSongFromSongList}
 				type={type}
 				data={song}
 				index={i}
@@ -28,12 +28,12 @@ const SongList = (props) => {
 			songs,
 			addSongToQueueOrQupplistHandler,
 			type,
-			removeSongFromQueueOrPlaylist,
+			removeSongFromSongList,
 		} = props
 		const params = {
 			songs,
 			addSongToQueueOrQupplistHandler,
-			removeSongFromQueueOrPlaylist,
+			removeSongFromSongList,
 			type,
 		}
 		if (songs?.length > 0) {
@@ -41,8 +41,43 @@ const SongList = (props) => {
 		}
 		return showNoSongsMessage()
 	}
+	// if (props.type === "qupplist") {
+	// 	console.log("RERENDER compare", props.type)
+	// }
 
 	return <div>{songListContent()}</div>
 }
+
+const areEqual = (prevProps, nextProps) => {
+	// console.log("compare", prevProps.type, nextProps.type)
+	if (prevProps.type === "qupplist") {
+		// debugger
+		console.log(
+			"compare song length",
+			prevProps.songs.length === nextProps.songs.length
+		)
+		console.log("compare type", prevProps.type === nextProps.type)
+		console.log("compare colour", prevProps.colour === nextProps.colour)
+		console.log(
+			"compare addSongToQueueOrQupplistHandler",
+			prevProps.addSongToQueueOrQupplistHandler ===
+				nextProps.addSongToQueueOrQupplistHandler
+		)
+		console.log(
+			"compare removeSongFromSongList",
+			prevProps.removeSongFromSongList ===
+				nextProps.removeSongFromSongList
+		)
+	}
+	// if (prevProps.songs.length === nextProps.songs.length) {
+	// 	return true
+	// }
+	// return false
+}
+
+// SongList.whyDidYouRender = {
+// 	logOnDifferentValues: true,
+// 	customName: "SongList",
+// }
 
 export default React.memo(SongList)
