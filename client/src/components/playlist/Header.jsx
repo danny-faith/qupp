@@ -9,9 +9,11 @@ function Header(props) {
 		playlistname,
 		username,
 		numberOfSongsInQueue,
-		progressValue,
 		nowPlaying,
 		upNext,
+		playNextSong,
+		duration_secs,
+		playing,
 	} = props
 
 	return (
@@ -24,7 +26,11 @@ function Header(props) {
 			</p>
 			<Row>
 				<Col s={6} offset="s3">
-					<ProgressBar progress={progressValue} />
+					<ProgressBar
+						playNextSong={playNextSong}
+						duration_secs={duration_secs}
+						playing={playing}
+					/>
 					<NowPlaying nowPlaying={nowPlaying} />
 					<UpNext upNext={upNext} />
 				</Col>

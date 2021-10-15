@@ -40,7 +40,7 @@ export function QuppListPage({
 	let payload = useRef()
 	const [loadingPlaylists, setLoadingPlaylists] = useState({ status: true })
 	const [playing, setPlaying] = useState(false)
-	const [progress, setProgress] = useState(0)
+	// const [progress, setProgress] = useState(0)
 	const [nowPlaying, setNowPlaying] = useState({})
 	const [upNext, setUpNext] = useState({})
 	const [searchResults, setSearchResults] = useState([])
@@ -61,9 +61,8 @@ export function QuppListPage({
 			)
 			playlistRef.on("value", (snapshot) => {
 				const snapShot = snapshot.val()
-				if (snapShot) {
-					setter(snapShot)
-				}
+
+				setter(snapShot)
 			})
 			return () => playlistRef.off()
 		},
@@ -81,23 +80,6 @@ export function QuppListPage({
 			syncSongListState("queue", setQueue)
 		}
 	}, [playlists, syncSongListState])
-
-	const duration_ms = queue?.length > 0 ? queue[0].duration_ms : 0
-	const duration_secs = duration_ms / 1000
-	let secondsPassed = Math.round((duration_secs / 100) * progress)
-
-	useInterval(
-		() => {
-			const percent = Math.round((secondsPassed / duration_secs) * 100)
-			setProgress(percent)
-			if (percent >= 100) {
-				setProgress(0)
-				playNextSong()
-			}
-			secondsPassed++
-		},
-		playing ? 30 : null
-	)
 
 	useEffect(() => {
 		if (!isEmpty(queue)) {
@@ -125,6 +107,7 @@ export function QuppListPage({
 	}, [loadingPlaylists, queue])
 
 	const playNextSong = () => {
+		console.log("playNextSong")
 		const cloneOfQueue = R.clone(queue)
 		const slicedQueue = R.remove(0, 1, cloneOfQueue)
 		db.ref(`playlists/${playlists.playlist._id}/queue`).set(slicedQueue)
@@ -263,7 +246,9 @@ export function QuppListPage({
 				})
 			} else if (type === "queue") {
 				setQueue((oldState) => {
-					newPlaylist = addToQueue(songPayload, oldState)
+					const oldStateCheck = oldState === null ? [] : oldState
+
+					newPlaylist = addToQueue(songPayload, oldStateCheck)
 					db.ref(`playlists/${playlists?.playlist?._id}/${type}`).set(
 						newPlaylist
 					)
@@ -316,6 +301,8 @@ export function QuppListPage({
 
 	const playlistName = playlists?.playlist?.name
 	const playDisabled = isEmpty(queue) ? true : false
+	const duration_ms = queue?.length > 0 ? queue[0].duration_ms : 0
+	const duration_secs = duration_ms / 1000
 
 	return (
 		<Fragment>
@@ -325,7 +312,9 @@ export function QuppListPage({
 				playlistname={playlistName}
 				nowPlaying={nowPlaying}
 				upNext={upNext}
-				progressValue={progress}
+				playNextSong={playNextSong}
+				duration_secs={duration_secs}
+				playing={playing}
 			/>
 
 			<div className="container">
