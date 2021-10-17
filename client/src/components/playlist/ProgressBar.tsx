@@ -2,15 +2,14 @@ import React, { useState } from "react"
 import useInterval from "../../utils/useInterval"
 
 interface IProps {
-	progress?: number
-	duration_secs?: number
-	playNextSong: Function
+	duration_secs: number
+	onComplete: Function
 	playing: boolean
 }
 
 const ProgressBar: React.FC<IProps> = ({
 	duration_secs,
-	playNextSong,
+	onComplete,
 	playing,
 }) => {
 	const [progress, setProgress] = useState(0)
@@ -21,18 +20,14 @@ const ProgressBar: React.FC<IProps> = ({
 
 	useInterval(
 		() => {
-			if (playing && duration_secs) {
-				const percent = Math.round(
-					(secondsPassed / duration_secs) * 100
-				)
+			const percent = Math.round((secondsPassed / duration_secs) * 100)
 
-				setProgress(percent)
-				if (percent >= 100) {
-					setProgress(0)
-					playNextSong()
-				}
-				secondsPassed++
+			setProgress(percent)
+			if (percent >= 100) {
+				setProgress(0)
+				onComplete()
 			}
+			secondsPassed++
 		},
 		playing ? 30 : null
 	)

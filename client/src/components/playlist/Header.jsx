@@ -11,7 +11,7 @@ function Header(props) {
 		numberOfSongsInQueue,
 		nowPlaying,
 		upNext,
-		playNextSong,
+		progressOnComplete,
 		duration_secs,
 		playing,
 	} = props
@@ -27,7 +27,7 @@ function Header(props) {
 			<Row>
 				<Col s={6} offset="s3">
 					<ProgressBar
-						playNextSong={playNextSong}
+						onComplete={progressOnComplete}
 						duration_secs={duration_secs}
 						playing={playing}
 					/>

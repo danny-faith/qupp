@@ -11,7 +11,6 @@ import { firebase } from "../../base"
 import PropTypes from "prop-types"
 import { getPlaylist, clearPlaylists } from "../../actions/playlistActions"
 import isEmpty from "../../utils/isEmpty"
-import useInterval from "../../utils/useInterval"
 
 import { Row, Col, Button } from "react-materialize"
 
@@ -312,7 +311,7 @@ export function QuppListPage({
 				playlistname={playlistName}
 				nowPlaying={nowPlaying}
 				upNext={upNext}
-				playNextSong={playNextSong}
+				progressOnComplete={playNextSong}
 				duration_secs={duration_secs}
 				playing={playing}
 			/>
