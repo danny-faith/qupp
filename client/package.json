@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "App that allows users to create playlists using Spotify's API",
 	"engines": {
-		"node": "11.0.0"
+		"node": "12.x"
 	},
 	"scripts": {
 		"build:css": "postcss src/App.scss -o src/index.css",
