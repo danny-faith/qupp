@@ -1,13 +1,13 @@
 import React, { useState } from "react"
 import useInterval from "../../utils/useInterval"
 
-interface IProps {
+interface ProgressBarProps {
 	duration_secs: number
 	onComplete: Function
 	playing: boolean
 }
 
-const ProgressBar: React.FC<IProps> = ({
+const ProgressBar: React.FC<ProgressBarProps> = ({
 	duration_secs,
 	onComplete,
 	playing,

@@ -15,7 +15,7 @@ import isEmpty from "../../utils/isEmpty"
 import { Row, Col, Button } from "react-materialize"
 
 import SearchForm from "../../components/playlist/SearchForm"
-import Header from "../../components/playlist/Header"
+import Header from "../../components/playlist/Header.tsx"
 import PlayButton from "../../components/player/PlayButton"
 import SongList from "./SongList"
 
