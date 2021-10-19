@@ -7,6 +7,7 @@
         "build": "cd client && npm run build",
         "install-server": "cd server && npm ci",
         "install-client": "cd client && npm ci",
-        "heroku-postbuild": "npm run install-server && npm run install-client && npm run build"
+        "heroku-prebuild": "npm run install-client && npm run build",
+        "heroku-postbuild": "npm run install-server"
     }
 }
