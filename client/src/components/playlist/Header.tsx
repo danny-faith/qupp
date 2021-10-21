@@ -9,8 +9,8 @@ interface HeaderProps {
 	playlistname: string
 	username: string
 	numberOfSongsInQueue: number
-	nowPlaying?: Song
-	upNext?: Song
+	nowPlaying: Song
+	upNext: Song
 	progressOnComplete: Function
 	duration_secs: number
 	playing: boolean
