@@ -12,7 +12,8 @@
 		"start": "npm run watch:css & PORT=3002 craco start",
 		"build": "npm run build:css && craco build",
 		"test": "craco test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"prepare": "cd ../ && husky install ./client/.husky"
 	},
 	"proxy": "http://127.0.0.1:8082/",
 	"author": "Daniel Blythe",
