@@ -1,12 +1,11 @@
-import arrayOfPlaylistComps from './arrayOfPlaylistComps'
+//import arrayOfPlaylistComps from "./arrayOfPlaylistComps"
 
-describe('Testing arrayOfPlaylistComps', () => {
-    beforeEach(() => {
-        return ''
-    })
+describe("Testing arrayOfPlaylistComps", () => {
+	beforeEach(() => {
+		return ""
+	})
 
-    it('Returns 6 playlist components', () => {
-
-        expect(true).toBe(false)
-    })
+	it("Returns 6 playlist components", () => {
+		expect(true).toBe(false)
+	})
 })

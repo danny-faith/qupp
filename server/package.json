@@ -6,7 +6,7 @@
   "license": "ISC",
   "main": "server.js",
   "engines": {
-    "node": "11.0.0"
+    "node": "12.x"
   },
   "scripts": {
     "build": "cd client && npm run build",

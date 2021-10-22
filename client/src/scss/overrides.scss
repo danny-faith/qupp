@@ -1,15 +1,15 @@
 input:not([type]),
-input[type='text'],
-input[type='password'],
-input[type='email'],
-input[type='url'],
-input[type='time'],
-input[type='date'],
-input[type='datetime'],
-input[type='datetime-local'],
-input[type='tel'],
-input[type='number'],
-input[type='search'],
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="time"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="tel"],
+input[type="number"],
+input[type="search"],
 textarea.materialize-textarea {
 	padding-left: 10px;
 	-webkit-text-fill-color: rgb(211, 211, 211);
@@ -19,8 +19,8 @@ textarea.materialize-textarea {
 }
 input:-webkit-autofill,
 input:-internal-autofill-selected,
-input[type='text']:focus:not([readonly]),
-input[type='password']:focus:not([readonly]) {
+input[type="text"]:focus:not([readonly]),
+input[type="password"]:focus:not([readonly]) {
 	box-shadow: 0 0 0px 1000px rgb(94, 94, 94) inset !important;
 }
 .input-field label {
