@@ -51,7 +51,7 @@ function SearchForm(props) {
 
 		axios
 			.get(
-				`https://api.spotify.com/v1/search?q=${search}&type=track&limit=20`,
+				`https://api.spotify.com/v1/search?q=${search}&type=track&limit=10`,
 				{
 					headers: {
 						Authorization: `Bearer ${localStorage.getItem(

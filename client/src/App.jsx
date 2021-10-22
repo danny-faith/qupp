@@ -14,8 +14,6 @@ import Dashboard from "./pages/Dashboard"
 import ViewAllPlaylists from "./pages/ViewAllPlaylists"
 import Error404 from "./pages/Error404"
 
-import "./App.scss"
-
 import Landing from "./pages/Landing"
 import MyAccountPage from "./pages/user/MyAccount"
 import ForgotPasswordPage from "./pages/user/ForgotPassword"

@@ -36,6 +36,13 @@ const TextFieldGroup = ({
 	)
 }
 
+const areEqual = (prevProps, nextProps) => {
+	if (prevProps.value === nextProps.value) {
+		return true
+	}
+	return false
+}
+
 TextFieldGroup.propTypes = {
 	name: propTypes.string.isRequired,
 	placeholder: propTypes.string,
@@ -51,4 +58,4 @@ TextFieldGroup.defaultProps = {
 	type: "text",
 }
 
-export default TextFieldGroup
+export default React.memo(TextFieldGroup, areEqual)

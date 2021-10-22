@@ -3,17 +3,29 @@ import { Row, Col } from "react-materialize"
 import NowPlaying from "../common/NowPlaying"
 import UpNext from "../common/UpNext"
 import ProgressBar from "./ProgressBar"
+import { Song } from "../../interfaces"
 
-function Header(props) {
-	const {
-		playlistname,
-		username,
-		numberOfSongsInQueue,
-		progressValue,
-		nowPlaying,
-		upNext,
-	} = props
+interface HeaderProps {
+	playlistname: string
+	username: string
+	numberOfSongsInQueue: number
+	nowPlaying: Song
+	upNext: Song
+	progressOnComplete: Function
+	duration_secs: number
+	playing: boolean
+}
 
+const Header: React.FC<HeaderProps> = ({
+	playlistname,
+	username,
+	numberOfSongsInQueue,
+	nowPlaying,
+	upNext,
+	progressOnComplete,
+	duration_secs,
+	playing,
+}) => {
 	return (
 		<div className="header text-center py-8">
 			<h1 className="text-5xl my-0">{playlistname}</h1>
@@ -24,7 +36,11 @@ function Header(props) {
 			</p>
 			<Row>
 				<Col s={6} offset="s3">
-					<ProgressBar progress={progressValue} />
+					<ProgressBar
+						onComplete={progressOnComplete}
+						duration_secs={duration_secs}
+						playing={playing}
+					/>
 					<NowPlaying nowPlaying={nowPlaying} />
 					<UpNext upNext={upNext} />
 				</Col>

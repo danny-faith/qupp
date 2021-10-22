@@ -3,6 +3,6 @@
     "plugins": ["no-autofix"],
     "rules": {
         "react-hooks/exhaustive-deps": "off",
-        "no-autofix/react-hooks/exhaustive-deps": "error"
+        "no-autofix/react-hooks/exhaustive-deps": "warn"
     }
 }

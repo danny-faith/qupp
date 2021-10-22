@@ -1,24 +1,32 @@
-import React, { useState, useEffect, Fragment } from "react"
+import React, {
+	useState,
+	useEffect,
+	Fragment,
+	useCallback,
+	useRef,
+} from "react"
 import { connect } from "react-redux"
 
 import { firebase } from "../../base"
 import PropTypes from "prop-types"
 import { getPlaylist, clearPlaylists } from "../../actions/playlistActions"
 import isEmpty from "../../utils/isEmpty"
-import useInterval from "../../utils/useInterval"
 
 import { Row, Col, Button } from "react-materialize"
 
 import SearchForm from "../../components/playlist/SearchForm"
-import Header from "../../components/playlist/Header"
+import Header from "../../components/playlist/Header.tsx"
 import PlayButton from "../../components/player/PlayButton"
 import SongList from "./SongList"
 
 import { addSongToQupplist, addToQueue } from "./services/player"
 
-import { remove, view } from "ramda"
+import { remove } from "ramda"
 import * as R from "ramda"
 
+const db = firebase.database()
+const qupplistText = "qupplist"
+const greyText = "grey"
 export function QuppListPage({
 	clearPlaylists,
 	getPlaylist,
@@ -26,15 +34,12 @@ export function QuppListPage({
 	playlists,
 	auth,
 }) {
-	const db = firebase.database()
-	const [playlist, setPlaylist] = useState({
-		qupplist: [],
-		queue: [],
-	})
-	let payload = React.useRef()
+	const [qupplist, setQupplist] = useState([])
+	const [queue, setQueue] = useState([])
+	let payload = useRef()
 	const [loadingPlaylists, setLoadingPlaylists] = useState({ status: true })
 	const [playing, setPlaying] = useState(false)
-	const [progress, setProgress] = useState(0)
+	// const [progress, setProgress] = useState(0)
 	const [nowPlaying, setNowPlaying] = useState({})
 	const [upNext, setUpNext] = useState({})
 	const [searchResults, setSearchResults] = useState([])
@@ -48,57 +53,41 @@ export function QuppListPage({
 		setPlaying((prevState) => !prevState)
 	}
 
-	useEffect(() => {
-		if (playlists && playlists.playlist) {
-			const playlistRef = db.ref(`playlists/${playlists.playlist._id}`)
-
+	const syncSongListState = useCallback(
+		(target, setter) => {
+			const playlistRef = db.ref(
+				`playlists/${playlists.playlist._id}/${target}`
+			)
 			playlistRef.on("value", (snapshot) => {
 				const snapShot = snapshot.val()
-				let newData
 
-				if (snapShot) {
-					newData = snapShot
-				} else {
-					newData = {
-						qupplist: [],
-						queue: [],
-					}
-				}
-
-				setPlaylist(newData)
+				setter(snapShot)
 			})
-
 			return () => playlistRef.off()
-		}
-	}, [db, playlists])
-
-	const duration_ms =
-		playlist.queue?.length > 0 ? playlist.queue[0].duration_ms : 0
-	const duration_secs = duration_ms / 1000
-	let secondsPassed = Math.round((duration_secs / 100) * progress)
-
-	useInterval(
-		() => {
-			const percent = Math.round((secondsPassed / duration_secs) * 100)
-			setProgress(percent)
-			if (percent >= 100) {
-				setProgress(0)
-				playNextSong()
-			}
-			secondsPassed++
 		},
-		playing ? 30 : null
+		[playlists]
 	)
 
 	useEffect(() => {
-		if (!isEmpty(playlist.queue)) {
-			setLoadingPlaylists({ status: false })
+		if (playlists && playlists.playlist) {
+			syncSongListState("qupplist", setQupplist)
 		}
-		console.log("playlist check", playlist.queue, playlist.qupplist)
-	}, [playlist])
+	}, [playlists, syncSongListState])
 
 	useEffect(() => {
-		if (loadingPlaylists.status === false && isEmpty(playlist.queue)) {
+		if (playlists && playlists.playlist) {
+			syncSongListState("queue", setQueue)
+		}
+	}, [playlists, syncSongListState])
+
+	useEffect(() => {
+		if (!isEmpty(queue)) {
+			setLoadingPlaylists({ status: false })
+		}
+	}, [queue])
+
+	useEffect(() => {
+		if (loadingPlaylists.status === false && isEmpty(queue)) {
 			setNowPlaying({})
 			setUpNext({})
 			window.M.toast({
@@ -106,47 +95,40 @@ export function QuppListPage({
 				classes: "red lighten-2",
 			})
 		}
-		if (playlist.queue?.length === 1) {
-			setNowPlaying(playlist.queue[0])
+		if (queue?.length === 1) {
+			setNowPlaying(queue[0])
 			setUpNext({})
 		}
-		if (playlist.queue?.length > 1) {
-			setNowPlaying(playlist.queue[0])
-			setUpNext(playlist.queue[1])
+		if (queue?.length > 1) {
+			setNowPlaying(queue[0])
+			setUpNext(queue[1])
 		}
-	}, [playlist, loadingPlaylists])
+	}, [loadingPlaylists, queue])
 
 	const playNextSong = () => {
-		const cloneOfQueue = R.clone(playlist.queue)
+		console.log("playNextSong")
+		const cloneOfQueue = R.clone(queue)
 		const slicedQueue = R.remove(0, 1, cloneOfQueue)
-		setProgress(0)
 		db.ref(`playlists/${playlists.playlist._id}/queue`).set(slicedQueue)
 	}
 
 	function usePrevious(value) {
-		const ref = React.useRef()
+		const ref = useRef()
 		useEffect(() => {
 			ref.current = value
 		})
 		return ref.current
 	}
 
-	const previousQueue = usePrevious(playlist.queue)
-	const previousQupplist = usePrevious(playlist.qupplist)
+	const previousQueue = usePrevious(queue)
+	const previousQupplist = usePrevious(qupplist)
 
 	const manageSongNotifications = (previousQueue = [], nextQueue = []) => {
 		const { type } = payload.current
-		console.log(
-			"manage",
-			{ previousQueue },
-			{ nextQueue },
-			nextQueue?.length - previousQueue?.length
-		)
 		const moreThanOneSongAdded =
 			nextQueue?.length - previousQueue?.length > 1
 		const oneSongAdded = nextQueue?.length - previousQueue?.length === 1
 		const songRemoved = nextQueue?.length - previousQueue?.length < 0
-		console.log("manage", nextQueue?.length - previousQueue?.length)
 
 		if (oneSongAdded) {
 			const { name, album } = Array.isArray(payload.current.song)
@@ -178,119 +160,160 @@ export function QuppListPage({
 	}
 
 	useEffect(() => {
-		if (playlist.queue && playlist.queue?.length > 0) {
-			if (playlist.queue?.length > 1) {
-				setUpNext(playlist.queue[1])
+		if (queue && queue?.length > 0) {
+			if (queue?.length > 1) {
+				setUpNext(queue[1])
 			}
-			setNowPlaying(playlist.queue[0])
+			setNowPlaying(queue[0])
 		}
-	}, [playlist, previousQueue, previousQupplist])
+	}, [previousQueue, previousQupplist, queue])
 
 	useEffect(() => {
-		console.log("payload manage useeffect", payload.current)
 		if (payload.current) {
 			switch (payload.current.type) {
 				case "queue":
-					manageSongNotifications(previousQueue, playlist.queue)
+					manageSongNotifications(previousQueue, queue)
 					break
 				case "qupplist":
-					manageSongNotifications(previousQupplist, playlist.qupplist)
+					manageSongNotifications(previousQupplist, qupplist)
 					break
 				default:
 					break
 			}
 		}
-	}, [playlist.queue, playlist.qupplist, previousQueue, previousQupplist])
+	}, [previousQueue, previousQupplist, queue, qupplist])
 
 	useEffect(() => {
-		if (playing && isEmpty(playlist.queue)) {
+		if (playing && isEmpty(queue)) {
 			setPlaying(false)
 		}
-	}, [playing, playlist.queue])
+	}, [playing, queue])
 
-	const addSearchResultsToState = (results) => {
-		setSearchResults(results)
-	}
+	const addSearchResultsToState = useCallback(
+		(results) => {
+			setSearchResults(results)
+		},
+		[setSearchResults]
+	)
 
 	const addAllToQueueHandler = () => {
-		if (isEmpty(playlist.qupplist)) {
+		if (isEmpty(qupplist)) {
 			return window.M.toast({
 				html: `No songs to add`,
 				classes: "red lighten-2",
 			})
 		}
-		addSongToQueueOrQupplistHandler(playlist.qupplist, "queue")
+		addSongToQueueOrQupplistHandler(qupplist, "queue")
 	}
 
-	const addSongToQueueOrQupplistHandler = (songPayload, type) => {
-		const { qupplist = [], queue = [] } = playlist
+	const checkIfSongExistsInQupplist = useCallback(
+		(songPayload, type) => {
+			const qupplistExistsAndIsNotEmpty =
+				type === "qupplist" && !isEmpty(qupplist)
 
-		payload.current = R.clone({
-			type,
-			song: songPayload,
-		})
-		console.log("addAllToQ", payload.current, type)
+			if (qupplistExistsAndIsNotEmpty) {
+				const found = qupplist.find(
+					(x) => x.spotId === songPayload.spotId
+				)
 
-		const qupplistExistsAndIsNotEmpty =
-			type === "qupplist" && !isEmpty(playlist.qupplist)
-		if (qupplistExistsAndIsNotEmpty) {
-			const found = qupplist.find((x) => x.spotId === songPayload.spotId)
-			if (found) {
-				return window.M.toast({
-					html: `"${songPayload.name}" is a duplicate, cannot add`,
-					classes: "red lighten-2",
+				if (found) {
+					return window.M.toast({
+						html: `"${songPayload.name}" is a duplicate, cannot add`,
+						classes: "red lighten-2",
+					})
+				}
+			}
+		},
+		[qupplist]
+	)
+
+	const addSongToQueueOrQupplistHandler = useCallback(
+		(songPayload, type) => {
+			if (checkIfSongExistsInQupplist(songPayload, type)) {
+				return
+			}
+
+			setPayload(type, songPayload)
+
+			let newPlaylist
+			if (type === "qupplist") {
+				setQupplist((oldState) => {
+					newPlaylist = addSongToQupplist(songPayload, oldState)
+					db.ref(`playlists/${playlists?.playlist?._id}/${type}`).set(
+						newPlaylist
+					)
+				})
+			} else if (type === "queue") {
+				setQueue((oldState) => {
+					const oldStateCheck = oldState === null ? [] : oldState
+
+					newPlaylist = addToQueue(songPayload, oldStateCheck)
+					db.ref(`playlists/${playlists?.playlist?._id}/${type}`).set(
+						newPlaylist
+					)
 				})
 			}
-		}
+		},
+		[playlists, checkIfSongExistsInQupplist]
+	)
 
-		let newPlaylist
-
-		if (type === "qupplist") {
-			newPlaylist = addSongToQupplist(songPayload, qupplist)
-		} else if (type === "queue") {
-			newPlaylist = addToQueue(songPayload, queue)
-		}
-
-		console.log("addAllToQ newPlaylist", newPlaylist, type)
-		db.ref(`playlists/${playlists.playlist._id}/${type}`).set(newPlaylist)
-	}
-
-	const removeSongFromQueueOrPlaylist = (index, type) => {
-		const playlistLens = R.lensPath([type])
-		const chosenPlaylist = view(playlistLens, playlist)
-		const removeSongAtIndex = remove(index, 1)
-		const song = R.slice(index, index + 1, chosenPlaylist)[0]
-
+	const setPayload = (type, song) => {
 		payload.current = {
 			type,
 			song: song,
 		}
+	}
 
-		db.ref(`playlists/${playlists.playlist._id}/${type}`)
-			.set(removeSongAtIndex(chosenPlaylist))
-			.then(() => {
-				console.log("item removed", playlist.qupplist)
+	const removeSongFromSongList = useCallback(
+		(type, index, state) => {
+			const removeSongAtIndex = remove(index, 1)
+			const song = R.slice(index, index + 1, state)[0]
+			setPayload("queue", song)
+			db.ref(`playlists/${playlists?.playlist?._id}/${type}`).set(
+				removeSongAtIndex(state)
+			)
+		},
+		[playlists.playlist]
+	)
+
+	const removeSongFromQueue = useCallback(
+		(index) => {
+			setQueue((oldState) => {
+				removeSongFromSongList("queue", index, oldState)
 			})
-	}
+		},
+		[removeSongFromSongList]
+	)
 
-	const clearSearchResults = () => {
+	const removeSongFromQupplist = useCallback(
+		(index) => {
+			setQupplist((oldState) => {
+				removeSongFromSongList("qupplist", index, oldState)
+			})
+		},
+		[removeSongFromSongList]
+	)
+
+	const clearSearchResults = useCallback(() => {
 		setSearchResults([])
-	}
+	}, [setSearchResults])
 
 	const playlistName = playlists?.playlist?.name
-	const playDisabled = isEmpty(playlist.queue) ? true : false
+	const playDisabled = isEmpty(queue) ? true : false
+	const duration_ms = queue?.length > 0 ? queue[0].duration_ms : 0
+	const duration_secs = duration_ms / 1000
 
 	return (
 		<Fragment>
 			<Header
-				numberOfSongsInQueue={
-					playlist.queue === undefined ? 0 : playlist.queue?.length
-				}
+				numberOfSongsInQueue={queue === undefined ? 0 : queue?.length}
 				username={auth.user.name}
 				playlistname={playlistName}
 				nowPlaying={nowPlaying}
 				upNext={upNext}
-				progressValue={progress}
+				progressOnComplete={playNextSong}
+				duration_secs={duration_secs}
+				playing={playing}
 			/>
 
 			<div className="container">
@@ -311,15 +334,13 @@ export function QuppListPage({
 							</Button>
 						</h1>
 						<SongList
-							songs={playlist.qupplist}
-							type="qupplist"
-							removeSongFromQueueOrPlaylist={
-								removeSongFromQueueOrPlaylist
-							}
+							songs={qupplist}
+							type={qupplistText}
+							removeSongFromSongList={removeSongFromQupplist}
 							addSongToQueueOrQupplistHandler={
 								addSongToQueueOrQupplistHandler
 							}
-							colour="grey"
+							colour={greyText}
 						/>
 					</Col>
 
@@ -344,11 +365,9 @@ export function QuppListPage({
 						<h1 className="text-yellow darken-1">queue</h1>
 						<div className="queue-list">
 							<SongList
-								songs={playlist.queue}
+								songs={queue}
 								type="queue"
-								removeSongFromQueueOrPlaylist={
-									removeSongFromQueueOrPlaylist
-								}
+								removeSongFromSongList={removeSongFromQueue}
 								addSongToQueueOrQupplistHandler={
 									addSongToQueueOrQupplistHandler
 								}
