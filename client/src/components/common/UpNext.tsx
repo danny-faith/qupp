@@ -1,37 +1,27 @@
 import React from "react"
-import { Song, Artist } from "../../interfaces"
-// import PropTypes from "prop-types"
+import { SongResponse, SongResponseArtist } from "../../interfaces"
+import { isNil, isEmpty } from "ramda"
 
 interface UpNextProps {
-	upNext: Song
+	upNext?: SongResponse
 }
 
-const UpNext: React.FC<UpNextProps> = ({ upNext }) => {
-	const { name, album, artists = [] } = upNext
-
+function UpNext({ upNext }: UpNextProps) {
 	return (
 		<p className="m-0">
 			<span>Up next: </span>
-			<span className="text-green">
-				{name} - {album} -{" "}
-				{artists.map((artist: Artist) => (
-					<span key={artist.id}>{artist.name} </span>
-				))}
-			</span>
+			{!isNil(upNext) && !isEmpty(upNext) ? (
+				<span className="text-pink">
+					{upNext.name} - {upNext.album} -{" "}
+					{upNext.artists.map((artist: SongResponseArtist) => (
+						<span key={artist.id}>{artist.name} </span>
+					))}
+				</span>
+			) : (
+				"- -"
+			)}
 		</p>
 	)
-}
-
-// UpNext.propTypes = {
-// 	upNext: PropTypes.object,
-// }
-
-UpNext.defaultProps = {
-	upNext: {
-		name: "",
-		album: "",
-		artists: [],
-	},
 }
 
 export default UpNext

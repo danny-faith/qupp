@@ -3,14 +3,14 @@ import { Row, Col } from "react-materialize"
 import NowPlaying from "../common/NowPlaying"
 import UpNext from "../common/UpNext"
 import ProgressBar from "./ProgressBar"
-import { Song } from "../../interfaces"
+import { SongResponse } from "../../interfaces"
 
 interface HeaderProps {
 	playlistname: string
 	username: string
 	numberOfSongsInQueue: number
-	nowPlaying: Song
-	upNext: Song
+	nowPlaying?: SongResponse
+	upNext?: SongResponse
 	progressOnComplete: Function
 	duration_secs: number
 	playing: boolean

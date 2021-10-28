@@ -1,32 +1,27 @@
 import React from "react"
-import { Song, Artist } from "../../interfaces"
+import { SongResponse, SongResponseArtist } from "../../interfaces"
+import { isEmpty, isNil } from "ramda"
 
 interface NowPlayingProps {
-	nowPlaying: Song
+	nowPlaying?: SongResponse
 }
 
-const NowPlaying: React.FC<NowPlayingProps> = ({ nowPlaying }) => {
-	const { name, album, artists = [] } = nowPlaying
-
+function NowPlaying({ nowPlaying }: NowPlayingProps) {
 	return (
 		<p className="m-0">
 			<span>Now playing: </span>
-			<span className="text-pink">
-				{name} - {album} -{" "}
-				{artists.map((artist: Artist) => (
-					<span key={artist.id}>{artist.name} </span>
-				))}
-			</span>
+			{!isNil(nowPlaying) && !isEmpty(nowPlaying) ? (
+				<span className="text-pink">
+					{nowPlaying.name} - {nowPlaying.album} -{" "}
+					{nowPlaying.artists.map((artist: SongResponseArtist) => (
+						<span key={artist.id}>{artist.name} </span>
+					))}
+				</span>
+			) : (
+				"- -"
+			)}
 		</p>
 	)
-}
-
-NowPlaying.defaultProps = {
-	nowPlaying: {
-		name: "",
-		album: "",
-		artists: [],
-	},
 }
 
 export default NowPlaying

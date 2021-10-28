@@ -6,8 +6,27 @@ import arrayOfPlaylistComps from "../utils/arrayOfPlaylistComps"
 import CreatePlaylist from "../components/playlist/CreatePlaylist"
 import { getPlaylists, clearPlaylist } from "../actions/playlistActions"
 import Spinner from "../components/common/Spinner"
+import { Playlists, Auth } from "../interfaces"
 
-function Dashboard({ clearPlaylist, getPlaylists, playlists = [], auth }) {
+interface DashboardProps {
+	getPlaylists: Function
+	clearPlaylist: Function
+	playlists: Playlists
+	auth: Auth
+}
+
+type DashboardState = {
+	auth: Auth
+	playlists: Playlists
+	playlist: Playlists
+}
+
+function Dashboard({
+	clearPlaylist,
+	getPlaylists,
+	playlists,
+	auth,
+}: DashboardProps) {
 	useEffect(() => {
 		clearPlaylist()
 		getPlaylists(auth.user)
@@ -42,7 +61,7 @@ Dashboard.propTypes = {
 	auth: PropTypes.object.isRequired,
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: DashboardState) => ({
 	auth: state.auth,
 	playlists: state.playlist,
 })

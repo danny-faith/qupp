@@ -1,11 +1,37 @@
 import React, { Fragment } from "react"
 import { Row, Col, Button } from "react-materialize"
+import { SongResponse } from "../../interfaces"
 
-function Song(props) {
-	const { type, colour, data } = props
+interface SongProps {
+	addSongToQueueOrQupplistHandler: Function
+	removeSongFromSongList: Function
+	type: string
+	data: SongResponse
+	index: number
+	key: string
+}
 
-	const handleAddSong = (e) => {
-		const { data } = props
+interface SongReturn {
+	data: {}[]
+}
+
+interface IActionButton {
+	dataType: string
+	icon: string
+	classNames: string
+	action: Function
+}
+
+const Song: React.FC<SongProps> = ({
+	type,
+	data,
+	addSongToQueueOrQupplistHandler,
+	index,
+	removeSongFromSongList,
+}) => {
+	const handleAddSong = (
+		e: React.SyntheticEvent<HTMLButtonElement>
+	): void => {
 		const { type } = e.currentTarget.dataset
 		const songToAdd = {
 			name: data.name,
@@ -17,14 +43,19 @@ function Song(props) {
 			uri: data.uri,
 		}
 
-		props.addSongToQueueOrQupplistHandler(songToAdd, type)
+		addSongToQueueOrQupplistHandler(songToAdd, type)
 	}
 
-	const handleRemoveSong = (e) => {
-		props.removeSongFromSongList(props.index, e.currentTarget.dataset.type)
+	const handleRemoveSong = (e: React.SyntheticEvent<HTMLButtonElement>) => {
+		removeSongFromSongList(index, e.currentTarget.dataset.type)
 	}
 
-	const createActionButton = ({ dataType, classNames, icon, action }) => (
+	const createActionButton = ({
+		dataType,
+		classNames,
+		icon,
+		action,
+	}: IActionButton) => (
 		<Button
 			onClick={action}
 			data-type={dataType}
@@ -34,7 +65,7 @@ function Song(props) {
 		/>
 	)
 
-	const buttonDecider = (type) => {
+	const buttonDecider = (type: string) => {
 		switch (type) {
 			case "search":
 				return (
@@ -95,7 +126,7 @@ function Song(props) {
 	const songButtons = buttonDecider(type)
 
 	return (
-		<Row className={`${colour} py-3 darken-2 mb-0 flex`}>
+		<Row className="py-3 darken-2 mb-0 flex">
 			<Col s={2}>
 				<img
 					alt="Song cover"

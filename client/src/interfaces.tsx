@@ -21,13 +21,17 @@ export interface INewPlaylist {
 	id?: string | null
 }
 
-export interface Song {
+export interface SongResponse {
 	name: string
 	album: string
-	artists: Array<Artist>
+	artists: SongResponseArtist[]
+	image: string
+	spotId: string
+	duration_ms: string
+	uri: string
 }
 
-export interface Artist {
+export interface SongResponseArtist {
 	external_urls: external_urls
 	href: string
 	id: string
@@ -38,4 +42,34 @@ export interface Artist {
 
 type external_urls = {
 	spotify: string
+}
+
+export type Playlists = {
+	loading: boolean
+	playlist: {}
+	playlists: Playlist[]
+}
+
+export type Playlist = {
+	collaborative: boolean
+	user: string
+	name: string
+	slug: string
+	desc: string
+	createdAt: string
+	_id: string
+	__v: number
+}
+
+export type User = {
+	avatar: string
+	exp: number
+	iat: number
+	id: string
+	username: string
+}
+
+export type Auth = {
+	isAuthenticated: boolean
+	user: User
 }
