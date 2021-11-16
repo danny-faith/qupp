@@ -37,7 +37,10 @@ const TextFieldGroup = ({
 }
 
 const areEqual = (prevProps, nextProps) => {
-	if (prevProps.value === nextProps.value) {
+	if (
+		prevProps.value === nextProps.value &&
+		prevProps.error === nextProps.error
+	) {
 		return true
 	}
 	return false

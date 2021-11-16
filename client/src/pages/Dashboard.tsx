@@ -5,12 +5,14 @@ import isEmpty from "../utils/isEmpty"
 import arrayOfPlaylistComps from "../utils/arrayOfPlaylistComps"
 import CreatePlaylist from "../components/playlist/CreatePlaylist"
 import { getPlaylists, clearPlaylist } from "../actions/playlistActions"
+import { clearErrors } from "../actions/generalActions"
 import Spinner from "../components/common/Spinner"
 import { Playlists, Auth } from "../interfaces"
 
 interface DashboardProps {
 	getPlaylists: Function
 	clearPlaylist: Function
+	clearErrors: Function
 	playlists: Playlists
 	auth: Auth
 }
@@ -24,13 +26,15 @@ type DashboardState = {
 function Dashboard({
 	clearPlaylist,
 	getPlaylists,
+	clearErrors,
 	playlists,
 	auth,
 }: DashboardProps) {
 	useEffect(() => {
 		clearPlaylist()
+		clearErrors()
 		getPlaylists(auth.user)
-	}, [clearPlaylist, getPlaylists, auth.user])
+	}, [clearPlaylist, getPlaylists, auth.user, clearErrors])
 
 	const playlistContent = () => {
 		const { loading } = playlists
@@ -57,6 +61,7 @@ function Dashboard({
 Dashboard.propTypes = {
 	getPlaylists: PropTypes.func.isRequired,
 	clearPlaylist: PropTypes.func.isRequired,
+	clearErrors: PropTypes.func.isRequired,
 	playlist: PropTypes.object,
 	auth: PropTypes.object.isRequired,
 }
@@ -66,6 +71,8 @@ const mapStateToProps = (state: DashboardState) => ({
 	playlists: state.playlist,
 })
 
-export default connect(mapStateToProps, { getPlaylists, clearPlaylist })(
-	Dashboard
-)
+export default connect(mapStateToProps, {
+	getPlaylists,
+	clearPlaylist,
+	clearErrors,
+})(Dashboard)
