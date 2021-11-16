@@ -9,8 +9,8 @@ import {
 } from "../actions/types"
 
 const initialState = {
-	playlist: null,
-	playlists: null,
+	playlist: {},
+	playlists: [],
 	loading: false,
 }
 
