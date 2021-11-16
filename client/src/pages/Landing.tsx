@@ -2,16 +2,26 @@ import React, { useEffect } from "react"
 import { Link } from "react-router-dom"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
-
 import { Row, Col } from "react-materialize"
 import logo from "../logo-v2.svg"
+import { Auth } from "interfaces"
+import { History } from "history"
 
-function Landing(props) {
+type LandingProps = {
+	auth: Auth
+	history: History
+}
+
+type LandingState = {
+	auth: Auth
+}
+
+function Landing({ auth, history }: LandingProps) {
 	useEffect(() => {
-		if (props.auth.isAuthenticated) {
-			props.history.push("/dashboard")
+		if (auth.isAuthenticated) {
+			history.push("/dashboard")
 		}
-	}, [props.auth.isAuthenticated, props.history])
+	}, [auth.isAuthenticated, history])
 
 	return (
 		<div className="landing">
@@ -40,7 +50,7 @@ Landing.propTypes = {
 	auth: PropTypes.object.isRequired,
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: LandingState) => ({
 	auth: state.auth,
 })
 
