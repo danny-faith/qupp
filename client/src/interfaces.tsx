@@ -46,7 +46,7 @@ type external_urls = {
 
 export type Playlists = {
 	loading: boolean
-	playlist: {}
+	playlist: Playlist
 	playlists: Playlist[]
 }
 
@@ -59,6 +59,7 @@ export type Playlist = {
 	createdAt: string
 	_id: string
 	__v: number
+	share_link: string
 }
 
 export type User = {
