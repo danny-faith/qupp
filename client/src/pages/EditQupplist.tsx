@@ -1,12 +1,31 @@
-import React, { useEffect, useState, useMemo, useLayoutEffect } from "react"
+import React, { useEffect, useMemo, useLayoutEffect } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import CreatePlaylist from "../components/playlist/CreatePlaylist"
 import { getPlaylist } from "../actions/playlistActions"
-import isEmpty from "../utils/isEmpty"
+import { Auth, Playlist, Playlists } from "interfaces"
+import { RouteComponentProps } from "react-router"
+import { useParams } from "react-router-dom"
+import { isEmpty } from "ramda"
 
-function EditPlaylist({ history, auth, getPlaylist, playlist, match }) {
-	const [currentPlaylist, setcurrentPlaylist] = useState({})
+type EditPlaystProps = RouteComponentProps & {
+	getPlaylist: Function
+	playlist: Playlists
+	auth: Auth
+}
+
+interface ReduxEditPlaylistState {
+	auth: Auth
+	playlist: Playlist
+}
+
+function EditPlaylist({
+	history,
+	auth,
+	getPlaylist,
+	playlist,
+}: EditPlaystProps) {
+	const { slug } = useParams()
 
 	useEffect(() => {
 		const { isAuthenticated } = auth
@@ -17,8 +36,8 @@ function EditPlaylist({ history, auth, getPlaylist, playlist, match }) {
 	}, [auth, history])
 
 	useLayoutEffect(() => {
-		getPlaylist(match.params.slug)
-	}, [getPlaylist, match.params.slug])
+		getPlaylist(slug)
+	}, [getPlaylist, slug])
 
 	useMemo(() => {
 		const { isAuthenticated } = auth
@@ -26,20 +45,15 @@ function EditPlaylist({ history, auth, getPlaylist, playlist, match }) {
 		if (!isAuthenticated) {
 			history.push("/login")
 		}
-		if (playlist) {
-			setcurrentPlaylist(playlist)
-		}
-	}, [auth, history, setcurrentPlaylist, playlist])
+	}, [auth, history])
 
 	const editQupplistContent = () => {
-		const playlistsHaveLoaded = !isEmpty(currentPlaylist.playlist)
-
-		if (playlistsHaveLoaded) {
+		if (!isEmpty(playlist.playlist)) {
 			return (
 				<CreatePlaylist
-					name={currentPlaylist.playlist.name}
-					slug={currentPlaylist.playlist.slug}
-					id={currentPlaylist.playlist._id}
+					name={playlist.playlist.name}
+					slug={playlist.playlist.slug}
+					id={playlist.playlist._id}
 					title="Edit playlist"
 					buttonText="Edit playlist"
 				/>
@@ -62,7 +76,7 @@ EditPlaylist.propTypes = {
 	auth: PropTypes.object.isRequired,
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: ReduxEditPlaylistState) => ({
 	auth: state.auth,
 	playlist: state.playlist,
 })
